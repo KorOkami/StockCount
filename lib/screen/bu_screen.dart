@@ -12,6 +12,7 @@ import 'dart:io';
 import 'dart:async';
 
 import 'package:stock_counting_app/model/drugsMaster.dart';
+import 'package:stock_counting_app/screen/count_screen.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 
 class BU_Screen extends StatefulWidget {
@@ -87,24 +88,6 @@ class _BU_ScreenState extends State<BU_Screen> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.home,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("Home",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: Row(
-                          children: [
-                            Icon(
                               Icons.logout,
                               color: Colors.white,
                               size: 25,
@@ -122,8 +105,6 @@ class _BU_ScreenState extends State<BU_Screen> {
                   },
                   onSelected: (value) {
                     if (value == 0) {
-                      print("My account menu is selected.");
-                    } else if (value == 1) {
                       showLogout_AlertDialog(context);
                     }
                   })),
@@ -246,12 +227,13 @@ class _BU_ScreenState extends State<BU_Screen> {
                               formKey.currentState?.save();
 
                               if (widget.token != "") {
-                                /*Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ScanItemScreen(
-                                token: widget.token,
-                              );
-                            }));*/
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return CountScan(
+                                    token: widget.token,
+                                    userName: widget.userName,
+                                  );
+                                }));
                               } else {
                                 /*print(result?.ErrorM);
                                                 showAlertDialog(
