@@ -5,6 +5,7 @@ import 'package:stock_counting_app/screen/bu_screen.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class CountScan extends StatefulWidget {
   const CountScan({super.key, required this.token, required this.userName});
@@ -15,6 +16,8 @@ class CountScan extends StatefulWidget {
 }
 
 class _CountScanState extends State<CountScan> {
+  TextEditingController textController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -91,7 +94,58 @@ class _CountScanState extends State<CountScan> {
                     showLogout_AlertDialog(context);
                   }
                 })),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Container(
+              alignment: Alignment.center,
+              child: Text("PSUV-WH01",
+                  style: GoogleFonts.prompt(
+                      fontSize: 40, color: Color.fromARGB(255, 1, 68, 122))),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text("Item QR/Barcode",
+                style: GoogleFonts.prompt(
+                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83))),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: TextFormField(
+                        style: TextStyle(fontSize: 20),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Scan Item',
+                        ))),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
+                  child: IconButton(
+                    alignment: Alignment.topCenter,
+                    onPressed: startScan,
+                    icon: Icon(
+                      Icons.qr_code_scanner,
+                      color: Colors.black,
+                      size: 50,
+                    ),
+                  ),
+                )
+              ],
+            )
+          ]),
+        ),
       ),
     );
+  }
+
+  startScan() async {
+    String ttt = scanner.CameraAccessDenied;
+    String? cameraScanResult = await scanner.scan();
+
+    setState(() {
+      textController.text = cameraScanResult ?? "";
+    });
   }
 }
