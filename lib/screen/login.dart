@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     InputDecoration(labelText: "E-mail"),
                                 validator: MultiValidator([
                                   RequiredValidator(
-                                      errorText: "กรุณาป้อนอีเมล"),
+                                      errorText: "กรุณาระบุอีเมล"),
                                   EmailValidator(
                                       errorText: "รูปแบบอีเมลไม่ถูกต้อง")
                                 ]),
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextFormField(
                                 validator: RequiredValidator(
-                                    errorText: "กรุณาป้อนรหัสผ่าน"),
+                                    errorText: "กรุณาระบุรหัสผ่าน"),
                                 obscureText: true,
                                 onSaved: (password) {
                                   profile.password = password ?? "";
