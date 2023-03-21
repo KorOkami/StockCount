@@ -13,18 +13,19 @@ class Register_Screen extends StatefulWidget {
 class _Register_ScreenState extends State<Register_Screen> {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return true; //ป้องการกดปุ่มยอนกลับบน mobile
-      },
-      child: Scaffold(
-        appBar: AppBar(
-            title: Text(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
           "Register",
           style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
-        )),
-        body: Column(),
+        ),
+        //automaticallyImplyLeading: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
+      body: Column(),
     );
   }
 }

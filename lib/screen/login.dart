@@ -62,148 +62,159 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset:
-            false, //ป้องกัน Error : Bottom overflowed by pixels
-        appBar: AppBar(
-          title: Text(
-            "Stock Counting",
-            style: GoogleFonts.prompt(
-                fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+    return WillPopScope(
+      onWillPop: () async {
+        return false; //ป้องการกดปุ่มยอนกลับบน mobile
+      },
+      child: Scaffold(
+          resizeToAvoidBottomInset:
+              false, //ป้องกัน Error : Bottom overflowed by pixels
+          appBar: AppBar(
+            title: Text(
+              "Stock Counting",
+              style: GoogleFonts.prompt(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            automaticallyImplyLeading: false,
+            //backgroundColor: Colors.white,
           ),
-          automaticallyImplyLeading: false,
-          //backgroundColor: Colors.white,
-        ),
-        body: Column(
-          children: [
-            Image.asset("asset/images/PrincLogo.png"),
-            SingleChildScrollView(
-              child: Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Form(
-                    key: formKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "User Name",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 9, 1, 87)),
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(labelText: "E-mail"),
-                              validator: MultiValidator([
-                                RequiredValidator(errorText: "กรุณาป้อนอีเมล"),
-                                EmailValidator(
-                                    errorText: "รูปแบบอีเมลไม่ถูกต้อง")
-                              ]),
-                              keyboardType: TextInputType.emailAddress,
-                              onSaved: (email) {
-                                profile.email = email ?? "";
-                              },
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Password",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 9, 1, 87)),
-                            ),
-                            TextFormField(
-                              validator: RequiredValidator(
-                                  errorText: "กรุณาป้อนรหัสผ่าน"),
-                              obscureText: true,
-                              onSaved: (password) {
-                                profile.password = password ?? "";
-                              },
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: ElevatedButton.icon(
-                                label: Text(
-                                  "ลงชื่อเข้าใช้",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20, color: Colors.white),
-                                ),
-                                icon: Icon(
-                                  Icons.login,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  if (formKey.currentState?.validate() ==
-                                      true) {
-                                    formKey.currentState?.save();
-
-                                    AppLogin(profile.email, profile.password)
-                                        .then((result) {
-                                      if (result?.token != "") {
-                                        Navigator.pushReplacement(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return BU_Screen(
-                                              token: result?.token,
-                                              userName: result?.username);
-                                        }));
-                                      } else {
-                                        print(result?.ErrorM);
-                                        showAlertDialog(
-                                            context, result?.ErrorM);
-                                      }
-                                    });
-                                    //formKey.currentState?.reset();
-                                  }
+          body: Column(
+            children: [
+              Image.asset("asset/images/PrincLogo.png"),
+              SingleChildScrollView(
+                child: Container(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Form(
+                      key: formKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "User Name",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color.fromARGB(255, 9, 1, 87)),
+                              ),
+                              TextFormField(
+                                decoration:
+                                    InputDecoration(labelText: "E-mail"),
+                                validator: MultiValidator([
+                                  RequiredValidator(
+                                      errorText: "กรุณาป้อนอีเมล"),
+                                  EmailValidator(
+                                      errorText: "รูปแบบอีเมลไม่ถูกต้อง")
+                                ]),
+                                keyboardType: TextInputType.emailAddress,
+                                onSaved: (email) {
+                                  profile.email = email ?? "";
                                 },
                               ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Container(
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Password",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color.fromARGB(255, 9, 1, 87)),
+                              ),
+                              TextFormField(
+                                validator: RequiredValidator(
+                                    errorText: "กรุณาป้อนรหัสผ่าน"),
+                                obscureText: true,
+                                onSaved: (password) {
+                                  profile.password = password ?? "";
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
                                 width: double.infinity,
                                 height: 50,
-                                color: Colors.white,
                                 child: ElevatedButton.icon(
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color.fromARGB(255, 1, 103, 166)),
-                                    ),
-                                    label: Text(
-                                      "Register",
-                                      style: GoogleFonts.prompt(
-                                          fontSize: 20, color: Colors.white),
-                                    ),
-                                    icon: Icon(
-                                      Icons.person_add_alt_1,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return Register_Screen();
-                                      }));
-                                    }))
-                          ]),
+                                  label: Text(
+                                    "ลงชื่อเข้าใช้",
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 20, color: Colors.white),
+                                  ),
+                                  icon: Icon(
+                                    Icons.login,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    if (formKey.currentState?.validate() ==
+                                        true) {
+                                      formKey.currentState?.save();
+
+                                      AppLogin(profile.email, profile.password)
+                                          .then((result) {
+                                        if (result?.token != "") {
+                                          Navigator.pushReplacement(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return BU_Screen(
+                                                token: result?.token,
+                                                userName: result?.username);
+                                          }));
+                                        } else {
+                                          print(result?.ErrorM);
+                                          showAlertDialog(
+                                              context, result?.ErrorM);
+                                        }
+                                      });
+                                      //formKey.currentState?.reset();
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  color: Colors.white,
+                                  child: ElevatedButton.icon(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color.fromARGB(
+                                                    255, 1, 103, 166)),
+                                      ),
+                                      label: Text(
+                                        "Register",
+                                        style: GoogleFonts.prompt(
+                                            fontSize: 20, color: Colors.white),
+                                      ),
+                                      icon: Icon(
+                                        Icons.person_add_alt_1,
+                                        color: Colors.white,
+                                        size: 30,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return Register_Screen();
+                                        }));
+                                      }))
+                            ]),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 }
