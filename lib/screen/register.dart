@@ -38,6 +38,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text("Display Name",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 style: TextStyle(
                     fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
@@ -53,6 +56,9 @@ class _Register_ScreenState extends State<Register_Screen> {
               ),
               Text("Department",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              SizedBox(
+                height: 5,
+              ),
               TextFormField(
                 style: TextStyle(
                     fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
