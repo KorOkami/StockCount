@@ -11,6 +11,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:stock_counting_app/model/successlogin.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
+import 'package:stock_counting_app/screen/register.dart';
 //import 'package:stock_counting_app/screen/poScreen.dart';
 import 'package:stock_counting_app/utility/Alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -139,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 icon: Icon(
                                   Icons.login,
                                   color: Colors.white,
+                                  size: 30,
                                 ),
                                 onPressed: () {
                                   if (formKey.currentState?.validate() ==
@@ -166,6 +168,35 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                                width: double.infinity,
+                                height: 50,
+                                color: Colors.white,
+                                child: ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color.fromARGB(255, 1, 103, 166)),
+                                    ),
+                                    label: Text(
+                                      "Register",
+                                      style: GoogleFonts.prompt(
+                                          fontSize: 20, color: Colors.white),
+                                    ),
+                                    icon: Icon(
+                                      Icons.person_add_alt_1,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return Register_Screen();
+                                      }));
+                                    }))
                           ]),
                     ),
                   ),
