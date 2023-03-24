@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
+import 'package:stock_counting_app/screen/scanItem.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -142,66 +143,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                   NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
               controller: _tabController,
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text("PSUV-WH01",
-                              style: GoogleFonts.prompt(
-                                  fontSize: 40,
-                                  color: Color.fromARGB(255, 1, 68, 122))),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text("Item QR/Barcode",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83))),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                                child: TextFormField(
-                              controller: _textEditingController,
-                              style: TextStyle(fontSize: 20),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                labelText: 'Scan Item',
-                              ),
-                            )),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
-                              child: IconButton(
-                                alignment: Alignment.topCenter,
-                                onPressed: startScan,
-                                icon: Icon(
-                                  Icons.qr_code_scanner,
-                                  color: Colors.black,
-                                  size: 50,
-                                ),
-                              ),
-                            )
-                          ],
-                        )
-                      ]),
-                ),
+                Scan_Item(),
                 Counting_View(
                   Name: _textEditingController?.text,
                 )
               ])),
     );
-  }
-
-  startScan() async {
-    String ttt = scanner.CameraAccessDenied;
-    String? cameraScanResult = await scanner.scan();
-
-    setState(() {
-      textController.text = cameraScanResult ?? "";
-    });
   }
 }
