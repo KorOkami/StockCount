@@ -26,7 +26,7 @@ class BU_Screen extends StatefulWidget {
 class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
   late Future<List<Drugs>> BU_List;
-  BU_Detail BU = BU_Detail("", "");
+  BU_Detail BU = BU_Detail("", "", "");
 
   @override
   void initState() {
@@ -143,11 +143,11 @@ class _BU_ScreenState extends State<BU_Screen> {
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
                       SizedBox(
                         child: Text(
-                          "BU",
+                          "Document No.",
                           style: GoogleFonts.prompt(
                               fontSize: 20,
                               color: Color.fromARGB(255, 1, 57, 83)),
@@ -162,47 +162,15 @@ class _BU_ScreenState extends State<BU_Screen> {
                             u?.genericName ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
                         onChanged: (value) {
-                          BU.BU = value!.code ?? "";
+                          BU.DocNum = value!.code ?? "";
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                labelText: "Business Unit Name"),
+                                labelText: "Document No./BU/Warehose"),
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
                             return 'กรุณาเลือกหน่วยธุระกิจ';
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        child: Text(
-                          "Warehouse",
-                          style: GoogleFonts.prompt(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                      DropdownSearch<Drugs>(
-                        autoValidateMode: AutovalidateMode.onUserInteraction,
-                        popupProps: PopupProps.dialog(
-                            showSearchBox: true), // Popup search
-                        asyncItems: (filter) => BU_List, //GetBU(filter),
-                        itemAsString: (Drugs? u) =>
-                            u?.genericName ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
-
-                        onChanged: (value) {
-                          BU.BU = value!.code ?? "";
-                        },
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration:
-                                InputDecoration(labelText: "คลังสินค้า"),
-                            baseStyle: GoogleFonts.prompt(fontSize: 18)),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'กรุณาเลือกคลังสินค้า';
                           }
                         },
                       ),
