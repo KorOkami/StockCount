@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
+import 'package:stock_counting_app/screen/counting_view.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,7 @@ class CountScan extends StatefulWidget {
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   TextEditingController textController = TextEditingController();
   TabController? _tabController;
-
+  TextEditingController? _textEditingController;
   @override
   void initState() {
     super.initState();
@@ -165,11 +166,13 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                           children: [
                             Expanded(
                                 child: TextFormField(
-                                    style: TextStyle(fontSize: 20),
-                                    decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Scan Item',
-                                    ))),
+                              controller: _textEditingController,
+                              style: TextStyle(fontSize: 20),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Scan Item',
+                              ),
+                            )),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
                               child: IconButton(
@@ -186,7 +189,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         )
                       ]),
                 ),
-                Container()
+                Counting_View(
+                  Name: _textEditingController?.text,
+                )
               ])),
     );
   }
