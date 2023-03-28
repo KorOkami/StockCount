@@ -162,7 +162,11 @@ class _BU_ScreenState extends State<BU_Screen> {
                             u?.genericName ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
                         onChanged: (value) {
-                          BU.DocNum = value!.code ?? "";
+                          setState(() {
+                            BU.DocNum = value!.code ?? "";
+                            BU.BU = value.id ?? "";
+                            BU.Warehouse = value.genericName ?? "";
+                          });
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
@@ -170,9 +174,50 @@ class _BU_ScreenState extends State<BU_Screen> {
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
-                            return 'กรุณาเลือกหน่วยธุระกิจ';
+                            return 'กรุณาเลือกเลขที่เอกสาร';
                           }
                         },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: 80,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 177, 226, 248),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        //color: Color.fromARGB(255, 128, 210, 248),
+                        child: SizedBox(
+                          child: Text(
+                            "BU : ${BU.BU}",
+                            style: GoogleFonts.prompt(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 1, 57, 83)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: 80,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 177, 226, 248),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: SizedBox(
+                          child: Text(
+                            "Warehouse : ${BU.Warehouse}",
+                            style: GoogleFonts.prompt(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 1, 57, 83)),
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 10,
