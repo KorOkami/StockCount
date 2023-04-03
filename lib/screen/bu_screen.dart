@@ -11,6 +11,7 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 
+import 'package:stock_counting_app/model/countingDoc.dart';
 import 'package:stock_counting_app/model/drugsMaster.dart';
 import 'package:stock_counting_app/screen/count_screen.dart';
 import 'package:stock_counting_app/utility/alert.dart';
@@ -25,37 +26,37 @@ class BU_Screen extends StatefulWidget {
 
 class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
-  late Future<List<Drugs>> BU_List;
+  late Future<List<CountingDoc>> Document_List;
   BU_Detail BU = BU_Detail("", "", "");
 
   @override
   void initState() {
     // TODO: implement initState
-    BU_List = GetBU();
+    Document_List = GetBU();
     super.initState();
   }
 
-  Future<List<Drugs>> GetBU() async {
-    late List<Drugs> _drugsMaster;
+  Future<List<CountingDoc>> GetBU() async {
+    late List<CountingDoc> _DocumentCounting;
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${widget.token}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request =
-        http.Request('GET', Uri.parse('http://172.24.9.24:5000/api/drugs'));
+    var request = http.Request(
+        'GET', Uri.parse('http://172.24.9.24:5000/api/stockcounts'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
     var Response = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
-      _drugsMaster = drugsFromJson(Response.body);
+      _DocumentCounting = countingDocFromJson(Response.body);
       //print(await Response.body);
     } else {
       //_faillogin = failloginFromJson(Response.body);
     }
-    return _drugsMaster;
+    return _DocumentCounting;
   }
 
   @override
@@ -153,19 +154,19 @@ class _BU_ScreenState extends State<BU_Screen> {
                               color: Color.fromARGB(255, 1, 57, 83)),
                         ),
                       ),
-                      DropdownSearch<Drugs>(
+                      DropdownSearch<CountingDoc>(
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         popupProps: PopupProps.dialog(
                             showSearchBox: true), // Popup search
-                        asyncItems: (filter) => BU_List, //GetBU(filter),
-                        itemAsString: (Drugs? u) =>
-                            u?.genericName ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+                        asyncItems: (filter) => Document_List, //GetBU(filter),
+                        itemAsString: (CountingDoc? u) =>
+                            u?.docNum ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
                         onChanged: (value) {
                           setState(() {
-                            BU.DocNum = value!.code ?? "";
-                            BU.BU = value.id ?? "";
-                            BU.Warehouse = value.genericName ?? "";
+                            BU.DocNum = value!.docNum ?? "";
+                            BU.BU = value.businessUnit ?? "";
+                            BU.Warehouse = value.warehouse ?? "";
                           });
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
