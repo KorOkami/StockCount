@@ -43,8 +43,8 @@ class _BU_ScreenState extends State<BU_Screen> {
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request(
-        'GET', Uri.parse('https://edrug-uat.princhealth.com/api/drugs'));
+    var request =
+        http.Request('GET', Uri.parse('http://172.24.9.24:5000/api/drugs'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();

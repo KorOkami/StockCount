@@ -36,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
       'Content-Type': 'application/json',
       'Cookie': 'refreshToken=l9lbOu2%2BQ08KTAKEUHqYe9fwywz6Rz5TKeXP7yQV2p0%3D'
     };
-    var request = http.Request('POST',
-        Uri.parse('https://edrug-uat.princhealth.com/api/account/login'));
+    var request = http.Request(
+        'POST', Uri.parse('http://172.24.9.24:5000/api/account/login'));
     request.body =
         json.jsonEncode({"email": "$_email", "password": "$_password"});
     request.headers.addAll(headers);

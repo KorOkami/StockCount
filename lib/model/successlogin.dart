@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final successlogin = successloginFromJson(jsonString);
+
 import 'dart:convert';
 
 Successlogin successloginFromJson(String str) =>
@@ -8,35 +12,31 @@ String successloginToJson(Successlogin data) => json.encode(data.toJson());
 class Successlogin {
   Successlogin({
     this.displayName,
-    this.token,
     this.userName,
-    this.isVendor,
-    this.vendorId,
-    this.isApproved,
+    this.department,
+    this.jobTitle,
+    this.token,
   });
 
   String? displayName;
-  String? token;
   String? userName;
-  bool? isVendor;
-  String? vendorId;
-  bool? isApproved;
+  String? department;
+  String? jobTitle;
+  String? token;
 
   factory Successlogin.fromJson(Map<String, dynamic> json) => Successlogin(
         displayName: json["displayName"],
-        token: json["token"],
         userName: json["userName"],
-        isVendor: json["isVendor"],
-        vendorId: json["vendorId"],
-        isApproved: json["isApproved"],
+        department: json["department"],
+        jobTitle: json["jobTitle"],
+        token: json["token"],
       );
 
   Map<String, dynamic> toJson() => {
         "displayName": displayName,
-        "token": token,
         "userName": userName,
-        "isVendor": isVendor,
-        "vendorId": vendorId,
-        "isApproved": isApproved,
+        "department": department,
+        "jobTitle": jobTitle,
+        "token": token,
       };
 }
