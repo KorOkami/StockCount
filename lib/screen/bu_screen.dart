@@ -27,7 +27,7 @@ class BU_Screen extends StatefulWidget {
 class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
   late Future<List<CountingDoc>> Document_List;
-  BU_Detail BU = BU_Detail("", "", "");
+  BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "");
 
   @override
   void initState() {
@@ -89,6 +89,24 @@ class _BU_ScreenState extends State<BU_Screen> {
                         child: Row(
                           children: [
                             Icon(
+                              Icons.person_2,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("${widget.userName}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            Icon(
                               Icons.logout,
                               color: Colors.white,
                               size: 25,
@@ -105,7 +123,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                     ];
                   },
                   onSelected: (value) {
-                    if (value == 0) {
+                    if (value == 1) {
                       showLogout_AlertDialog(context);
                     }
                   })),
@@ -121,7 +139,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                       SizedBox(
                         height: 10,
                       ),
-                      SizedBox(
+                      /*SizedBox(
                         child: Text(
                           "User Name",
                           style: GoogleFonts.prompt(
@@ -142,13 +160,13 @@ class _BU_ScreenState extends State<BU_Screen> {
                           "${widget.userName}",
                           style: GoogleFonts.prompt(fontSize: 18),
                         ),
-                      ),
+                      ),*/
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       SizedBox(
                         child: Text(
-                          "Document No.",
+                          "Please select.",
                           style: GoogleFonts.prompt(
                               fontSize: 20,
                               color: Color.fromARGB(255, 1, 57, 83)),
@@ -158,20 +176,29 @@ class _BU_ScreenState extends State<BU_Screen> {
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         popupProps: PopupProps.dialog(
                             showSearchBox: true), // Popup search
+
                         asyncItems: (filter) => Document_List, //GetBU(filter),
+
                         itemAsString: (CountingDoc? u) =>
-                            u?.docNum ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+                            u?.userAsString() ??
+                            "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
                         onChanged: (value) {
                           setState(() {
-                            BU.DocNum = value!.docNum ?? "";
-                            BU.BU = value.businessUnit ?? "";
-                            BU.Warehouse = value.warehouse ?? "";
+                            BU.id = value!.id ?? "";
+                            BU.buCode = value.buCode ?? "";
+                            BU.buName = value.buName ?? "";
+                            BU.whsCode = value.whsCode ?? "";
+                            BU.whsName = value.whsName ?? "";
+                            BU.docNum = value.docNum ?? "";
+                            BU.controlLot = value.controlLot ?? "";
+                            BU.remark = value.remarks ?? "";
+                            BU.status = value.status ?? "";
                           });
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                labelText: "Document No./BU/Warehose"),
+                                labelText: "Business Unit - Warehose"),
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
@@ -180,48 +207,97 @@ class _BU_ScreenState extends State<BU_Screen> {
                         },
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 20,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            child: Icon(
+                              Icons.business,
+                              color: Color.fromARGB(255, 1, 57, 83),
+                              size: 35,
+                            ),
+                          ),
+                          Text(
+                            " Business Unit",
+                            style: GoogleFonts.prompt(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 1, 57, 83)),
+                          ),
+                        ],
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        height: 80,
+                        height: 50,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 177, 226, 248),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         //color: Color.fromARGB(255, 128, 210, 248),
-                        child: SizedBox(
-                          child: Text(
-                            "BU : ${BU.BU}",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            child: Text(
+                              "${BU.buName}",
+                              style: GoogleFonts.prompt(
+                                  fontSize: 20,
+                                  color: Color.fromARGB(255, 1, 57, 83)),
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 20,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            child: Icon(
+                              Icons.warehouse,
+                              color: Color.fromARGB(255, 1, 57, 83),
+                              size: 35,
+                            ),
+                          ),
+                          Text(
+                            " Warehouse",
+                            style: GoogleFonts.prompt(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 1, 57, 83)),
+                          ),
+                        ],
                       ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        height: 80,
+                        height: 50,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 177, 226, 248),
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: SizedBox(
-                          child: Text(
-                            "Warehouse : ${BU.Warehouse}",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  child: Text(
+                                    "${BU.whsName}",
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: 10,
+                        height: 30,
                       ),
                       SizedBox(
                         width: double.infinity,

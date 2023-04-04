@@ -1,7 +1,16 @@
-class BU_Detail {
-  String BU;
-  String Warehouse;
-  String DocNum;
+import 'package:flutter/material.dart';
 
-  BU_Detail(this.BU, this.Warehouse, this.DocNum);
+class BU_Detail {
+  String id;
+  String buCode;
+  String buName;
+  String whsCode;
+  String whsName;
+  String docNum;
+  String controlLot;
+  String remark;
+  String status;
+
+  BU_Detail(this.id, this.buCode, this.buName, this.whsCode, this.whsName,
+      this.docNum, this.controlLot, this.remark, this.status);
 }

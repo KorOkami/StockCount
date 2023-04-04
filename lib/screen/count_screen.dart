@@ -72,6 +72,24 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         child: Row(
                           children: [
                             Icon(
+                              Icons.person_2,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("${widget.userName}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            Icon(
                               Icons.home,
                               color: Colors.white,
                               size: 25,
@@ -86,7 +104,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         ),
                       ),
                       PopupMenuItem<int>(
-                        value: 1,
+                        value: 2,
                         child: Row(
                           children: [
                             Icon(
@@ -106,7 +124,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                     ];
                   },
                   onSelected: (value) {
-                    if (value == 0) {
+                    if (value == 1) {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return BU_Screen(
@@ -114,7 +132,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                           userName: widget.userName,
                         );
                       }));
-                    } else if (value == 1) {
+                    } else if (value == 2) {
                       showLogout_AlertDialog(context);
                     }
                   })),

@@ -15,8 +15,10 @@ class CountingDoc {
     this.id,
     this.docNum,
     this.docDate,
-    this.businessUnit,
-    this.warehouse,
+    this.buCode,
+    this.buName,
+    this.whsCode,
+    this.whsName,
     this.controlLot,
     this.remarks,
     this.status,
@@ -25,8 +27,10 @@ class CountingDoc {
   String? id;
   String? docNum;
   DateTime? docDate;
-  String? businessUnit;
-  String? warehouse;
+  String? buCode;
+  String? buName;
+  String? whsCode;
+  String? whsName;
   String? controlLot;
   String? remarks;
   String? status;
@@ -36,8 +40,10 @@ class CountingDoc {
         docNum: json["docNum"],
         docDate:
             json["docDate"] == null ? null : DateTime.parse(json["docDate"]),
-        businessUnit: json["businessUnit"],
-        warehouse: json["warehouse"],
+        buCode: json["buCode"],
+        buName: json["buName"],
+        whsCode: json["whsCode"],
+        whsName: json["whsName"],
         controlLot: json["controlLot"],
         remarks: json["remarks"],
         status: json["status"],
@@ -47,10 +53,16 @@ class CountingDoc {
         "id": id,
         "docNum": docNum,
         "docDate": docDate?.toIso8601String(),
-        "businessUnit": businessUnit,
-        "warehouse": warehouse,
+        "buCode": buCode,
+        "buName": buName,
+        "whsCode": whsCode,
+        "whsName": whsName,
         "controlLot": controlLot,
         "remarks": remarks,
         "status": status,
       };
+
+  String userAsString() {
+    return '${this.buCode} - ${this.whsCode}';
+  }
 }
