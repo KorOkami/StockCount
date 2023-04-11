@@ -10,6 +10,8 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 
+import 'package:stock_counting_app/utility/alert.dart';
+
 class Register_Screen extends StatefulWidget {
   const Register_Screen({super.key, required this.token});
   final String? token;
@@ -26,7 +28,6 @@ class _Register_ScreenState extends State<Register_Screen> {
     late RegisterResponse _resRegister;
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
@@ -49,7 +50,7 @@ class _Register_ScreenState extends State<Register_Screen> {
       _resRegister = registerResponseFromJson(Response.body);
       //print(await Response.body);
     } else {
-      //_faillogin = failloginFromJson(Response.body);
+      var tt = response;
     }
     return _resRegister;
   }
@@ -211,10 +212,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                       formKey.currentState?.save();
                       ResgisterUser(register).then((result) {
                         if (result?.token != "") {
-                          SnackBar(
-                            content: Text('User Register Successfully'),
-                            backgroundColor: Colors.green,
-                          );
+                          showRegister_AlertDialog(context);
                         }
                       });
                       //formKey.currentState?.reset();
