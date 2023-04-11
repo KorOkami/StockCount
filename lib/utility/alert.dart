@@ -77,3 +77,37 @@ showLogout_AlertDialog(BuildContext context) {
     },
   );
 }
+
+showRegister_AlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget OkButton = TextButton(
+    child: Text(
+      "OK",
+      style: GoogleFonts.prompt(fontSize: 20),
+    ),
+    onPressed: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return LoginScreen();
+      }));
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text(
+      "Resiter successfully",
+      style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+    ),
+    actions: [
+      OkButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
