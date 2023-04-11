@@ -322,6 +322,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                                   return CountScan(
                                     token: widget.token,
                                     userName: widget.userName,
+                                    bu_detail: BU,
                                   );
                                 }));
                               } else {

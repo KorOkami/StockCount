@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 import 'package:stock_counting_app/screen/scanItem.dart';
@@ -14,9 +15,14 @@ import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
 
 class CountScan extends StatefulWidget {
-  const CountScan({super.key, required this.token, required this.userName});
+  const CountScan(
+      {super.key,
+      required this.token,
+      required this.userName,
+      required this.bu_detail});
   final String? token;
   final String? userName;
+  final BU_Detail bu_detail;
 
   @override
   State<CountScan> createState() => _CountScanState();
@@ -161,7 +167,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                   NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
               controller: _tabController,
               children: <Widget>[
-                Scan_Item(),
+                Scan_Item(
+                  bu_detail: widget.bu_detail,
+                ),
                 Counting_View(
                   Name: _textEditingController?.text,
                 )

@@ -8,13 +8,14 @@ import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
+import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
 
 class Scan_Item extends StatefulWidget {
-  const Scan_Item({super.key});
-
+  const Scan_Item({super.key, required this.bu_detail});
+  final BU_Detail bu_detail;
   @override
   State<Scan_Item> createState() => _Scan_ItemState();
 }
@@ -32,7 +33,8 @@ class _Scan_ItemState extends State<Scan_Item> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
             alignment: Alignment.center,
-            child: Text("PSUV-WH01",
+            child: Text(
+                "${widget.bu_detail.buCode} - ${widget.bu_detail.whsCode}",
                 style: GoogleFonts.prompt(
                     fontSize: 40, color: Color.fromARGB(255, 1, 68, 122))),
           ),

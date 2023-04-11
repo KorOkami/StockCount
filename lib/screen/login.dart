@@ -204,7 +204,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          return Register_Screen();
+                                          return Register_Screen(
+                                              token: _successData?.token);
                                         }));
                                       }))
                             ]),

@@ -3,18 +3,57 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/model/registerResponse.dart';
 import 'package:stock_counting_app/model/register_detail.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as json;
+import 'dart:io';
+import 'dart:async';
 
 class Register_Screen extends StatefulWidget {
-  const Register_Screen({super.key});
-
+  const Register_Screen({super.key, required this.token});
+  final String? token;
   @override
   State<Register_Screen> createState() => _Register_ScreenState();
 }
 
 class _Register_ScreenState extends State<Register_Screen> {
   final formKey = GlobalKey<FormState>();
+
   register_detail register = register_detail("", "", "", "", "", "");
+
+  Future<RegisterResponse> ResgisterUser(register_detail resg_detail) async {
+    late RegisterResponse _resRegister;
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request(
+        'POST', Uri.parse('http://172.24.9.24:5000/api/account/register'));
+
+    request.body = json.jsonEncode({
+      "displayName": "${resg_detail.displayname}",
+      "department": "${resg_detail.department}",
+      "jobTitle": "${resg_detail.jobtitle}",
+      "email": "${resg_detail.email}",
+      "username": "${resg_detail.username}",
+      "password": "${resg_detail.password}"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      _resRegister = registerResponseFromJson(Response.body);
+      //print(await Response.body);
+    } else {
+      //_faillogin = failloginFromJson(Response.body);
+    }
+    return _resRegister;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +89,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                 ),
                 validator:
                     RequiredValidator(errorText: "Please Enter Display Name"),
+                onSaved: (displayname) {
+                  register.displayname = displayname ?? "";
+                },
               ),
               SizedBox(
                 height: 5,
@@ -68,6 +110,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                 ),
                 validator:
                     RequiredValidator(errorText: "Please Enter Department"),
+                onSaved: (department) {
+                  register.department = department ?? "";
+                },
               ),
               SizedBox(
                 height: 5,
@@ -83,6 +128,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                 ),
                 validator:
                     RequiredValidator(errorText: "Please Enter Job Title"),
+                onSaved: (jobtitle) {
+                  register.jobtitle = jobtitle ?? "";
+                },
               ),
               SizedBox(
                 height: 5,
@@ -119,6 +167,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                 ),
                 validator:
                     RequiredValidator(errorText: "Please Enter User Name"),
+                onSaved: (userName) {
+                  register.username = userName ?? "";
+                },
               ),
               SizedBox(
                 height: 5,
@@ -158,7 +209,14 @@ class _Register_ScreenState extends State<Register_Screen> {
                   onPressed: () {
                     if (formKey.currentState?.validate() == true) {
                       formKey.currentState?.save();
-
+                      ResgisterUser(register).then((result) {
+                        if (result?.token != "") {
+                          SnackBar(
+                            content: Text('User Register Successfully'),
+                            backgroundColor: Colors.green,
+                          );
+                        }
+                      });
                       //formKey.currentState?.reset();
                     }
                   },
