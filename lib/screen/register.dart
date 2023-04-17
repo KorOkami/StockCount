@@ -211,7 +211,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                     if (formKey.currentState?.validate() == true) {
                       formKey.currentState?.save();
                       ResgisterUser(register).then((result) {
-                        if (result?.token != "") {
+                        if (result.token != "") {
                           showRegister_AlertDialog(context);
                         }
                       });

@@ -52,9 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       _faillogin = failloginFromJson(Response.body);
       res.status = "fail";
-      for (String? dd in _faillogin!.errors!.loginFail!) {
-        res.ErrorM = dd ?? "";
-      }
+      res.ErrorM = _faillogin?.title ?? "";
+      // for (String? dd in _faillogin!.errors!.loginFail!) {
+      //res.ErrorM = dd ?? "";
+      //}
       //res.ErrorM = _faillogin!.errors!.loginFail!.first();
     }
     return res;
