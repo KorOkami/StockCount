@@ -107,7 +107,34 @@ class _Scan_ItemState extends State<Scan_Item> {
               ),
             ),
             SizedBox(
-              height: 30,
+              height: 5,
+            ),
+            Row(
+              children: [
+                Expanded(
+                    child: SizedBox(
+                  height: 50,
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Batch No.',
+                    ),
+                  ),
+                )),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
+                  child: IconButton(
+                    alignment: Alignment.topCenter,
+                    onPressed: startScan,
+                    icon: Icon(
+                      Icons.add_box_rounded,
+                      color: Color.fromARGB(255, 242, 233, 58),
+                      size: 50,
+                    ),
+                  ),
+                )
+              ],
             ),
             SizedBox(
               child: Text(
@@ -124,11 +151,32 @@ class _Scan_ItemState extends State<Scan_Item> {
               ),
             ),
             SizedBox(
-              child: Text(
-                "Count :",
-                style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-              ),
+              height: 10,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Count :",
+                    style: GoogleFonts.prompt(
+                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: SizedBox(
+                  height: 50,
+                  child: TextFormField(
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Count Item',
+                    ),
+                  ),
+                ))
+              ],
             ),
             SizedBox(
               height: 20,

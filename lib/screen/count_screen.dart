@@ -171,7 +171,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                   bu_detail: widget.bu_detail,
                 ),
                 Counting_View(
-                  Name: _textEditingController?.text,
+                  bu_detail: widget.bu_detail,
                 )
               ])),
     );
