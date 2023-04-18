@@ -1,6 +1,9 @@
+//import 'dart:js_util';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 
@@ -8,14 +11,21 @@ import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 
+import 'package:http/http.dart' as http;
+import 'package:stock_counting_app/model/bu_detail.dart';
+import 'dart:convert' as json;
+import 'dart:io';
+import 'dart:async';
+
 import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
 
 class Scan_Item extends StatefulWidget {
-  const Scan_Item({super.key, required this.bu_detail});
+  const Scan_Item({super.key, required this.bu_detail, required this.token});
   final BU_Detail bu_detail;
+  final String? token;
   @override
   State<Scan_Item> createState() => _Scan_ItemState();
 }
@@ -24,6 +34,33 @@ class _Scan_ItemState extends State<Scan_Item> {
   TextEditingController textController = TextEditingController();
   TextEditingController? _textEditingController;
   final formKey = GlobalKey<FormState>();
+  ItemMaster itemMaster = ItemMaster();
+
+  Future<ItemMaster> GetItemDetail(String itemCode) async {
+    late ItemMaster _ItemMaster;
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request(
+        'GET', Uri.parse('http://172.24.9.24:5000/api/itemmasters/0000000001'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      _ItemMaster = itemMasterFromJson(Response.body);
+      setState(() {
+        itemMaster = _ItemMaster;
+      });
+    } else {
+      //_faillogin = failloginFromJson(Response.body);
+    }
+    return _ItemMaster;
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -57,9 +94,6 @@ class _Scan_ItemState extends State<Scan_Item> {
                     border: OutlineInputBorder(),
                     labelText: 'Scan Item',
                   ),
-                  onChanged: (value) {
-                    print("Hey");
-                  },
                 )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
@@ -80,7 +114,7 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             SizedBox(
               child: Text(
-                "Item Name :",
+                "Item Name : ${itemMaster.name}",
                 style: GoogleFonts.prompt(
                     fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
               ),
@@ -94,7 +128,7 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             SizedBox(
               child: Text(
-                "Base Uom :",
+                "Base Uom : ${itemMaster.uomCode}",
                 style: GoogleFonts.prompt(
                     fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
               ),
@@ -196,6 +230,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     formKey.currentState?.save();
+                    GetItemDetail(textController.text);
 
                     //formKey.currentState?.reset();
                   }
