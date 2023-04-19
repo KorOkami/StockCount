@@ -1,9 +1,10 @@
 //import 'dart:js_util';
-
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
+import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 
@@ -35,6 +36,8 @@ class _Scan_ItemState extends State<Scan_Item> {
   TextEditingController? _textEditingController;
   final formKey = GlobalKey<FormState>();
   ItemMaster itemMaster = ItemMaster();
+  late Future<List<StockOnhand>> Batch_List;
+  final StockOnhand batch_detail = StockOnhand();
 
   Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
@@ -70,12 +73,38 @@ class _Scan_ItemState extends State<Scan_Item> {
     return _ItemMaster;
   }
 
+  Future<List<StockOnhand>> GetBatchList(String itemCode) async {
+    late List<StockOnhand> _StockOnhand;
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'http://172.24.9.24:5000/api/stockcounts/onhandsbyitem/328ab602-f0ac-49b0-9c65-0b8995140983?ItemCode=${itemCode}'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      _StockOnhand = stockOnhandFromJson(Response.body);
+    } else {
+      //_faillogin = failloginFromJson(Response.body);
+    }
+    return _StockOnhand;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     itemMaster.code = "";
     itemMaster.name = "";
     itemMaster.uomCode = "";
+    batch_detail.qty = 0;
+    batch_detail.countQty = 0;
     super.initState();
   }
 
@@ -100,7 +129,9 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             Text("Item QR/Barcode",
                 style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83))),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 1, 57, 83))),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -134,7 +165,9 @@ class _Scan_ItemState extends State<Scan_Item> {
               child: Text(
                 "Item Name : ",
                 style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 1, 57, 83)),
               ),
             ),
             SizedBox(
@@ -147,7 +180,9 @@ class _Scan_ItemState extends State<Scan_Item> {
               child: Text(
                 "Location :",
                 style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 1, 57, 83)),
               ),
             ),
             Row(
@@ -156,7 +191,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                   child: Text(
                     "Base Uom : ",
                     style: GoogleFonts.prompt(
-                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 1, 57, 83)),
                   ),
                 ),
                 SizedBox(
@@ -172,27 +209,58 @@ class _Scan_ItemState extends State<Scan_Item> {
               child: Text(
                 "Batch",
                 style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 1, 57, 83)),
               ),
             ),
             Row(
               children: [
                 Expanded(
-                    child: SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Batch No.',
-                    ),
+                  child: DropdownSearch<StockOnhand>(
+                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    popupProps:
+                        PopupProps.dialog(showSearchBox: true), // Popup search
+
+                    asyncItems: (filter) => Batch_List, //GetBU(filter),
+
+                    itemAsString: (StockOnhand? u) =>
+                        u?.batchId ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+
+                    onChanged: (value) {
+                      setState(() {
+                        batch_detail.qty = value!.qty;
+                        batch_detail.countQty = value.countQty;
+                      });
+                    },
+
+                    dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration:
+                            InputDecoration(labelText: "Batch"),
+                        baseStyle: GoogleFonts.prompt(fontSize: 18)),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select batch.';
+                      }
+                    },
                   ),
-                )),
+                ),
+                /*Expanded(
+                      child: SizedBox(
+                    height: 50,
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 20),
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Batch No.',
+                      ),
+                    ),
+                  )),*/
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
                   child: IconButton(
                     alignment: Alignment.topCenter,
-                    onPressed: startScan,
+                    onPressed: () {},
                     icon: Icon(
                       Icons.add_box_rounded,
                       color: Color.fromARGB(255, 242, 233, 58),
@@ -203,18 +271,50 @@ class _Scan_ItemState extends State<Scan_Item> {
               ],
             ),
             SizedBox(
-              child: Text(
-                "Onhand :",
-                style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-              ),
+              height: 10,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Onhand : ",
+                    style: GoogleFonts.prompt(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 1, 57, 83)),
+                  ),
+                ),
+                SizedBox(
+                  child: Text(
+                    "${batch_detail.qty}",
+                    style:
+                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
-              child: Text(
-                "Counted :",
-                style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-              ),
+              height: 8,
+            ),
+            Row(
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Counted : ",
+                    style: GoogleFonts.prompt(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 1, 57, 83)),
+                  ),
+                ),
+                SizedBox(
+                  child: Text(
+                    "${batch_detail.countQty}",
+                    style:
+                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 10,
@@ -225,7 +325,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                   child: Text(
                     "Count :",
                     style: GoogleFonts.prompt(
-                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromARGB(255, 1, 57, 83)),
                   ),
                 ),
                 SizedBox(
@@ -282,6 +384,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     setState(() {
       textController.text = cameraScanResult ?? "";
       GetItemDetail(textController.text);
+      Batch_List = GetBatchList(textController.text);
     });
   }
 }

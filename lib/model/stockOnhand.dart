@@ -39,11 +39,11 @@ class StockOnhand {
   int? qty;
   String? uomCode;
   String? uomName;
-  int? cost;
+  double? cost;
   double? total;
   int? countQty;
   int? diffQty;
-  int? diffTotal;
+  double? diffTotal;
 
   factory StockOnhand.fromJson(Map<String, dynamic> json) => StockOnhand(
         id: json["id"],

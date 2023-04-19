@@ -28,7 +28,7 @@ class _Counting_ViewState extends State<Counting_View> {
         ),
         SizedBox(
           child: Text(
-            "Item Name : }",
+            "Item Name : ",
             style: GoogleFonts.prompt(
                 fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
           ),
