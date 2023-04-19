@@ -32,3 +32,12 @@ class ItemMaster {
         "uomCode": uomCode,
       };
 }
+
+class Batch {
+  Batch({
+    this.batchNumber,
+    this.epireDate,
+  });
+  String? batchNumber;
+  DateTime? epireDate;
+}
