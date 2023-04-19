@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/model/bu_detail.dart';
+import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 import 'package:stock_counting_app/screen/scanItem.dart';
@@ -32,6 +33,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   TextEditingController textController = TextEditingController();
   TabController? _tabController;
   TextEditingController? _textEditingController;
+  ItemMaster? itm_detail;
   @override
   void initState() {
     super.initState();
@@ -171,9 +173,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                   bu_detail: widget.bu_detail,
                   token: widget.token,
                 ),
-                Counting_View(
-                  bu_detail: widget.bu_detail,
-                )
+                Counting_View()
               ])),
     );
   }

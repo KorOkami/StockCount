@@ -50,9 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
       res.token = _successData?.token ?? "";
       res.username = _successData?.userName ?? "";
     } else {
-      _faillogin = failloginFromJson(Response.body);
+      //_faillogin = failloginFromJson(Response.body);
       res.status = "fail";
-      res.ErrorM = _faillogin?.title ?? "";
+      res.ErrorM = "Login Failed";
+      //_faillogin?.title ?? "";
       // for (String? dd in _faillogin!.errors!.loginFail!) {
       //res.ErrorM = dd ?? "";
       //}

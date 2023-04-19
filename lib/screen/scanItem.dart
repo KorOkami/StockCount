@@ -37,15 +37,15 @@ class _Scan_ItemState extends State<Scan_Item> {
   ItemMaster itemMaster = ItemMaster();
 
   Future<ItemMaster> GetItemDetail(String itemCode) async {
-    late ItemMaster _ItemMaster;
+    ItemMaster _ItemMaster = ItemMaster();
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${widget.token}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request(
-        'GET', Uri.parse('http://172.24.9.24:5000/api/itemmasters/0000000001'));
+    var request = http.Request('GET',
+        Uri.parse('http://172.24.9.24:5000/api/itemmasters/${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -57,8 +57,26 @@ class _Scan_ItemState extends State<Scan_Item> {
       });
     } else {
       //_faillogin = failloginFromJson(Response.body);
+      _ItemMaster.code = "";
+      _ItemMaster.name = "";
+      _ItemMaster.uomCode = "";
+      showAlertDialog(context, "Item not found.");
+      setState(() {
+        itemMaster.code = "";
+        itemMaster.name = "";
+        itemMaster.uomCode = "";
+      });
     }
     return _ItemMaster;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    itemMaster.code = "";
+    itemMaster.name = "";
+    itemMaster.uomCode = "";
+    super.initState();
   }
 
   @override
@@ -88,7 +106,7 @@ class _Scan_ItemState extends State<Scan_Item> {
               children: [
                 Expanded(
                     child: TextFormField(
-                  controller: _textEditingController,
+                  controller: textController,
                   style: TextStyle(fontSize: 20),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
@@ -114,9 +132,15 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             SizedBox(
               child: Text(
-                "Item Name : ${itemMaster.name}",
+                "Item Name : ",
                 style: GoogleFonts.prompt(
                     fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+              ),
+            ),
+            SizedBox(
+              child: Text(
+                "${itemMaster.name}",
+                style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
               ),
             ),
             SizedBox(
@@ -126,12 +150,23 @@ class _Scan_ItemState extends State<Scan_Item> {
                     fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
               ),
             ),
-            SizedBox(
-              child: Text(
-                "Base Uom : ${itemMaster.uomCode}",
-                style: GoogleFonts.prompt(
-                    fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-              ),
+            Row(
+              children: [
+                SizedBox(
+                  child: Text(
+                    "Base Uom : ",
+                    style: GoogleFonts.prompt(
+                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                  ),
+                ),
+                SizedBox(
+                  child: Text(
+                    "${itemMaster.uomCode}",
+                    style:
+                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               child: Text(
@@ -139,9 +174,6 @@ class _Scan_ItemState extends State<Scan_Item> {
                 style: GoogleFonts.prompt(
                     fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
               ),
-            ),
-            SizedBox(
-              height: 5,
             ),
             Row(
               children: [
@@ -249,6 +281,7 @@ class _Scan_ItemState extends State<Scan_Item> {
 
     setState(() {
       textController.text = cameraScanResult ?? "";
+      GetItemDetail(textController.text);
     });
   }
 }
