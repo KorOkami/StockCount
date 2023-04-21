@@ -304,7 +304,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                         height: 50,
                         child: ElevatedButton.icon(
                           label: Text(
-                            "ยืนยัน",
+                            "Submit",
                             style: GoogleFonts.prompt(
                                 fontSize: 20, color: Colors.white),
                           ),

@@ -106,7 +106,9 @@ class _Scan_ItemState extends State<Scan_Item> {
     itemMaster.name = "";
     itemMaster.uomCode = "";
     batch_detail.qty = 0;
+    batch_detail.binLoc = "";
     batch_detail.countQty = 0;
+    Batch_List = GetBatchList("");
     super.initState();
   }
 
@@ -145,6 +147,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                     border: OutlineInputBorder(),
                     labelText: 'Scan Item',
                   ),
+                  validator: RequiredValidator(errorText: "Please Scan Item."),
                 )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
@@ -233,7 +236,11 @@ class _Scan_ItemState extends State<Scan_Item> {
                       setState(() {
                         batch_detail.qty = value!.qty;
                         batch_detail.countQty = value.countQty;
-                        batch_detail.binLoc = value.binLoc;
+                        if (value.binLoc != null) {
+                          batch_detail.binLoc = value.binLoc;
+                        } else {
+                          batch_detail.binLoc = "";
+                        }
                       });
                     },
 
@@ -241,11 +248,6 @@ class _Scan_ItemState extends State<Scan_Item> {
                         dropdownSearchDecoration:
                             InputDecoration(labelText: "Batch"),
                         baseStyle: GoogleFonts.prompt(fontSize: 18)),
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please select batch.';
-                      }
-                    },
                   ),
                 ),
                 /*Expanded(
@@ -271,8 +273,10 @@ class _Scan_ItemState extends State<Scan_Item> {
                             token: widget.token,
                             itemCode: itemMaster.code,
                             stockID: widget.bu_detail.id,
+                            bu_detail: widget.bu_detail,
                           );
                         }));
+                        //GetItemDetail(textController.text);
                       } else {
                         /*print(result?.ErrorM);
                                                 showAlertDialog(
@@ -375,7 +379,7 @@ class _Scan_ItemState extends State<Scan_Item> {
               height: 50,
               child: ElevatedButton.icon(
                 label: Text(
-                  "ยืนยัน",
+                  "Submit",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                 ),
                 icon: Icon(
@@ -385,7 +389,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     formKey.currentState?.save();
-                    GetItemDetail(textController.text);
+                    //GetItemDetail(textController.text);
 
                     //formKey.currentState?.reset();
                   }

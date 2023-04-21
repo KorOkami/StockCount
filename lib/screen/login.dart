@@ -109,9 +109,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     InputDecoration(labelText: "E-mail"),
                                 validator: MultiValidator([
                                   RequiredValidator(
-                                      errorText: "กรุณาระบุอีเมล"),
+                                      errorText: "Please enter E-mail"),
                                   EmailValidator(
-                                      errorText: "รูปแบบอีเมลไม่ถูกต้อง")
+                                      errorText: "Invaild E-mail fromat.")
                                 ]),
                                 keyboardType: TextInputType.emailAddress,
                                 onSaved: (email) {
@@ -129,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextFormField(
                                 validator: RequiredValidator(
-                                    errorText: "กรุณาระบุรหัสผ่าน"),
+                                    errorText: "Please enter password."),
                                 obscureText: true,
                                 onSaved: (password) {
                                   profile.password = password ?? "";
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 50,
                                 child: ElevatedButton.icon(
                                   label: Text(
-                                    "ลงชื่อเข้าใช้",
+                                    "Login",
                                     style: GoogleFonts.prompt(
                                         fontSize: 20, color: Colors.white),
                                   ),

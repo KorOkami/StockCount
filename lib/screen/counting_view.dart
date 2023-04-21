@@ -16,31 +16,34 @@ class Counting_View extends StatefulWidget {
 class _Counting_ViewState extends State<Counting_View> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          child: Text(
-            "Item Code :",
-            style: GoogleFonts.prompt(
-                fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            child: Text(
+              "Item Code :",
+              style: GoogleFonts.prompt(
+                  fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+            ),
           ),
-        ),
-        SizedBox(
-          child: Text(
-            "Item Name : ",
-            style: GoogleFonts.prompt(
-                fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+          SizedBox(
+            child: Text(
+              "Item Name : ",
+              style: GoogleFonts.prompt(
+                  fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+            ),
           ),
-        ),
-        SizedBox(
-          child: Text(
-            "Base Uom : ",
-            style: GoogleFonts.prompt(
-                fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+          SizedBox(
+            child: Text(
+              "Base Uom : ",
+              style: GoogleFonts.prompt(
+                  fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

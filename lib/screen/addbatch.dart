@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/registerResponse.dart';
 import 'package:stock_counting_app/model/register_detail.dart';
@@ -11,6 +12,7 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:stock_counting_app/screen/scanItem.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:uuid/uuid.dart';
@@ -20,10 +22,12 @@ class AddBatch extends StatefulWidget {
       {super.key,
       required this.token,
       required this.itemCode,
-      required this.stockID});
+      required this.stockID,
+      required this.bu_detail});
   final String? token;
   final String? itemCode;
   final String? stockID;
+  final BU_Detail bu_detail;
   @override
   State<AddBatch> createState() => _AddBatchState();
 }
@@ -141,8 +145,7 @@ class _AddBatchState extends State<AddBatch> {
                             controller:
                                 dateController, //editing controller of this TextField
                             validator: MultiValidator([
-                              RequiredValidator(
-                                  errorText: "กรุณาเลือกวันที่รับสินค้า")
+                              RequiredValidator(errorText: "Please select Date")
                             ]),
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.zero,
@@ -202,7 +205,6 @@ class _AddBatchState extends State<AddBatch> {
                       AddBatchExpire(stockOnhand, addBatch).then((result) {
                         if (result == "success") {
                           showAddBatch_AlertDialog(context);
-                          formKey.currentState?.reset();
                         } else if (result == "fail") {}
                       });
                     }
