@@ -39,5 +39,5 @@ class Batch {
     this.epireDate,
   });
   String? batchNumber;
-  DateTime? epireDate;
+  String? epireDate;
 }

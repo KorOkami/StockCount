@@ -6,6 +6,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stock_counting_app/screen/login.dart';
+import 'package:stock_counting_app/screen/scanItem.dart';
 
 showAlertDialog(BuildContext context, String? errorMessage) {
   // set up the button
@@ -96,6 +97,35 @@ showRegister_AlertDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(
     title: Text(
       "Resiter successfully",
+      style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+    ),
+    actions: [
+      OkButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
+showAddBatch_AlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget OkButton = TextButton(
+      child: Text(
+        "OK",
+        style: GoogleFonts.prompt(fontSize: 20),
+      ),
+      onPressed: () => Navigator.pop(context));
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text(
+      "Add Batch successfully",
       style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
     ),
     actions: [

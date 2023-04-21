@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
+import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 
@@ -22,6 +23,7 @@ import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class Scan_Item extends StatefulWidget {
   const Scan_Item({super.key, required this.bu_detail, required this.token});
@@ -178,7 +180,7 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             SizedBox(
               child: Text(
-                "Location :",
+                "Location : ${batch_detail.binLoc}",
                 style: GoogleFonts.prompt(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -231,6 +233,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                       setState(() {
                         batch_detail.qty = value!.qty;
                         batch_detail.countQty = value.countQty;
+                        batch_detail.binLoc = value.binLoc;
                       });
                     },
 
@@ -260,7 +263,22 @@ class _Scan_ItemState extends State<Scan_Item> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
                   child: IconButton(
                     alignment: Alignment.topCenter,
-                    onPressed: () {},
+                    onPressed: () {
+                      if (widget.token != "") {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return AddBatch(
+                            token: widget.token,
+                            itemCode: itemMaster.code,
+                            stockID: widget.bu_detail.id,
+                          );
+                        }));
+                      } else {
+                        /*print(result?.ErrorM);
+                                                showAlertDialog(
+                                                    context, result?.ErrorM);*/
+                      }
+                    },
                     icon: Icon(
                       Icons.add_box_rounded,
                       color: Color.fromARGB(255, 242, 233, 58),
@@ -342,6 +360,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                       border: OutlineInputBorder(),
                       labelText: 'Count Item',
                     ),
+                    validator:
+                        RequiredValidator(errorText: "Please Enter Count Qty."),
+                    keyboardType: TextInputType.number,
                   ),
                 ))
               ],

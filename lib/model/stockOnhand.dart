@@ -13,6 +13,7 @@ String stockOnhandToJson(List<StockOnhand> data) =>
 class StockOnhand {
   StockOnhand({
     this.id,
+    this.stockcountid,
     this.lineNum,
     this.itemCode,
     this.itemName,
@@ -30,6 +31,7 @@ class StockOnhand {
   });
 
   String? id;
+  String? stockcountid;
   int? lineNum;
   String? itemCode;
   String? itemName;
