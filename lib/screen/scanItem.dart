@@ -8,6 +8,7 @@ import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
+import 'package:provider/provider.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -114,289 +115,294 @@ class _Scan_ItemState extends State<Scan_Item> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: formKey,
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Container(
-              alignment: Alignment.center,
-              child: Text(
-                  "${widget.bu_detail.buCode} - ${widget.bu_detail.whsCode}",
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) {})],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: formKey,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                    "${widget.bu_detail.buCode} - ${widget.bu_detail.whsCode}",
+                    style: GoogleFonts.prompt(
+                        fontSize: 40, color: Color.fromARGB(255, 1, 68, 122))),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Item QR/Barcode",
                   style: GoogleFonts.prompt(
-                      fontSize: 40, color: Color.fromARGB(255, 1, 68, 122))),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text("Item QR/Barcode",
-                style: GoogleFonts.prompt(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 1, 57, 83))),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                    child: TextFormField(
-                  controller: textController,
-                  style: TextStyle(fontSize: 20),
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Scan Item',
-                  ),
-                  validator: RequiredValidator(errorText: "Please Scan Item."),
-                )),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
-                  child: IconButton(
-                    alignment: Alignment.topCenter,
-                    onPressed: startScan,
-                    icon: Icon(
-                      Icons.qr_code_scanner,
-                      color: Colors.black,
-                      size: 50,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 1, 57, 83))),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                      child: TextFormField(
+                    controller: textController,
+                    style: TextStyle(fontSize: 20),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Scan Item',
+                    ),
+                    validator:
+                        RequiredValidator(errorText: "Please Scan Item."),
+                  )),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
+                    child: IconButton(
+                      alignment: Alignment.topCenter,
+                      onPressed: startScan,
+                      icon: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.black,
+                        size: 50,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                child: Text(
+                  "Item Name : ",
+                  style: GoogleFonts.prompt(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 1, 57, 83)),
+                ),
+              ),
+              SizedBox(
+                child: Text(
+                  "${itemMaster.name}",
+                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                child: Text(
+                  "Location : ${batch_detail.binLoc}",
+                  style: GoogleFonts.prompt(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 1, 57, 83)),
+                ),
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: Text(
+                      "Base Uom : ",
+                      style: GoogleFonts.prompt(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 1, 57, 83)),
                     ),
                   ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              child: Text(
-                "Item Name : ",
-                style: GoogleFonts.prompt(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 1, 57, 83)),
-              ),
-            ),
-            SizedBox(
-              child: Text(
-                "${itemMaster.name}",
-                style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-              ),
-            ),
-            SizedBox(
-              child: Text(
-                "Location : ${batch_detail.binLoc}",
-                style: GoogleFonts.prompt(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 1, 57, 83)),
-              ),
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  child: Text(
-                    "Base Uom : ",
-                    style: GoogleFonts.prompt(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 1, 57, 83)),
+                  SizedBox(
+                    child: Text(
+                      "${itemMaster.uomCode}",
+                      style:
+                          GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  child: Text(
-                    "${itemMaster.uomCode}",
-                    style:
-                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              child: Text(
-                "Batch",
-                style: GoogleFonts.prompt(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Color.fromARGB(255, 1, 57, 83)),
+                ],
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownSearch<StockOnhand>(
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
-                    popupProps:
-                        PopupProps.dialog(showSearchBox: true), // Popup search
+              SizedBox(
+                child: Text(
+                  "Batch",
+                  style: GoogleFonts.prompt(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 1, 57, 83)),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownSearch<StockOnhand>(
+                      autoValidateMode: AutovalidateMode.onUserInteraction,
+                      popupProps: PopupProps.dialog(
+                          showSearchBox: true), // Popup search
 
-                    asyncItems: (filter) => Batch_List, //GetBU(filter),
+                      asyncItems: (filter) => Batch_List, //GetBU(filter),
 
-                    itemAsString: (StockOnhand? u) =>
-                        u?.batchId ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+                      itemAsString: (StockOnhand? u) =>
+                          u?.batchId ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
-                    onChanged: (value) {
-                      setState(() {
-                        batch_detail.qty = value!.qty;
-                        batch_detail.countQty = value.countQty;
-                        if (value.binLoc != null) {
-                          batch_detail.binLoc = value.binLoc;
+                      onChanged: (value) {
+                        setState(() {
+                          batch_detail.qty = value!.qty;
+                          batch_detail.countQty = value.countQty;
+                          if (value.binLoc != null) {
+                            batch_detail.binLoc = value.binLoc;
+                          } else {
+                            batch_detail.binLoc = "";
+                          }
+                        });
+                      },
+
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                          dropdownSearchDecoration:
+                              InputDecoration(labelText: "Batch"),
+                          baseStyle: GoogleFonts.prompt(fontSize: 18)),
+                    ),
+                  ),
+                  /*Expanded(
+                        child: SizedBox(
+                      height: 50,
+                      child: TextFormField(
+                        style: TextStyle(fontSize: 20),
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Batch No.',
+                        ),
+                      ),
+                    )),*/
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
+                    child: IconButton(
+                      alignment: Alignment.topCenter,
+                      onPressed: () {
+                        if (widget.token != "") {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return AddBatch(
+                              token: widget.token,
+                              itemCode: itemMaster.code,
+                              stockID: widget.bu_detail.id,
+                              bu_detail: widget.bu_detail,
+                            );
+                          }));
+                          //GetItemDetail(textController.text);
                         } else {
-                          batch_detail.binLoc = "";
+                          /*print(result?.ErrorM);
+                                                  showAlertDialog(
+                                                      context, result?.ErrorM);*/
                         }
-                      });
-                    },
-
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                        dropdownSearchDecoration:
-                            InputDecoration(labelText: "Batch"),
-                        baseStyle: GoogleFonts.prompt(fontSize: 18)),
+                      },
+                      icon: Icon(
+                        Icons.add_box_rounded,
+                        color: Color.fromARGB(255, 242, 233, 58),
+                        size: 50,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: Text(
+                      "Onhand : ",
+                      style: GoogleFonts.prompt(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 1, 57, 83)),
+                    ),
                   ),
-                ),
-                /*Expanded(
+                  SizedBox(
+                    child: Text(
+                      "${batch_detail.qty}",
+                      style:
+                          GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: Text(
+                      "Counted : ",
+                      style: GoogleFonts.prompt(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 1, 57, 83)),
+                    ),
+                  ),
+                  SizedBox(
+                    child: Text(
+                      "${batch_detail.countQty}",
+                      style:
+                          GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    child: Text(
+                      "Count :",
+                      style: GoogleFonts.prompt(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 1, 57, 83)),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
                       child: SizedBox(
                     height: 50,
                     child: TextFormField(
                       style: TextStyle(fontSize: 20),
                       decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Batch No.',
+                        labelText: 'Count Item',
                       ),
+                      validator: RequiredValidator(
+                          errorText: "Please Enter Count Qty."),
+                      keyboardType: TextInputType.number,
                     ),
-                  )),*/
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
-                  child: IconButton(
-                    alignment: Alignment.topCenter,
-                    onPressed: () {
-                      if (widget.token != "") {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return AddBatch(
-                            token: widget.token,
-                            itemCode: itemMaster.code,
-                            stockID: widget.bu_detail.id,
-                            bu_detail: widget.bu_detail,
-                          );
-                        }));
-                        //GetItemDetail(textController.text);
-                      } else {
-                        /*print(result?.ErrorM);
-                                                showAlertDialog(
-                                                    context, result?.ErrorM);*/
-                      }
-                    },
-                    icon: Icon(
-                      Icons.add_box_rounded,
-                      color: Color.fromARGB(255, 242, 233, 58),
-                      size: 50,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  child: Text(
-                    "Onhand : ",
-                    style: GoogleFonts.prompt(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 1, 57, 83)),
-                  ),
-                ),
-                SizedBox(
-                  child: Text(
-                    "${batch_detail.qty}",
-                    style:
-                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 8,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  child: Text(
-                    "Counted : ",
-                    style: GoogleFonts.prompt(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 1, 57, 83)),
-                  ),
-                ),
-                SizedBox(
-                  child: Text(
-                    "${batch_detail.countQty}",
-                    style:
-                        GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  child: Text(
-                    "Count :",
-                    style: GoogleFonts.prompt(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Color.fromARGB(255, 1, 57, 83)),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    child: SizedBox(
-                  height: 50,
-                  child: TextFormField(
-                    style: TextStyle(fontSize: 20),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Count Item',
-                    ),
-                    validator:
-                        RequiredValidator(errorText: "Please Enter Count Qty."),
-                    keyboardType: TextInputType.number,
-                  ),
-                ))
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                label: Text(
-                  "Submit",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
-                ),
-                icon: Icon(
-                  Icons.check_rounded,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (formKey.currentState?.validate() == true) {
-                    formKey.currentState?.save();
-                    //GetItemDetail(textController.text);
-
-                    //formKey.currentState?.reset();
-                  }
-                },
+                  ))
+                ],
               ),
-            )
-          ]),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton.icon(
+                  label: Text(
+                    "Submit",
+                    style:
+                        GoogleFonts.prompt(fontSize: 20, color: Colors.white),
+                  ),
+                  icon: Icon(
+                    Icons.check_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (formKey.currentState?.validate() == true) {
+                      formKey.currentState?.save();
+                      //GetItemDetail(textController.text);
+
+                      //formKey.currentState?.reset();
+                    }
+                  },
+                ),
+              )
+            ]),
+          ),
         ),
       ),
     );
