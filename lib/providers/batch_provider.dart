@@ -10,7 +10,9 @@ class Batch_Provider with ChangeNotifier {
     return bList;
   }
 
-  void addBatchStockOnhand(StockOnhand batchOnhand) {
-    bList.add(batchOnhand);
+  void addBatchStockOnhand(List<StockOnhand> batchOnhand) {
+    bList = batchOnhand;
+    //แจ้งเตือน consumer
+    notifyListeners();
   }
 }

@@ -42,6 +42,7 @@ class _Scan_ItemState extends State<Scan_Item> {
   ItemMaster itemMaster = ItemMaster();
   late Future<List<StockOnhand>> Batch_List;
   final StockOnhand batch_detail = StockOnhand();
+  late List<StockOnhand> List_StockOnhand;
 
   Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
@@ -95,6 +96,12 @@ class _Scan_ItemState extends State<Scan_Item> {
     var Response = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       _StockOnhand = stockOnhandFromJson(Response.body);
+      //List_StockOnhand = await _StockOnhand;
+      if (_StockOnhand.length != 0) {
+        Batch_Provider provider =
+            Provider.of<Batch_Provider>(context, listen: false);
+        provider.addBatchStockOnhand(_StockOnhand);
+      }
     } else {
       //_faillogin = failloginFromJson(Response.body);
     }

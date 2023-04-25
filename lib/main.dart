@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:grpo_app/screen/home.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:stock_counting_app/providers/batch_provider.dart';
 import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
@@ -32,10 +34,17 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "May App",
-      home: LoginScreen(),
-      theme: ThemeData(primarySwatch: Colors.lightBlue),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) {
+          return Batch_Provider();
+        })
+      ],
+      child: MaterialApp(
+        title: "May App",
+        home: LoginScreen(),
+        theme: ThemeData(primarySwatch: Colors.lightBlue),
+      ),
     );
   }
 }
