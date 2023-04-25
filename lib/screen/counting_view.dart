@@ -133,6 +133,9 @@ class _Counting_ViewState extends State<Counting_View> {
                                 )),
                           ],
                         ),
+                        onTap: () {
+                          print(Text("${data.id}"));
+                        },
                       ),
                     );
                   }),

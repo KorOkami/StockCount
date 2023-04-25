@@ -202,7 +202,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
-                            return 'กรุณาเลือกเลขที่เอกสาร';
+                            return 'Please select Business Unit.';
                           }
                         },
                       ),

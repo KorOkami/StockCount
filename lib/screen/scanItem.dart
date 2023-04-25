@@ -26,6 +26,7 @@ import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:uuid/uuid.dart';
 
 class Scan_Item extends StatefulWidget {
   const Scan_Item({super.key, required this.bu_detail, required this.token});
@@ -106,6 +107,36 @@ class _Scan_ItemState extends State<Scan_Item> {
       //_faillogin = failloginFromJson(Response.body);
     }
     return _StockOnhand;
+  }
+
+  Future<String> AddStockActual(StockOnhand _stockOnhand) async {
+    ItemMaster _ItemMaster = ItemMaster();
+    String result = "";
+    var uuid = Uuid();
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request('POST',
+        Uri.parse('http://172.24.9.24:5000/api/stockcounts/createactual'));
+    request.body = json.jsonEncode({
+      "id": "${uuid.v4()}",
+      "onhandId": "${_stockOnhand.id}",
+      "countQty": _stockOnhand.countQty
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      result = "success";
+    } else {
+      showAlertDialog(context, "Add Stock Actual fail.");
+      result = "fail";
+    }
+    return result;
   }
 
   @override
@@ -243,7 +274,8 @@ class _Scan_ItemState extends State<Scan_Item> {
 
                     onChanged: (value) {
                       setState(() {
-                        batch_detail.qty = value!.qty;
+                        batch_detail.id = value!.id;
+                        batch_detail.qty = value.qty;
                         batch_detail.countQty = value.countQty;
                         if (value.binLoc != null) {
                           batch_detail.binLoc = value.binLoc;
@@ -257,6 +289,11 @@ class _Scan_ItemState extends State<Scan_Item> {
                         dropdownSearchDecoration:
                             InputDecoration(labelText: "Batch"),
                         baseStyle: GoogleFonts.prompt(fontSize: 18)),
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select Batch.';
+                      }
+                    },
                   ),
                 ),
                 /*Expanded(
@@ -376,6 +413,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                     validator:
                         RequiredValidator(errorText: "Please Enter Count Qty."),
                     keyboardType: TextInputType.number,
+                    onSaved: (countItem) {
+                      batch_detail.countQty = int.parse(countItem!);
+                    },
                   ),
                 ))
               ],
@@ -398,7 +438,11 @@ class _Scan_ItemState extends State<Scan_Item> {
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     formKey.currentState?.save();
-                    //GetItemDetail(textController.text);
+                    AddStockActual(batch_detail).then((result) {
+                      if (result == "success") {
+                        //showAddBatch_AlertDialog(context);
+                      } else if (result == "fail") {}
+                    });
 
                     //formKey.currentState?.reset();
                   }
