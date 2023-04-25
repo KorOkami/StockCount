@@ -97,7 +97,10 @@ class _Scan_ItemState extends State<Scan_Item> {
     var Response = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       _StockOnhand = stockOnhandFromJson(Response.body);
-      //List_StockOnhand = await _StockOnhand;
+      setState(() {
+        List_StockOnhand = _StockOnhand;
+      });
+
       if (_StockOnhand.length != 0) {
         Batch_Provider provider =
             Provider.of<Batch_Provider>(context, listen: false);
@@ -440,7 +443,10 @@ class _Scan_ItemState extends State<Scan_Item> {
                     formKey.currentState?.save();
                     AddStockActual(batch_detail).then((result) {
                       if (result == "success") {
-                        //showAddBatch_AlertDialog(context);
+                        print(result);
+                        /*Batch_Provider provider =
+                            Provider.of<Batch_Provider>(context, listen: false);
+                        provider.addBatchStockOnhand(List_StockOnhand);*/
                       } else if (result == "fail") {}
                     });
 
