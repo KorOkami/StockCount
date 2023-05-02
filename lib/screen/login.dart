@@ -10,11 +10,14 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 import 'package:stock_counting_app/model/successlogin.dart';
+import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/register.dart';
 //import 'package:stock_counting_app/screen/poScreen.dart';
 import 'package:stock_counting_app/utility/Alert.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,6 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
       res.status = "success";
       res.token = _successData?.token ?? "";
       res.username = _successData?.userName ?? "";
+      Token_Provider provider =
+          Provider.of<Token_Provider>(context, listen: false);
+      provider.addToken(res.token);
     } else {
       //_faillogin = failloginFromJson(Response.body);
       res.status = "fail";

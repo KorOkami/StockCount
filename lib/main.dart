@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
+import 'package:stock_counting_app/providers/token_provider.dart';
 import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) {
           return Batch_Provider();
+        }),
+        ChangeNotifierProvider(create: (context) {
+          return Token_Provider();
         })
       ],
       child: MaterialApp(

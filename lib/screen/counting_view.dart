@@ -8,6 +8,8 @@ import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
+import 'package:stock_counting_app/providers/token_provider.dart';
+import 'package:stock_counting_app/screen/counting_Detail.dart';
 
 class Counting_View extends StatefulWidget {
   const Counting_View({super.key});
@@ -20,7 +22,8 @@ class Counting_View extends StatefulWidget {
 class _Counting_ViewState extends State<Counting_View> {
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, Batch_Provider provider, Widget? child) {
+    return Consumer2<Batch_Provider, Token_Provider>(builder: (context,
+        Batch_Provider provider, Token_Provider token_provider, Widget? child) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -135,6 +138,15 @@ class _Counting_ViewState extends State<Counting_View> {
                         ),
                         onTap: () {
                           print(Text("${data.id}"));
+
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return Counting_Detail(
+                              token: token_provider.token,
+                              onHandId: data.id,
+                              BatchID: data.batchId,
+                            );
+                          }));
                         },
                       ),
                     );

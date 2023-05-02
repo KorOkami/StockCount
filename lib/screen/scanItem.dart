@@ -90,7 +90,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/onhandsbyitem/328ab602-f0ac-49b0-9c65-0b8995140983?ItemCode=${itemCode}'));
+            'http://172.24.9.24:5000/api/stockcounts/onhandsbyitem/${widget.bu_detail.id}?ItemCode=${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -413,8 +413,15 @@ class _Scan_ItemState extends State<Scan_Item> {
                       border: OutlineInputBorder(),
                       labelText: 'Count Item',
                     ),
-                    validator:
-                        RequiredValidator(errorText: "Please Enter Count Qty."),
+                    //validator:
+                    //RequiredValidator(errorText: "Please Enter Count Qty."),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please Enter Count.";
+                      } else if (double.parse(value).toInt() <= 0) {
+                        return "Count should be greater than 0";
+                      }
+                    },
                     keyboardType: TextInputType.number,
                     onSaved: (countItem) {
                       batch_detail.countQty = int.parse(countItem!);
