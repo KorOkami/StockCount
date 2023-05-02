@@ -1,6 +1,7 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:http/http.dart' as http;
@@ -134,23 +135,46 @@ class _Counting_DetailState extends State<Counting_Detail> {
               itemCount: countingDetailList!.length,
               itemBuilder: (context, int index) {
                 CountingDetail data = countingDetailList![index];
-                return Card(
-                  elevation: 5,
-                  //margin: const EdgeInsets.symmetric(
-                  //vertical: 8, horizontal: 5),
-                  child: ListTile(
-                    title: Text("Counted : ${data.countQty}",
-                        style: GoogleFonts.prompt(
-                            fontSize: 17,
-                            color: Color.fromARGB(255, 1, 57, 83))),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("User : ${data.userName}",
-                            style: GoogleFonts.prompt(
-                              fontSize: 15,
-                            )),
-                      ],
+                return Slidable(
+                  key: Key('$data'),
+                  endActionPane:
+                      ActionPane(motion: const ScrollMotion(), children: [
+                    SlidableAction(
+                      onPressed: (context) {},
+                      backgroundColor: Colors.green,
+                      icon: Icons.edit,
+                    ),
+                    SlidableAction(
+                      onPressed: (context) {
+                        setState(() {
+                          countingDetailList!.removeAt(index);
+                        });
+                      },
+                      backgroundColor: Colors.red,
+                      icon: Icons.delete,
+                    )
+                  ]),
+                  child: Card(
+                    elevation: 5,
+                    //margin: const EdgeInsets.symmetric(
+                    //vertical: 8, horizontal: 5),
+                    child: ListTile(
+                      title: Text("Counted : ${data.countQty}",
+                          style: GoogleFonts.prompt(
+                              fontSize: 17,
+                              color: Color.fromARGB(255, 1, 57, 83))),
+                      subtitle: Text("User : ${data.userName}",
+                          style: GoogleFonts.prompt(
+                            fontSize: 15,
+                          )),
+                      /*trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
+                          IconButton(
+                              onPressed: () {}, icon: Icon(Icons.delete)),
+                        ],
+                      ),*/
                     ),
                   ),
                 );
