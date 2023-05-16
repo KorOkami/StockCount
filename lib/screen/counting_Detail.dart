@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 import 'package:stock_counting_app/model/countingDetail.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class Counting_Detail extends StatefulWidget {
   const Counting_Detail(
@@ -29,7 +30,9 @@ class Counting_Detail extends StatefulWidget {
 }
 
 class _Counting_DetailState extends State<Counting_Detail> {
+  final formKey = GlobalKey<FormState>();
   List<CountingDetail>? countingDetailList = [];
+  late String deleteRes = "";
 
   Future<String> GetCountingDetail() async {
     List<CountingDetail> _countingDetail = [];
@@ -60,6 +63,58 @@ class _Counting_DetailState extends State<Counting_Detail> {
     return result;
   }
 
+  Future<String> DeleteCountingDetail(String actualID) async {
+    //List<CountingDetail> _countingDetail = [];
+    String result = "";
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request(
+        'DELETE',
+        Uri.parse(
+            'http://172.24.9.24:5000/api/stockcounts/deleteactual/${actualID}'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      result = "success";
+      setState(() {
+        deleteRes = "success";
+      });
+    } else {
+      //showAlertDialog(context, "Item not found.");
+      setState(() {});
+    }
+    return result;
+  }
+
+  Future<String> EditCountingDetail(String actualID, String countedQty) async {
+    //List<CountingDetail> _countingDetail = [];
+    String result = "";
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${widget.token}',
+      'Cookie':
+          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+    };
+    var request = http.Request(
+        'PUT',
+        Uri.parse(
+            'http://172.24.9.24:5000/api/stockcounts/editactual/${actualID}?countQty=${countedQty}'));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    var Response = await http.Response.fromStream(response);
+    if (response.statusCode == 200) {
+      result = "success";
+    } else {}
+    return result;
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -80,6 +135,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
 
     return sumMap;
   }*/
+  String strCounted = '';
 
   @override
   Widget build(BuildContext context) {
@@ -133,21 +189,107 @@ class _Counting_DetailState extends State<Counting_Detail> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: countingDetailList!.length,
-              itemBuilder: (context, int index) {
+              itemBuilder: (context, index) {
                 CountingDetail data = countingDetailList![index];
                 return Slidable(
                   key: Key('$data'),
-                  endActionPane:
+                  startActionPane:
                       ActionPane(motion: const ScrollMotion(), children: [
                     SlidableAction(
-                      onPressed: (context) {},
+                      onPressed: (context) {
+                        showDialog(
+                            context: context,
+                            builder: (context) => SimpleDialog(
+                                  children: [
+                                    Form(
+                                        key: formKey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              TextFormField(
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  labelText:
+                                                      'Edit Counted Item',
+                                                ),
+                                                style: GoogleFonts.prompt(
+                                                    fontSize: 18,
+                                                    color: Colors.black),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    strCounted = value;
+                                                  });
+                                                },
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return "Please Enter Counted.";
+                                                  } else if (double.parse(value)
+                                                          .toInt() <=
+                                                      0) {
+                                                    return "Count should be greater than 0";
+                                                  }
+                                                },
+                                              ),
+                                              SizedBox(
+                                                height: 5,
+                                              ),
+                                              SizedBox(
+                                                width: double.infinity,
+                                                height: 50,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    if (formKey.currentState
+                                                            ?.validate() ==
+                                                        true) {
+                                                      formKey.currentState
+                                                          ?.save();
+
+                                                      EditCountingDetail(
+                                                              data.id!,
+                                                              strCounted)
+                                                          .then((result) {
+                                                        if (result ==
+                                                            "success") {
+                                                          setState(() {
+                                                            data.countQty =
+                                                                int.parse(
+                                                                    strCounted);
+                                                          });
+                                                        } else {}
+                                                      });
+
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  child: Text("Update",
+                                                      style: GoogleFonts.prompt(
+                                                          fontSize: 15,
+                                                          color: Colors.white)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ))
+                                  ],
+                                ));
+                      },
                       backgroundColor: Colors.green,
                       icon: Icons.edit,
                     ),
+                  ]),
+                  endActionPane:
+                      ActionPane(motion: const ScrollMotion(), children: [
                     SlidableAction(
                       onPressed: (context) {
                         setState(() {
-                          countingDetailList!.removeAt(index);
+                          DeleteCountingDetail(data.id!).then((result) {
+                            if (result == "success") {
+                              countingDetailList!.removeAt(index);
+                            } else {}
+                          });
                         });
                       },
                       backgroundColor: Colors.red,

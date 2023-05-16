@@ -44,6 +44,7 @@ class _Scan_ItemState extends State<Scan_Item> {
   late Future<List<StockOnhand>> Batch_List;
   final StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand;
+  late int? countItem = 0;
 
   Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
@@ -267,8 +268,10 @@ class _Scan_ItemState extends State<Scan_Item> {
                 Expanded(
                   child: DropdownSearch<StockOnhand>(
                     autoValidateMode: AutovalidateMode.onUserInteraction,
-                    popupProps:
-                        PopupProps.dialog(showSearchBox: true), // Popup search
+                    popupProps: PopupProps.dialog(
+                        showSearchBox: true,
+                        dialogProps: DialogProps(
+                            barrierLabel: 'Test000')), // Popup search
 
                     asyncItems: (filter) => Batch_List, //GetBU(filter),
 
@@ -280,6 +283,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                         batch_detail.id = value!.id;
                         batch_detail.qty = value.qty;
                         batch_detail.countQty = value.countQty;
+                        countItem = batch_detail.countQty;
                         if (value.binLoc != null) {
                           batch_detail.binLoc = value.binLoc;
                         } else {
@@ -315,7 +319,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                   child: IconButton(
                     alignment: Alignment.topCenter,
                     onPressed: () {
-                      if (widget.token != "") {
+                      if (widget.token != "" && itemMaster.code != "") {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return AddBatch(
@@ -327,9 +331,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                         }));
                         //GetItemDetail(textController.text);
                       } else {
-                        /*print(result?.ErrorM);
-                                                  showAlertDialog(
-                                                      context, result?.ErrorM);*/
+                        if (itemMaster.code == "") {
+                          showAlertDialog(context, "Item Code is not null");
+                        }
                       }
                     },
                     icon: Icon(
@@ -451,6 +455,12 @@ class _Scan_ItemState extends State<Scan_Item> {
                     AddStockActual(batch_detail).then((result) {
                       if (result == "success") {
                         print(result);
+                        GetBatchList(textController.text);
+                        setState(() {
+                          batch_detail.countQty =
+                              batch_detail.countQty! + countItem!;
+                        });
+                        formKey.currentState?.reset();
                         /*Batch_Provider provider =
                             Provider.of<Batch_Provider>(context, listen: false);
                         provider.addBatchStockOnhand(List_StockOnhand);*/

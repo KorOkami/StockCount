@@ -49,6 +49,11 @@ dependencies:
   uuid: ^3.0.7
   provider: ^6.0.5
   flutter_slidable: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  image_path: "asset/images/StockCountLogo.png"
 
 dev_dependencies:
   flutter_test:
