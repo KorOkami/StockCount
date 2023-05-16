@@ -270,6 +270,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                     autoValidateMode: AutovalidateMode.onUserInteraction,
                     popupProps: PopupProps.dialog(
                         showSearchBox: true,
+                        searchFieldProps: TextFieldProps(
+                            decoration:
+                                InputDecoration(labelText: "Search...")),
                         dialogProps: DialogProps(
                             barrierLabel: 'Test000')), // Popup search
 

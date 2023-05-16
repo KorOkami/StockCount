@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 
 class Batch_Provider with ChangeNotifier {
-  List<StockOnhand> bList = [];
+  List<StockOnhand> bList = [
+    new StockOnhand(itemCode: "", itemName: "", uomCode: "", uomName: "")
+  ];
 
 //ดึงข้อมูล Batch
   List<StockOnhand> getBatchStockOnhand() {

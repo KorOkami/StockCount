@@ -175,7 +175,10 @@ class _BU_ScreenState extends State<BU_Screen> {
                       DropdownSearch<CountingDoc>(
                         autoValidateMode: AutovalidateMode.onUserInteraction,
                         popupProps: PopupProps.dialog(
-                            showSearchBox: true), // Popup search
+                            showSearchBox: true,
+                            searchFieldProps: TextFieldProps(
+                                decoration: InputDecoration(
+                                    labelText: "Search..."))), // Popup search
 
                         asyncItems: (filter) => Document_List, //GetBU(filter),
 
