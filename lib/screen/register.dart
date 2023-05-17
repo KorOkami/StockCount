@@ -24,12 +24,11 @@ class _Register_ScreenState extends State<Register_Screen> {
 
   register_detail register = register_detail("", "", "", "", "", "");
 
-  Future<RegisterResponse> ResgisterUser(register_detail resg_detail) async {
+  Future<String> ResgisterUser(register_detail resg_detail) async {
     late RegisterResponse _resRegister;
+    String res = "";
     var headers = {
       'Content-Type': 'application/json',
-      'Cookie':
-          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
     var request = http.Request(
         'POST', Uri.parse('http://172.24.9.24:5000/api/account/register'));
@@ -48,11 +47,11 @@ class _Register_ScreenState extends State<Register_Screen> {
     var Response = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
       _resRegister = registerResponseFromJson(Response.body);
-      //print(await Response.body);
+      res = "Success";
     } else {
-      var tt = response;
+      res = "Register Failed.";
     }
-    return _resRegister;
+    return res;
   }
 
   @override
@@ -211,11 +210,13 @@ class _Register_ScreenState extends State<Register_Screen> {
                     if (formKey.currentState?.validate() == true) {
                       formKey.currentState?.save();
                       ResgisterUser(register).then((result) {
-                        if (result.token != "") {
+                        if (result == "Success") {
                           showRegister_AlertDialog(context);
+                          formKey.currentState?.reset();
+                        } else {
+                          showAlertDialog(context, "Failed");
                         }
                       });
-                      //formKey.currentState?.reset();
                     }
                   },
                 ),

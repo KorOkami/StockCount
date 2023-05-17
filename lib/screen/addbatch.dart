@@ -205,7 +205,10 @@ class _AddBatchState extends State<AddBatch> {
                       AddBatchExpire(stockOnhand, addBatch).then((result) {
                         if (result == "success") {
                           showAddBatch_AlertDialog(context);
-                        } else if (result == "fail") {}
+                          formKey.currentState?.reset();
+                        } else if (result == "fail") {
+                          showAlertDialog(context, result);
+                        }
                       });
                     }
                   },

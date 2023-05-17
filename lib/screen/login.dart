@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   RequiredValidator(
                                       errorText: "Please enter E-mail"),
                                   EmailValidator(
-                                      errorText: "Invaild E-mail fromat.")
+                                      errorText: "Invaild E-mail format.")
                                 ]),
                                 keyboardType: TextInputType.emailAddress,
                                 onSaved: (email) {
