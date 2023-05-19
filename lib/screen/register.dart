@@ -31,7 +31,9 @@ class _Register_ScreenState extends State<Register_Screen> {
       'Content-Type': 'application/json',
     };
     var request = http.Request(
-        'POST', Uri.parse('http://172.24.9.24:5000/api/account/register'));
+        'POST',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/account/register'));
 
     request.body = json.jsonEncode({
       "displayName": "${resg_detail.displayname}",
@@ -46,9 +48,10 @@ class _Register_ScreenState extends State<Register_Screen> {
     http.StreamedResponse response = await request.send();
     var Response = await http.Response.fromStream(response);
     if (response.statusCode == 200) {
-      _resRegister = registerResponseFromJson(Response.body);
+      //_resRegister = registerResponseFromJson(Response.body);
       res = "Success";
     } else {
+      String bodyError = Response.body;
       res = "Register Failed.";
     }
     return res;

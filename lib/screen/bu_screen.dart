@@ -45,7 +45,9 @@ class _BU_ScreenState extends State<BU_Screen> {
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
     var request = http.Request(
-        'GET', Uri.parse('http://172.24.9.24:5000/api/stockcounts'));
+        'GET',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/stockcounts/mobile'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -307,12 +309,12 @@ class _BU_ScreenState extends State<BU_Screen> {
                         height: 50,
                         child: ElevatedButton.icon(
                           label: Text(
-                            "Submit",
+                            "Start Counting",
                             style: GoogleFonts.prompt(
                                 fontSize: 20, color: Colors.white),
                           ),
                           icon: Icon(
-                            Icons.check_rounded,
+                            Icons.play_circle,
                             color: Colors.white,
                           ),
                           onPressed: () {

@@ -36,7 +36,7 @@ class _Counting_ViewState extends State<Counting_View> {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/onhandsbyitem/${onhandID}?ItemCode=${itemCode}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/onhandsbyitem/${onhandID}?ItemCode=${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();

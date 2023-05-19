@@ -7,6 +7,15 @@ class Batch_Provider with ChangeNotifier {
     new StockOnhand(itemCode: "", itemName: "", uomCode: "", uomName: "")
   ];
 
+  List<StockOnhand> ClearBatchStockOnhand(
+      String itmCode, String itmName, String uom) {
+    bList = [
+      new StockOnhand(
+          itemCode: "${itmCode}", itemName: "${itmName}", uomName: "${uom}")
+    ];
+    return bList;
+  }
+
 //ดึงข้อมูล Batch
   List<StockOnhand> getBatchStockOnhand() {
     return bList;

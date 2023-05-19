@@ -54,8 +54,10 @@ class _Scan_ItemState extends State<Scan_Item> {
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request('GET',
-        Uri.parse('http://172.24.9.24:5000/api/itemmasters/${itemCode}'));
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/itemmasters/${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -91,7 +93,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/onhandsbyitem/${widget.bu_detail.id}?ItemCode=${itemCode}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/onhandsbyitem/${widget.bu_detail.id}?ItemCode=${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -106,6 +108,12 @@ class _Scan_ItemState extends State<Scan_Item> {
         Batch_Provider provider =
             Provider.of<Batch_Provider>(context, listen: false);
         provider.addBatchStockOnhand(_StockOnhand);
+      } else {
+        Batch_Provider provider =
+            Provider.of<Batch_Provider>(context, listen: false);
+        provider.ClearBatchStockOnhand(
+            itemMaster.code!, itemMaster.name!, itemMaster.uomCode!);
+        //Provider.of<Batch_Provider>(context).dispose();
       }
     } else {
       //_faillogin = failloginFromJson(Response.body);
@@ -123,8 +131,10 @@ class _Scan_ItemState extends State<Scan_Item> {
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request('POST',
-        Uri.parse('http://172.24.9.24:5000/api/stockcounts/createactual'));
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/stockcounts/createactual'));
     request.body = json.jsonEncode({
       "id": "${uuid.v4()}",
       "onhandId": "${_stockOnhand.id}",
@@ -192,6 +202,12 @@ class _Scan_ItemState extends State<Scan_Item> {
                     labelText: 'Scan Item',
                   ),
                   validator: RequiredValidator(errorText: "Please Scan Item."),
+                  onEditingComplete: () {
+                    setState(() {
+                      GetItemDetail(textController.text);
+                      Batch_List = GetBatchList(textController.text);
+                    });
+                  },
                 )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
@@ -445,11 +461,11 @@ class _Scan_ItemState extends State<Scan_Item> {
               height: 50,
               child: ElevatedButton.icon(
                 label: Text(
-                  "Submit",
+                  "Save",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                 ),
                 icon: Icon(
-                  Icons.check_rounded,
+                  Icons.save,
                   color: Colors.white,
                 ),
                 onPressed: () {

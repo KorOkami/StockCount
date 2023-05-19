@@ -46,7 +46,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     var request = http.Request(
         'GET',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/actuals/${widget.onHandId}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/onhands/${widget.onHandId}/actuals'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -75,7 +75,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     var request = http.Request(
         'DELETE',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/deleteactual/${actualID}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/deleteactual/${actualID}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -104,7 +104,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     var request = http.Request(
         'PUT',
         Uri.parse(
-            'http://172.24.9.24:5000/api/stockcounts/editactual/${actualID}?countQty=${countedQty}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();

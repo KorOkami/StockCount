@@ -18,6 +18,7 @@ import 'package:stock_counting_app/utility/Alert.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,19 +29,36 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
+  final formKeySetting = GlobalKey<FormState>();
   Profile profile = Profile("", "");
   Successlogin? _successData;
   Faillogin? _faillogin;
-  //ResponseLogin res = new ResponseLogin("", "", "");
+
+  /* String? urlNew;
+
+  late Future<String> _url;
+  final Future<SharedPreferences> _prefsURL = SharedPreferences.getInstance();
+  Future<void> _AppUrlString() async {
+    final SharedPreferences prefs = await _prefsURL;
+    final String? counter =
+        prefs.getString("AppUrl"); //"http://172.24.9.24:5000";
+
+    setState(() {
+      _url = prefs.setString('AppUrl', counter!).then((bool success) {
+        return counter;
+      });
+    });
+  }*/
 
   Future<ResponseLogin?> AppLogin(String _email, String _password) async {
     ResponseLogin res = new ResponseLogin("", "", "", "");
+
     var headers = {
       'Content-Type': 'application/json',
       'Cookie': 'refreshToken=l9lbOu2%2BQ08KTAKEUHqYe9fwywz6Rz5TKeXP7yQV2p0%3D'
     };
-    var request = http.Request(
-        'POST', Uri.parse('http://172.24.9.24:5000/api/account/login'));
+    var request = http.Request('POST',
+        Uri.parse('https://inventory-uat.princhealth.com/api/account/login'));
     request.body =
         json.jsonEncode({"email": "$_email", "password": "$_password"});
     request.headers.addAll(headers);
@@ -58,7 +76,8 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       //_faillogin = failloginFromJson(Response.body);
       res.status = "fail";
-      res.ErrorM = "Login Failed";
+      res.ErrorM = Response.body;
+      //"Login Failed";
       //_faillogin?.title ?? "";
       // for (String? dd in _faillogin!.errors!.loginFail!) {
       //res.ErrorM = dd ?? "";
@@ -69,6 +88,13 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    //_AppUrlString();
+  }
+
+  TextEditingController? _textEditingController;
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -78,16 +104,90 @@ class _LoginScreenState extends State<LoginScreen> {
           resizeToAvoidBottomInset:
               false, //ป้องกัน Error : Bottom overflowed by pixels
           appBar: AppBar(
-            title: Text(
-              "Stock Counting",
-              style: GoogleFonts.prompt(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-            automaticallyImplyLeading: false,
-            //backgroundColor: Colors.white,
-          ),
+              title: Text(
+                "Stock Counting",
+                style: GoogleFonts.prompt(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+              automaticallyImplyLeading: false,
+              leading: IconButton(
+                //elevation: 0,
+                color: Color.fromARGB(255, 1, 68, 122),
+                //shadowColor: Colors.black,
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 35,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => SimpleDialog(
+                            children: [
+                              Form(
+                                  key: formKeySetting,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("URL",
+                                            style: GoogleFonts.prompt(
+                                                fontSize: 18,
+                                                color: Colors.black)),
+                                        TextFormField(
+                                          controller: _textEditingController,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(),
+                                            labelText: 'url:port',
+                                          ),
+                                          style: GoogleFonts.prompt(
+                                              fontSize: 18,
+                                              color: Colors.black),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              //urlNew = value;
+                                            });
+                                          },
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return "Please url:port";
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              if (formKeySetting.currentState
+                                                      ?.validate() ==
+                                                  true) {
+                                                formKeySetting.currentState
+                                                    ?.save();
+                                                //_AppUrlString();
+                                                // Navigator.pop(context);
+                                              }
+                                            },
+                                            child: Text("Save",
+                                                style: GoogleFonts.prompt(
+                                                    fontSize: 18,
+                                                    color: Colors.white)),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                            ],
+                          ));
+                },
+              )),
           body: Column(
             children: [
               Image.asset("asset/images/PrincLogo.png"),
@@ -111,15 +211,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Color.fromARGB(255, 9, 1, 87)),
                               ),
                               TextFormField(
-                                decoration:
-                                    InputDecoration(labelText: "E-mail"),
+                                decoration: InputDecoration(
+                                    labelText: "User Name/E-mail"),
                                 validator: MultiValidator([
                                   RequiredValidator(
                                       errorText: "Please enter E-mail"),
-                                  EmailValidator(
-                                      errorText: "Invaild E-mail format.")
+                                  // EmailValidator(
+                                  //errorText: "Invaild E-mail format.")
                                 ]),
-                                keyboardType: TextInputType.emailAddress,
+                                //keyboardType: TextInputType.emailAddress,
                                 onSaved: (email) {
                                   profile.email = email ?? "";
                                 },

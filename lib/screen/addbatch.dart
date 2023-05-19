@@ -55,8 +55,10 @@ class _AddBatchState extends State<AddBatch> {
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request('POST',
-        Uri.parse('http://172.24.9.24:5000/api/stockcounts/createonhand'));
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/stockcounts/createonhand'));
     request.body = json.jsonEncode({
       "id": "${uuid.v4()}",
       "stockCountId": "${_stockOnhand.stockcountid}",
@@ -65,7 +67,8 @@ class _AddBatchState extends State<AddBatch> {
       "batchID": "${batch.batchNumber}",
       "expiryDate": "${batch.epireDate}",
       "qty": 0,
-      "uomCode": ""
+      "uomCode": "",
+      "binLoc": ""
     });
     request.headers.addAll(headers);
 
@@ -172,8 +175,11 @@ class _AddBatchState extends State<AddBatch> {
                                   String formattedDate =
                                       DateFormat('dd-MM-yyyy')
                                           .format(pickedDate);
+                                  String SendformattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
                                   dateController.text = formattedDate;
-                                  addBatch.epireDate = formattedDate;
+                                  addBatch.epireDate = SendformattedDate;
                                 }
                               });
                             }),
@@ -207,7 +213,7 @@ class _AddBatchState extends State<AddBatch> {
                           showAddBatch_AlertDialog(context);
                           formKey.currentState?.reset();
                         } else if (result == "fail") {
-                          showAlertDialog(context, result);
+                          showAlertDialog(context, "Add Batch Failed.");
                         }
                       });
                     }
