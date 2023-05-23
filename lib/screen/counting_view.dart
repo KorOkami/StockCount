@@ -150,46 +150,47 @@ class _Counting_ViewState extends State<Counting_View> {
                     itemCount: provider.bList.length,
                     itemBuilder: (context, int index) {
                       StockOnhand data = provider.bList[index];
-                      return Card(
-                        elevation: 5,
-                        //margin: const EdgeInsets.symmetric(
-                        //vertical: 8, horizontal: 5),
-                        child: ListTile(
-                          title: Text("Batch : ${data.batchId}",
-                              style: GoogleFonts.prompt(
-                                  fontSize: 17,
-                                  color: Color.fromARGB(255, 1, 57, 83))),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("OnHand : ${data.qty}",
-                                  style: GoogleFonts.prompt(
-                                    fontSize: 15,
-                                  )),
-                              Text("Counted : ${data.countQty}",
-                                  style: GoogleFonts.prompt(
-                                    fontSize: 15,
-                                  )),
-                              Text("Diff : ${data.diffQty}",
-                                  style: GoogleFonts.prompt(
-                                    fontSize: 15,
-                                  )),
-                            ],
-                          ),
-                          onTap: () {
-                            //print(Text("${data.id}"));
+                      if (data != null)
+                        return Card(
+                          elevation: 5,
+                          //margin: const EdgeInsets.symmetric(
+                          //vertical: 8, horizontal: 5),
+                          child: ListTile(
+                            title: Text("Batch : ${data.batchId ?? ""}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 17,
+                                    color: Color.fromARGB(255, 1, 57, 83))),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("OnHand : ${data.qty ?? ""}",
+                                    style: GoogleFonts.prompt(
+                                      fontSize: 15,
+                                    )),
+                                Text("Counted : ${data.countQty ?? ""}",
+                                    style: GoogleFonts.prompt(
+                                      fontSize: 15,
+                                    )),
+                                Text("Diff : ${data.diffQty ?? ""}",
+                                    style: GoogleFonts.prompt(
+                                      fontSize: 15,
+                                    )),
+                              ],
+                            ),
+                            onTap: () {
+                              //print(Text("${data.id}"));
 
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return Counting_Detail(
-                                token: token_provider.token,
-                                onHandId: data.id,
-                                BatchID: data.batchId,
-                              );
-                            }));
-                          },
-                        ),
-                      );
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return Counting_Detail(
+                                  token: token_provider.token,
+                                  onHandId: data.id,
+                                  BatchID: data.batchId,
+                                );
+                              }));
+                            },
+                          ),
+                        );
                     }),
                 onRefresh: _getData,
               ),

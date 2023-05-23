@@ -16,6 +16,8 @@ import 'package:stock_counting_app/model/drugsMaster.dart';
 import 'package:stock_counting_app/screen/count_screen.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 
+import 'package:stock_counting_app/model/refrashToken.dart';
+
 class BU_Screen extends StatefulWidget {
   const BU_Screen({super.key, required this.token, required this.userName});
   final String? token;
@@ -28,7 +30,7 @@ class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
   late Future<List<CountingDoc>> Document_List;
   BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "");
-
+  late Future<String?> internalToken;
   @override
   void initState() {
     // TODO: implement initState
@@ -40,7 +42,7 @@ class _BU_ScreenState extends State<BU_Screen> {
     late List<CountingDoc> _DocumentCounting;
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}',
+      'Authorization': 'Bearer ${widget.token ?? internalToken}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
@@ -55,9 +57,7 @@ class _BU_ScreenState extends State<BU_Screen> {
     if (response.statusCode == 200) {
       _DocumentCounting = countingDocFromJson(Response.body);
       //print(await Response.body);
-    } else {
-      //_faillogin = failloginFromJson(Response.body);
-    }
+    } else if (response.statusCode == 401) {}
     return _DocumentCounting;
   }
 

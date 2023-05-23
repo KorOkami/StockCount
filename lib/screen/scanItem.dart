@@ -10,6 +10,7 @@ import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_counting_app/services/api.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,14 +38,19 @@ class Scan_Item extends StatefulWidget {
 }
 
 class _Scan_ItemState extends State<Scan_Item> {
-  TextEditingController textController = TextEditingController();
-  TextEditingController? _textEditingController;
+  final TextEditingController textController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  ItemMaster itemMaster = ItemMaster();
+  ItemMaster itemMaster = new ItemMaster();
   late Future<List<StockOnhand>> Batch_List;
   final StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand;
   late int? countItem = 0;
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+  }
 
   Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
@@ -90,10 +96,14 @@ class _Scan_ItemState extends State<Scan_Item> {
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
+    /*var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://inventory-uat.princhealth.com/api/stockcounts/onhandsbyitem/${widget.bu_detail.id}?ItemCode=${itemCode}'));*/
     var request = http.Request(
         'GET',
         Uri.parse(
-            'https://inventory-uat.princhealth.com/api/stockcounts/onhandsbyitem/${widget.bu_detail.id}?ItemCode=${itemCode}'));
+            'https://inventory-uat.princhealth.com/api/stockcounts/${widget.bu_detail.id}/item?ItemCode=${itemCode}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -102,21 +112,28 @@ class _Scan_ItemState extends State<Scan_Item> {
       _StockOnhand = stockOnhandFromJson(Response.body);
       setState(() {
         List_StockOnhand = _StockOnhand;
+        if (_StockOnhand.length != 0) {
+          itemMaster.code = List_StockOnhand[0].itemCode;
+          itemMaster.name = List_StockOnhand[0].itemName;
+          itemMaster.uomCode = List_StockOnhand[0].uomCode;
+          Batch_Provider provider =
+              Provider.of<Batch_Provider>(context, listen: false);
+          provider.addBatchStockOnhand(_StockOnhand);
+        } else {
+          itemMaster.code = "";
+          itemMaster.name = "";
+          itemMaster.uomCode = "";
+          Batch_Provider provider =
+              Provider.of<Batch_Provider>(context, listen: false);
+          provider.ClearBatchStockOnhand(
+              itemMaster.code!, itemMaster.name!, itemMaster.uomCode!);
+          if (itemCode != "") {
+            showAlertDialog(context, "Item not found in this Document.");
+          }
+        }
       });
-
-      if (_StockOnhand.length != 0) {
-        Batch_Provider provider =
-            Provider.of<Batch_Provider>(context, listen: false);
-        provider.addBatchStockOnhand(_StockOnhand);
-      } else {
-        Batch_Provider provider =
-            Provider.of<Batch_Provider>(context, listen: false);
-        provider.ClearBatchStockOnhand(
-            itemMaster.code!, itemMaster.name!, itemMaster.uomCode!);
-        //Provider.of<Batch_Provider>(context).dispose();
-      }
     } else {
-      //_faillogin = failloginFromJson(Response.body);
+      String test = Response.body;
     }
     return _StockOnhand;
   }
@@ -153,6 +170,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     return result;
   }
 
+  final api = stockCountingAPI();
   @override
   void initState() {
     // TODO: implement initState
@@ -162,7 +180,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     batch_detail.qty = 0;
     batch_detail.binLoc = "";
     batch_detail.countQty = 0;
-    Batch_List = GetBatchList("");
+    Batch_List = api.GetBatchList(widget.bu_detail.id, "");
     super.initState();
   }
 
@@ -204,8 +222,9 @@ class _Scan_ItemState extends State<Scan_Item> {
                   validator: RequiredValidator(errorText: "Please Scan Item."),
                   onEditingComplete: () {
                     setState(() {
-                      GetItemDetail(textController.text);
-                      Batch_List = GetBatchList(textController.text);
+                      if (textController.text != "") {
+                        Batch_List = GetBatchList(textController.text);
+                      }
                     });
                   },
                 )),
@@ -283,14 +302,12 @@ class _Scan_ItemState extends State<Scan_Item> {
               children: [
                 Expanded(
                   child: DropdownSearch<StockOnhand>(
-                    autoValidateMode: AutovalidateMode.onUserInteraction,
+                    //autoValidateMode: AutovalidateMode.onUserInteraction,
                     popupProps: PopupProps.dialog(
-                        showSearchBox: true,
-                        searchFieldProps: TextFieldProps(
-                            decoration:
-                                InputDecoration(labelText: "Search...")),
-                        dialogProps: DialogProps(
-                            barrierLabel: 'Test000')), // Popup search
+                      showSearchBox: true,
+                      searchFieldProps: TextFieldProps(
+                          decoration: InputDecoration(labelText: "Search...")),
+                    ), // Popup search
 
                     asyncItems: (filter) => Batch_List, //GetBU(filter),
 
@@ -348,7 +365,6 @@ class _Scan_ItemState extends State<Scan_Item> {
                             bu_detail: widget.bu_detail,
                           );
                         }));
-                        //GetItemDetail(textController.text);
                       } else {
                         if (itemMaster.code == "") {
                           showAlertDialog(context, "Item Code is not null");
@@ -500,10 +516,10 @@ class _Scan_ItemState extends State<Scan_Item> {
   startScan() async {
     String ttt = scanner.CameraAccessDenied;
     String? cameraScanResult = await scanner.scan();
-
+    textController.text = cameraScanResult ?? "";
     setState(() {
-      textController.text = cameraScanResult ?? "";
-      GetItemDetail(textController.text);
+      //textController.text = cameraScanResult ?? "";
+      //GetItemDetail(textController!.text);
       Batch_List = GetBatchList(textController.text);
     });
   }

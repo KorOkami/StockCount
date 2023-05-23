@@ -32,7 +32,7 @@ class CountScan extends StatefulWidget {
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   TextEditingController textController = TextEditingController();
   TabController? _tabController;
-  TextEditingController? _textEditingController;
+  //TextEditingController? _textEditingController;
   ItemMaster? itm_detail;
   @override
   void initState() {

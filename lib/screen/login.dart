@@ -13,6 +13,7 @@ import 'package:stock_counting_app/model/successlogin.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/register.dart';
+import 'package:stock_counting_app/services/api.dart';
 //import 'package:stock_counting_app/screen/poScreen.dart';
 import 'package:stock_counting_app/utility/Alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -94,6 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   TextEditingController? _textEditingController;
+
+  final api = stockCountingAPI();
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -262,10 +266,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (formKey.currentState?.validate() ==
                                         true) {
                                       formKey.currentState?.save();
-
-                                      AppLogin(profile.email, profile.password)
+                                      api
+                                          .dioLogin(
+                                              profile.email, profile.password)
                                           .then((result) {
-                                        if (result?.token != "") {
+                                        // AppLogin(profile.email, profile.password)
+                                        //.then((result) {
+                                        if (result?.status == "success") {
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -274,9 +281,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 userName: result?.username);
                                           }));
                                         } else {
-                                          print(result?.ErrorM);
+                                          /*print(result?.ErrorM);
                                           showAlertDialog(
-                                              context, result?.ErrorM);
+                                              context, result?.ErrorM);*/
                                         }
                                       });
                                       //formKey.currentState?.reset();
