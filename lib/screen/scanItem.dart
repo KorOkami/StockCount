@@ -5,12 +5,14 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
+import 'package:stock_counting_app/model/successlogin.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
 import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_counting_app/services/api.dart';
+import 'package:stock_counting_app/services/store.dart';
 
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,6 +47,7 @@ class _Scan_ItemState extends State<Scan_Item> {
   final StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand;
   late int? countItem = 0;
+  late String? internalToken;
 
   @override
   void dispose() {
@@ -52,7 +55,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     super.dispose();
   }
 
-  Future<ItemMaster> GetItemDetail(String itemCode) async {
+  /*Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
     var headers = {
       'Content-Type': 'application/json',
@@ -86,13 +89,13 @@ class _Scan_ItemState extends State<Scan_Item> {
       });
     }
     return _ItemMaster;
-  }
+  }*/
 
   Future<List<StockOnhand>> GetBatchList(String itemCode) async {
     late List<StockOnhand> _StockOnhand;
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}',
+      'Authorization': 'Bearer ${widget.token ?? internalToken}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
@@ -132,8 +135,8 @@ class _Scan_ItemState extends State<Scan_Item> {
           }
         }
       });
-    } else {
-      String test = Response.body;
+    } else if (response.statusCode == 401) {
+      //String test = Response.body;
     }
     return _StockOnhand;
   }
@@ -181,6 +184,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     batch_detail.binLoc = "";
     batch_detail.countQty = 0;
     Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+    //Batch_List = GetBatchList("");
     super.initState();
   }
 
@@ -224,6 +228,11 @@ class _Scan_ItemState extends State<Scan_Item> {
                     setState(() {
                       if (textController.text != "") {
                         Batch_List = GetBatchList(textController.text);
+                        //Batch_List = api.GetBatchList(
+                        //widget.bu_detail.id, textController.text);
+                        //if (Batch_List != null) {
+                        //itemMaster.code = Batch_List;
+                        //}
                       }
                     });
                   },
@@ -490,7 +499,8 @@ class _Scan_ItemState extends State<Scan_Item> {
                     AddStockActual(batch_detail).then((result) {
                       if (result == "success") {
                         print(result);
-                        GetBatchList(textController.text);
+                        api.GetBatchList(
+                            widget.bu_detail.id, textController.text);
                         setState(() {
                           batch_detail.countQty =
                               batch_detail.countQty! + countItem!;
@@ -520,7 +530,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     setState(() {
       //textController.text = cameraScanResult ?? "";
       //GetItemDetail(textController!.text);
-      Batch_List = GetBatchList(textController.text);
+      Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
     });
   }
 }

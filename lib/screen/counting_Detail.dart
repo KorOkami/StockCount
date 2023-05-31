@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_counting_app/model/countingDetail.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/services/store.dart';
 
 class Counting_Detail extends StatefulWidget {
   const Counting_Detail(
@@ -36,10 +37,11 @@ class _Counting_DetailState extends State<Counting_Detail> {
 
   Future<String> GetCountingDetail() async {
     List<CountingDetail> _countingDetail = [];
+    final token = await Store.getToken();
     String result = "";
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}',
+      'Authorization': 'Bearer ${token}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };

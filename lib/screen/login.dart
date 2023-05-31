@@ -51,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }*/
 
-  Future<ResponseLogin?> AppLogin(String _email, String _password) async {
+  /*Future<ResponseLogin?> AppLogin(String _email, String _password) async {
     ResponseLogin res = new ResponseLogin("", "", "", "");
 
     var headers = {
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       //res.ErrorM = _faillogin!.errors!.loginFail!.first();
     }
     return res;
-  }
+  }*/
 
   @override
   void initState() {
@@ -281,9 +281,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 userName: result?.username);
                                           }));
                                         } else {
-                                          /*print(result?.ErrorM);
                                           showAlertDialog(
-                                              context, result?.ErrorM);*/
+                                              context, result?.ErrorM);
                                         }
                                       });
                                       //formKey.currentState?.reset();
