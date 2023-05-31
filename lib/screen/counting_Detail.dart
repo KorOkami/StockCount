@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:stock_counting_app/model/countingDetail.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/services/store.dart';
 
 class Counting_Detail extends StatefulWidget {
@@ -32,10 +33,12 @@ class Counting_Detail extends StatefulWidget {
 
 class _Counting_DetailState extends State<Counting_Detail> {
   final formKey = GlobalKey<FormState>();
-  List<CountingDetail>? countingDetailList = [];
+  late Future<List<CountingDetail>> futurecountingDetailList;
+  late List<CountingDetail>? countingDetailList = [];
   late String deleteRes = "";
+  final api = stockCountingAPI();
 
-  Future<String> GetCountingDetail() async {
+  /*Future<String> GetCountingDetail() async {
     List<CountingDetail> _countingDetail = [];
     final token = await Store.getToken();
     String result = "";
@@ -63,14 +66,14 @@ class _Counting_DetailState extends State<Counting_Detail> {
       setState(() {});
     }
     return result;
-  }
+  }*/
 
   Future<String> DeleteCountingDetail(String actualID) async {
-    //List<CountingDetail> _countingDetail = [];
+    String? token = await Store.getToken();
     String result = "";
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${widget.token}',
+      'Authorization': 'Bearer ${token}',
       'Cookie':
           'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
@@ -88,13 +91,12 @@ class _Counting_DetailState extends State<Counting_Detail> {
         deleteRes = "success";
       });
     } else {
-      //showAlertDialog(context, "Item not found.");
-      setState(() {});
+      result = "fail";
     }
     return result;
   }
 
-  Future<String> EditCountingDetail(String actualID, String countedQty) async {
+  /*Future<String> EditCountingDetail(String actualID, String countedQty) async {
     //List<CountingDetail> _countingDetail = [];
     String result = "";
     var headers = {
@@ -115,12 +117,21 @@ class _Counting_DetailState extends State<Counting_Detail> {
       result = "success";
     } else {}
     return result;
-  }
+  }*/
 
   @override
   void initState() {
     // TODO: implement initState
-    GetCountingDetail();
+    futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
+    //ConvertList();
+    Future.delayed(const Duration(
+            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+        .then((val) {
+      setState(() {
+        ConvertList();
+      });
+    });
+
     super.initState();
   }
 
@@ -249,7 +260,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                       formKey.currentState
                                                           ?.save();
 
-                                                      EditCountingDetail(
+                                                      api.EditCountingDetail(
                                                               data.id!,
                                                               strCounted)
                                                           .then((result) {
@@ -326,5 +337,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
         ),
       ]),
     );
+  }
+
+  void ConvertList() async {
+    countingDetailList = await futurecountingDetailList;
   }
 }

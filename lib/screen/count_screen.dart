@@ -171,7 +171,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
               children: <Widget>[
                 Scan_Item(
                   bu_detail: widget.bu_detail,
-                  token: widget.token,
+                  //token: widget.token,
                 ),
                 Counting_View()
               ])),

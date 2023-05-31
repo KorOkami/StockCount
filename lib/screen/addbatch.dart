@@ -13,6 +13,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:stock_counting_app/screen/scanItem.dart';
+import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:uuid/uuid.dart';
@@ -20,11 +21,11 @@ import 'package:uuid/uuid.dart';
 class AddBatch extends StatefulWidget {
   const AddBatch(
       {super.key,
-      required this.token,
+      //required this.token,
       required this.itemCode,
       required this.stockID,
       required this.bu_detail});
-  final String? token;
+  //final String? token;
   final String? itemCode;
   final String? stockID;
   final BU_Detail bu_detail;
@@ -45,7 +46,8 @@ class _AddBatchState extends State<AddBatch> {
     super.initState();
   }
 
-  Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
+  final api = stockCountingAPI();
+  /*Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";
     var uuid = Uuid();
@@ -81,7 +83,7 @@ class _AddBatchState extends State<AddBatch> {
       result = "fail";
     }
     return result;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +210,7 @@ class _AddBatchState extends State<AddBatch> {
                   onPressed: () {
                     if (formKey.currentState?.validate() == true) {
                       formKey.currentState?.save();
-                      AddBatchExpire(stockOnhand, addBatch).then((result) {
+                      api.AddBatchExpire(stockOnhand, addBatch).then((result) {
                         if (result == "success") {
                           showAddBatch_AlertDialog(context);
                           formKey.currentState?.reset();

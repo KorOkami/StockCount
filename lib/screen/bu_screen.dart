@@ -147,28 +147,6 @@ class _BU_ScreenState extends State<BU_Screen> {
                       SizedBox(
                         height: 10,
                       ),
-                      /*SizedBox(
-                        child: Text(
-                          "User Name",
-                          style: GoogleFonts.prompt(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            border: Border(
-                                bottom: BorderSide(
-                          //                    <--- top side
-                          color: Colors.grey,
-                          width: 1.0,
-                        ))),
-                        child: Text(
-                          "${widget.userName}",
-                          style: GoogleFonts.prompt(fontSize: 18),
-                        ),
-                      ),*/
                       SizedBox(
                         height: 10,
                       ),

@@ -32,9 +32,11 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:uuid/uuid.dart';
 
 class Scan_Item extends StatefulWidget {
-  const Scan_Item({super.key, required this.bu_detail, required this.token});
+  const Scan_Item({super.key, required this.bu_detail
+      //, required this.token
+      });
   final BU_Detail bu_detail;
-  final String? token;
+  //final String? token;
   @override
   State<Scan_Item> createState() => _Scan_ItemState();
 }
@@ -44,8 +46,9 @@ class _Scan_ItemState extends State<Scan_Item> {
   final formKey = GlobalKey<FormState>();
   ItemMaster itemMaster = new ItemMaster();
   late Future<List<StockOnhand>> Batch_List;
+
   final StockOnhand batch_detail = StockOnhand();
-  late List<StockOnhand> List_StockOnhand;
+  late List<StockOnhand> List_StockOnhand = [];
   late int? countItem = 0;
   late String? internalToken;
 
@@ -91,7 +94,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     return _ItemMaster;
   }*/
 
-  Future<List<StockOnhand>> GetBatchList(String itemCode) async {
+  /*Future<List<StockOnhand>> GetBatchList(String itemCode) async {
     late List<StockOnhand> _StockOnhand;
     var headers = {
       'Content-Type': 'application/json',
@@ -139,9 +142,9 @@ class _Scan_ItemState extends State<Scan_Item> {
       //String test = Response.body;
     }
     return _StockOnhand;
-  }
+  }*/
 
-  Future<String> AddStockActual(StockOnhand _stockOnhand) async {
+  /*Future<String> AddStockActual(StockOnhand _stockOnhand) async {
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";
     var uuid = Uuid();
@@ -171,7 +174,7 @@ class _Scan_ItemState extends State<Scan_Item> {
       result = "fail";
     }
     return result;
-  }
+  }*/
 
   final api = stockCountingAPI();
   @override
@@ -184,6 +187,7 @@ class _Scan_ItemState extends State<Scan_Item> {
     batch_detail.binLoc = "";
     batch_detail.countQty = 0;
     Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+    ConvertList();
     //Batch_List = GetBatchList("");
     super.initState();
   }
@@ -227,12 +231,39 @@ class _Scan_ItemState extends State<Scan_Item> {
                   onEditingComplete: () {
                     setState(() {
                       if (textController.text != "") {
-                        Batch_List = GetBatchList(textController.text);
-                        //Batch_List = api.GetBatchList(
-                        //widget.bu_detail.id, textController.text);
-                        //if (Batch_List != null) {
-                        //itemMaster.code = Batch_List;
-                        //}
+                        //Batch_List = GetBatchList(textController.text);
+                        Batch_List = api.GetBatchList(
+                            widget.bu_detail.id, textController.text);
+                        if (Batch_List != null) {
+                          ConvertList(); // แปลงจาก Future List เป็น List
+                          Future.delayed(const Duration(
+                                  seconds:
+                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                              .then((val) {
+                            setState(() {
+                              if (List_StockOnhand.length != 0) {
+                                itemMaster.code = List_StockOnhand[0].itemCode;
+                                itemMaster.name = List_StockOnhand[0].itemName;
+                                itemMaster.uomCode =
+                                    List_StockOnhand[0].uomCode;
+                                itemMaster.location =
+                                    List_StockOnhand[0].binLoc;
+                                Batch_Provider provider =
+                                    Provider.of<Batch_Provider>(context,
+                                        listen: false);
+                                provider.addBatchStockOnhand(List_StockOnhand);
+                              } else {
+                                showAlertDialog(context,
+                                    "Item not found in this Document.");
+                              }
+                            });
+                          });
+                        }
+                      } else {
+                        itemMaster.code = "";
+                        itemMaster.name = "";
+                        itemMaster.uomCode = "";
+                        itemMaster.location = "";
                       }
                     });
                   },
@@ -348,27 +379,16 @@ class _Scan_ItemState extends State<Scan_Item> {
                     },
                   ),
                 ),
-                /*Expanded(
-                        child: SizedBox(
-                      height: 50,
-                      child: TextFormField(
-                        style: TextStyle(fontSize: 20),
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Batch No.',
-                        ),
-                      ),
-                    )),*/
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 8, 18),
                   child: IconButton(
                     alignment: Alignment.topCenter,
                     onPressed: () {
-                      if (widget.token != "" && itemMaster.code != "") {
+                      if (itemMaster.code != "") {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return AddBatch(
-                            token: widget.token,
+                            //token: widget.token,
                             itemCode: itemMaster.code,
                             stockID: widget.bu_detail.id,
                             bu_detail: widget.bu_detail,
@@ -428,7 +448,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                 ),
                 SizedBox(
                   child: Text(
-                    "${batch_detail.countQty}",
+                    "${countItem}",
                     style:
                         GoogleFonts.prompt(fontSize: 20, color: Colors.black),
                   ),
@@ -471,8 +491,12 @@ class _Scan_ItemState extends State<Scan_Item> {
                       }
                     },
                     keyboardType: TextInputType.number,
-                    onSaved: (countItem) {
-                      batch_detail.countQty = int.parse(countItem!);
+                    onSaved: (countItem1) {
+                      setState(() {
+                        countItem = countItem! + int.parse(countItem1!);
+                      });
+
+                      batch_detail.countQty = int.parse(countItem1!);
                     },
                   ),
                 ))
@@ -496,20 +520,19 @@ class _Scan_ItemState extends State<Scan_Item> {
                 onPressed: () {
                   if (formKey.currentState?.validate() == true) {
                     formKey.currentState?.save();
-                    AddStockActual(batch_detail).then((result) {
+                    api.AddStockActual(batch_detail).then((result) {
                       if (result == "success") {
                         print(result);
                         api.GetBatchList(
                             widget.bu_detail.id, textController.text);
                         setState(() {
-                          batch_detail.countQty =
-                              batch_detail.countQty! + countItem!;
+                          //batch_detail.countQty =
+                          //batch_detail.countQty! + countItem!;
                         });
                         formKey.currentState?.reset();
-                        /*Batch_Provider provider =
-                            Provider.of<Batch_Provider>(context, listen: false);
-                        provider.addBatchStockOnhand(List_StockOnhand);*/
-                      } else if (result == "fail") {}
+                      } else if (result == "fail") {
+                        showAlertDialog(context, "Add Stock Actual fail.");
+                      }
                     });
 
                     //formKey.currentState?.reset();
@@ -532,5 +555,9 @@ class _Scan_ItemState extends State<Scan_Item> {
       //GetItemDetail(textController!.text);
       Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
     });
+  }
+
+  void ConvertList() async {
+    List_StockOnhand = await Batch_List;
   }
 }

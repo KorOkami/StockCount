@@ -273,6 +273,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         // AppLogin(profile.email, profile.password)
                                         //.then((result) {
                                         if (result?.status == "success") {
+                                          Token_Provider provider =
+                                              Provider.of<Token_Provider>(
+                                                  context,
+                                                  listen: false);
+                                          provider.addToken(result!.token);
                                           Navigator.pushReplacement(context,
                                               MaterialPageRoute(
                                                   builder: (context) {

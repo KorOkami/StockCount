@@ -38,7 +38,7 @@ showLogout_AlertDialog(BuildContext context) {
   // set up the buttons
   Widget OkButton = TextButton(
     child: Text(
-      "ใช่",
+      "Yes",
       style: GoogleFonts.prompt(fontSize: 20),
     ),
     onPressed: () {
@@ -49,7 +49,7 @@ showLogout_AlertDialog(BuildContext context) {
   );
   Widget cancelButton = TextButton(
     child: Text(
-      "ไม่",
+      "No",
       style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
     ),
     onPressed: () => Navigator.pop(context),
@@ -58,11 +58,11 @@ showLogout_AlertDialog(BuildContext context) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text(
-      "ออกจากระบบ",
+      "Logout",
       style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
     ),
     content: Text(
-      "คุณต้องการออกจากระบบ ใช่หรือไม่?",
+      "Are you sure you want to logout?",
       style: GoogleFonts.prompt(fontSize: 16),
     ),
     actions: [

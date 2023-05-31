@@ -3,7 +3,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:stock_counting_app/interceptors/dio_interceptor.dart';
 import 'package:stock_counting_app/model/bu_detail.dart';
+import 'package:stock_counting_app/model/countingDetail.dart';
 import 'package:stock_counting_app/model/countingDoc.dart';
+import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/profile.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/model/successlogin.dart';
@@ -11,6 +13,8 @@ import 'package:stock_counting_app/services/store.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as json;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:uuid/uuid.dart';
 
 class stockCountingAPI {
   late final Dio _dio;
@@ -43,7 +47,14 @@ class stockCountingAPI {
         res.status = "success";
         res.token = response.data['token'];
         res.username = response.data['userName'];
-        Timer mytimer = Timer.periodic(Duration(minutes: 1), (timer) {
+        String DeCodeToken = res.token;
+        //Duration tokenTime = JwtDecoder.getTokenTime(DeCodeToken);
+        DateTime expirationDate = JwtDecoder.getExpirationDate(DeCodeToken);
+        Duration diff = expirationDate.difference(DateTime.now());
+        //print(diff.inMinutes);
+
+        Timer mytimer =
+            Timer.periodic(Duration(minutes: diff.inMinutes - 1), (timer) {
           refershtoken();
           //mytimer.cancel() //to terminate this timer
         });
@@ -61,12 +72,15 @@ class stockCountingAPI {
       'Content-Type': 'application/json',
       'Cookie': 'refreshToken=l9lbOu2%2BQ08KTAKEUHqYe9fwywz6Rz5TKeXP7yQV2p0%3D'
     };*/
-
-    final response = await _dio
-        .post('https://inventory-uat.princhealth.com/api/account/refreshToken');
-    if (response.statusCode == 200) {
-      await _saveToken(response.data);
-    } else {}
+    try {
+      final response = await _dio.post(
+          'https://inventory-uat.princhealth.com/api/account/refreshToken');
+      if (response.statusCode == 200) {
+        await _saveToken(response.data);
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
+    }
   }
 
   Future<List<StockOnhand>> GetBatchList(
@@ -74,16 +88,18 @@ class stockCountingAPI {
     late List<StockOnhand> _StockOnhand = [];
     String _BatchListUrl =
         'https://inventory-uat.princhealth.com/api/stockcounts/${bu_detail_Id}/item?ItemCode=${itemCode}';
-    final response = await _dio.get(_BatchListUrl);
+    try {
+      final response = await _dio.get(_BatchListUrl);
 
-    if (response.statusCode == 200) {
-      response.data.forEach((e) {
-        _StockOnhand.add(StockOnhand.fromJson(e));
-      });
-      //_StockOnhand = stockOnhandFromJson(Response.body);
-    } else {
-      String test = "";
+      if (response.statusCode == 200) {
+        response.data.forEach((e) {
+          _StockOnhand.add(StockOnhand.fromJson(e));
+        });
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
     }
+
     return _StockOnhand;
   }
 
@@ -92,13 +108,120 @@ class stockCountingAPI {
 
     String _BuListUrl =
         'https://inventory-uat.princhealth.com/api/stockcounts/mobile';
-    final response = await _dio.get(_BuListUrl);
-    if (response.statusCode == 200) {
-      //_DocumentCounting = countingDocFromJson(response.data);
-      response.data.forEach((e) {
-        _DocumentCounting.add(CountingDoc.fromJson(e));
-      });
-    } else {}
+    try {
+      final response = await _dio.get(_BuListUrl);
+      if (response.statusCode == 200) {
+        //_DocumentCounting = countingDocFromJson(response.data);
+        response.data.forEach((e) {
+          _DocumentCounting.add(CountingDoc.fromJson(e));
+        });
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
+    }
+
     return _DocumentCounting;
+  }
+
+  Future<String> AddStockActual(StockOnhand _stockOnhand) async {
+    ItemMaster _ItemMaster = ItemMaster();
+    String result = "";
+    var uuid = Uuid();
+    String _AddActualUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/createactual';
+    Map<String, dynamic> _actualdata = {
+      "id": "${uuid.v4()}",
+      "onhandId": "${_stockOnhand.id}",
+      "countQty": _stockOnhand.countQty
+    };
+    try {
+      final response = await _dio.post(_AddActualUrl, data: _actualdata);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+    }
+    return result;
+  }
+
+  Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
+    ItemMaster _ItemMaster = ItemMaster();
+    String result = "";
+    var uuid = Uuid();
+    String _AddBatchUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/createonhand';
+    Map<String, dynamic> _AddBatchdata = {
+      "id": "${uuid.v4()}",
+      "stockCountId": "${_stockOnhand.stockcountid}",
+      "lineNum": 0,
+      "itemCode": "${_stockOnhand.itemCode}",
+      "batchID": "${batch.batchNumber}",
+      "expiryDate": "${batch.epireDate}",
+      "qty": 0,
+      "uomCode": "",
+      "binLoc": ""
+    };
+    try {
+      final response = await _dio.post(_AddBatchUrl, data: _AddBatchdata);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+    }
+    return result;
+  }
+
+  Future<List<CountingDetail>> GetCountingDetail(String onHandID) async {
+    List<CountingDetail> _countingDetail = [];
+    String result = "";
+    String _countingDetailhUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/onhands/${onHandID}/actuals';
+    try {
+      final response = await _dio.get(_countingDetailhUrl);
+      if (response.statusCode == 200) {
+        response.data.forEach((e) {
+          _countingDetail.add(CountingDetail.fromJson(e));
+        });
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
+    }
+
+    return _countingDetail;
+  }
+
+  Future<String> EditCountingDetail(String actualID, String countedQty) async {
+    String result = "";
+    String _editCountingUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}';
+    try {
+      final response = await _dio.put(_editCountingUrl);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+      print(e.response?.data);
+    }
+    return result;
+  }
+
+  Future<String> DeleteCountingDetail(String actualID) async {
+    String result = "";
+    String _deleteCountingUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/deleteactual/${actualID}';
+
+    try {
+      final response = await _dio.delete(_deleteCountingUrl);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+      print(e.response?.data);
+    }
+    return result;
   }
 }
