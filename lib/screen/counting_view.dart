@@ -14,17 +14,23 @@ import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:stock_counting_app/screen/counting_Detail.dart';
+import 'package:stock_counting_app/services/api.dart';
 
 class Counting_View extends StatefulWidget {
-  const Counting_View({super.key});
-  //final ItemMaster itm_detail;
+  const Counting_View(
+      {super.key, required this.bu_detail, required this.itemMaster});
+  final BU_Detail bu_detail;
+  final ItemMaster itemMaster;
 
   @override
   State<Counting_View> createState() => _Counting_ViewState();
 }
 
 class _Counting_ViewState extends State<Counting_View> {
-  Future<void> GetBatchList(
+  late Future<List<StockOnhand>> Batch_List;
+  final StockOnhand batch_detail = StockOnhand();
+  late List<StockOnhand> List_StockOnhand = [];
+  /*Future<void> GetBatchList(
       String itemCode, String token, String onhandID) async {
     late List<StockOnhand> _StockOnhand;
     var headers = {
@@ -56,7 +62,7 @@ class _Counting_ViewState extends State<Counting_View> {
       //_faillogin = failloginFromJson(Response.body);
     }
     //return _StockOnhand;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +92,7 @@ class _Counting_ViewState extends State<Counting_View> {
                       ),
                       SizedBox(
                         child: Text(
-                          "${provider.bList[0].itemCode}",
+                          "${widget.itemMaster.code}",
                           style: GoogleFonts.prompt(
                               fontSize: 18, color: Colors.black),
                         ),
@@ -108,7 +114,7 @@ class _Counting_ViewState extends State<Counting_View> {
                         ),
                         SizedBox(
                           child: Text(
-                            "${provider.bList[0].itemName}",
+                            "${widget.itemMaster.name}",
                             style: GoogleFonts.prompt(
                                 fontSize: 18,
                                 color: Color.fromARGB(255, 1, 57, 83)),
@@ -130,7 +136,7 @@ class _Counting_ViewState extends State<Counting_View> {
                       ),
                       SizedBox(
                         child: Text(
-                          "${provider.bList[0].uomName}",
+                          "${widget.itemMaster.uomCode}",
                           style: GoogleFonts.prompt(
                               fontSize: 18,
                               color: Color.fromARGB(255, 1, 57, 83)),
@@ -186,6 +192,8 @@ class _Counting_ViewState extends State<Counting_View> {
                                   token: token_provider.token,
                                   onHandId: data.id,
                                   BatchID: data.batchId,
+                                  bu_detail: widget.bu_detail,
+                                  itemCode: data.itemCode,
                                 );
                               }));
                             },
@@ -201,9 +209,26 @@ class _Counting_ViewState extends State<Counting_View> {
     });
   }
 
+  final api = stockCountingAPI();
+
   Future<void> _getData() async {
     setState(() {
-      //GetBatchList(itm, tok, id);
+      Batch_List =
+          api.GetBatchList(widget.bu_detail.id, widget.itemMaster.code ?? "");
+      if (Batch_List != null) {
+        ConvertBatchList();
+        Future.delayed(const Duration(
+                seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            .then((val) {
+          Batch_Provider provider =
+              Provider.of<Batch_Provider>(context, listen: false);
+          provider.addBatchStockOnhand(List_StockOnhand);
+        });
+      }
     });
+  }
+
+  void ConvertBatchList() async {
+    List_StockOnhand = await Batch_List;
   }
 }

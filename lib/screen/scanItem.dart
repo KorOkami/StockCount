@@ -44,7 +44,8 @@ class Scan_Item extends StatefulWidget {
 class _Scan_ItemState extends State<Scan_Item> {
   final TextEditingController textController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  ItemMaster itemMaster = new ItemMaster();
+  final ItemMaster itemMaster = new ItemMaster();
+  late String? ItemName = "";
   late Future<List<StockOnhand>> Batch_List;
 
   final StockOnhand batch_detail = StockOnhand();
@@ -52,11 +53,11 @@ class _Scan_ItemState extends State<Scan_Item> {
   late int? countItem = 0;
   late String? internalToken;
 
-  @override
+  /*@override
   void dispose() {
     textController.dispose();
     super.dispose();
-  }
+  }*/
 
   /*Future<ItemMaster> GetItemDetail(String itemCode) async {
     ItemMaster _ItemMaster = ItemMaster();
@@ -244,6 +245,7 @@ class _Scan_ItemState extends State<Scan_Item> {
                               if (List_StockOnhand.length != 0) {
                                 itemMaster.code = List_StockOnhand[0].itemCode;
                                 itemMaster.name = List_StockOnhand[0].itemName;
+                                ItemName = List_StockOnhand[0].itemName;
                                 itemMaster.uomCode =
                                     List_StockOnhand[0].uomCode;
                                 itemMaster.location =
@@ -296,7 +298,7 @@ class _Scan_ItemState extends State<Scan_Item> {
             ),
             SizedBox(
               child: Text(
-                "${itemMaster.name}",
+                "${ItemName}",
                 style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
               ),
             ),

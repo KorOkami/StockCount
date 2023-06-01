@@ -13,6 +13,8 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 
 import 'package:stock_counting_app/model/countingDetail.dart';
+import 'package:stock_counting_app/model/stockOnhand.dart';
+import 'package:stock_counting_app/providers/batch_provider.dart';
 import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:stock_counting_app/services/api.dart';
@@ -23,10 +25,14 @@ class Counting_Detail extends StatefulWidget {
       {super.key,
       required this.token,
       required this.onHandId,
-      required this.BatchID});
+      required this.BatchID,
+      required this.bu_detail,
+      required this.itemCode});
   final String? token;
   final String? onHandId;
   final String? BatchID;
+  final BU_Detail bu_detail;
+  final String? itemCode;
   @override
   State<Counting_Detail> createState() => _Counting_DetailState();
 }

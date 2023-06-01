@@ -282,8 +282,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                               MaterialPageRoute(
                                                   builder: (context) {
                                             return BU_Screen(
-                                                token: result?.token,
-                                                userName: result?.username);
+                                                token: result.token,
+                                                userName: result.username);
                                           }));
                                         } else {
                                           showAlertDialog(
