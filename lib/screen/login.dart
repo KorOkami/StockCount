@@ -87,11 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     return res;
   }*/
+  var _isObscured;
 
   @override
   void initState() {
     super.initState();
     //_AppUrlString();
+    _isObscured = true;
   }
 
   TextEditingController? _textEditingController;
@@ -108,22 +110,22 @@ class _LoginScreenState extends State<LoginScreen> {
           resizeToAvoidBottomInset:
               false, //ป้องกัน Error : Bottom overflowed by pixels
           appBar: AppBar(
-              title: Text(
-                "Stock Counting",
-                style: GoogleFonts.prompt(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              automaticallyImplyLeading: false,
-              leading: IconButton(
+            title: Text(
+              "Stock Counting",
+              style: GoogleFonts.prompt(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            automaticallyImplyLeading: false,
+            /*leading: IconButton(
                 //elevation: 0,
                 color: Color.fromARGB(255, 1, 68, 122),
                 //shadowColor: Colors.black,
                 icon: Icon(
                   Icons.settings,
                   color: Colors.white,
-                  size: 35,
+                  size: 30,
                 ),
                 onPressed: () {
                   showDialog(
@@ -191,12 +193,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ));
                 },
-              )),
+              )*/
+          ),
           body: Column(
             children: [
               Image.asset("asset/images/PrincLogo.png"),
               SingleChildScrollView(
                 child: Container(
+                  //margin: EdgeInsets.symmetric(vertical: 10),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Form(
@@ -208,50 +212,76 @@ class _LoginScreenState extends State<LoginScreen> {
                               SizedBox(
                                 height: 5,
                               ),
-                              Text(
+                              /*Text(
                                 "User Name",
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Color.fromARGB(255, 9, 1, 87)),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                    labelText: "User Name/E-mail"),
-                                validator: MultiValidator([
-                                  RequiredValidator(
-                                      errorText: "Please enter E-mail"),
-                                  // EmailValidator(
-                                  //errorText: "Invaild E-mail format.")
-                                ]),
-                                //keyboardType: TextInputType.emailAddress,
-                                onSaved: (email) {
-                                  profile.email = email ?? "";
-                                },
+                              ),*/
+
+                              TextFormFieldContainer(
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 20),
+                                  decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      icon: Icon(
+                                        Icons.person,
+                                      ),
+                                      labelText: "User Name/E-mail"),
+                                  validator: MultiValidator([
+                                    RequiredValidator(
+                                        errorText:
+                                            "Please enter User Name or E-mail"),
+                                  ]),
+                                  onSaved: (email) {
+                                    profile.email = email ?? "";
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                "Password",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Color.fromARGB(255, 9, 1, 87)),
-                              ),
-                              TextFormField(
-                                validator: RequiredValidator(
-                                    errorText: "Please enter password."),
-                                obscureText: true,
-                                onSaved: (password) {
-                                  profile.password = password ?? "";
-                                },
+                              TextFormFieldContainer(
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 20),
+                                  decoration: InputDecoration(
+                                      hintText: "Password",
+                                      border: InputBorder.none,
+                                      icon: Icon(
+                                        Icons.lock,
+                                      ),
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _isObscured = !_isObscured;
+                                            });
+                                          },
+                                          icon: _isObscured
+                                              ? const Icon(Icons.visibility)
+                                              : const Icon(
+                                                  Icons.visibility_off))),
+                                  validator: RequiredValidator(
+                                      errorText: "Please enter password."),
+                                  obscureText: _isObscured,
+                                  onSaved: (password) {
+                                    profile.password = password ?? "";
+                                  },
+                                ),
                               ),
                               SizedBox(
-                                height: 20,
+                                height: 25,
                               ),
                               SizedBox(
                                 width: double.infinity,
                                 height: 50,
                                 child: ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15))),
+                                  ),
                                   label: Text(
                                     "Login",
                                     style: GoogleFonts.prompt(
@@ -304,6 +334,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                   color: Colors.white,
                                   child: ElevatedButton.icon(
                                       style: ButtonStyle(
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15))),
                                         backgroundColor:
                                             MaterialStateProperty.all(
                                                 Color.fromARGB(
@@ -335,6 +370,27 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           )),
+    );
+  }
+}
+
+class TextFormFieldContainer extends StatelessWidget {
+  final Widget child;
+  const TextFormFieldContainer({
+    super.key,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 35, vertical: 4),
+      width: size.width,
+      decoration: BoxDecoration(
+          color: Color.fromARGB(255, 183, 231, 253),
+          borderRadius: BorderRadius.circular(20)),
+      child: child,
     );
   }
 }

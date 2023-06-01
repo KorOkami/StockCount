@@ -41,7 +41,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
   late Future<List<StockOnhand>> Batch_List;
-  final StockOnhand batch_detail = StockOnhand();
+  late StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand = [];
   final ItemMaster itemMaster = new ItemMaster();
   late int? countItem = 0;
@@ -233,51 +233,63 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   validator: RequiredValidator(
                                       errorText: "Please Scan Item."),
                                   onEditingComplete: () {
-                                    setState(() {
-                                      if (textController.text != "") {
-                                        //Batch_List = GetBatchList(textController.text);
-                                        Batch_List = api.GetBatchList(
-                                            widget.bu_detail.id,
-                                            textController.text);
-                                        if (Batch_List != null) {
-                                          ConvertList(); // แปลงจาก Future List เป็น List
-                                          Future.delayed(const Duration(
-                                                  seconds:
-                                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                                              .then((val) {
-                                            setState(() {
-                                              if (List_StockOnhand.length !=
-                                                  0) {
-                                                itemMaster.code =
-                                                    List_StockOnhand[0]
-                                                        .itemCode;
-                                                itemMaster.name =
-                                                    List_StockOnhand[0]
-                                                        .itemName;
-                                                itemMaster.uomCode =
-                                                    List_StockOnhand[0].uomCode;
-                                                itemMaster.location =
-                                                    List_StockOnhand[0].binLoc;
-                                                Batch_Provider provider =
-                                                    Provider.of<Batch_Provider>(
-                                                        context,
-                                                        listen: false);
-                                                provider.addBatchStockOnhand(
-                                                    List_StockOnhand);
-                                              } else {
-                                                showAlertDialog(context,
-                                                    "Item not found in this Document.");
-                                              }
-                                            });
+                                    if (textController.text != "") {
+                                      //Batch_List = GetBatchList(textController.text);
+                                      Batch_List = api.GetBatchList(
+                                          widget.bu_detail.id,
+                                          textController.text);
+                                      if (Batch_List != null) {
+                                        ConvertList(); // แปลงจาก Future List เป็น List
+                                        Future.delayed(const Duration(
+                                                seconds:
+                                                    1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                            .then((val) {
+                                          setState(() {
+                                            if (List_StockOnhand.length != 0) {
+                                              itemMaster.code =
+                                                  List_StockOnhand[0].itemCode;
+                                              itemMaster.name =
+                                                  List_StockOnhand[0].itemName;
+                                              itemMaster.uomCode =
+                                                  List_StockOnhand[0].uomCode;
+                                              itemMaster.location =
+                                                  List_StockOnhand[0].binLoc;
+                                              Batch_Provider provider =
+                                                  Provider.of<Batch_Provider>(
+                                                      context,
+                                                      listen: false);
+                                              provider.addBatchStockOnhand(
+                                                  List_StockOnhand);
+                                            } else {
+                                              itemMaster.code = "";
+                                              itemMaster.name = "";
+                                              itemMaster.uomCode = "";
+                                              itemMaster.location = "";
+                                              batch_detail.qty = 0;
+                                              countItem = 0;
+                                              Batch_List = api.GetBatchList(
+                                                  widget.bu_detail.id, "");
+                                              ConvertList();
+                                              Batch_Provider provider =
+                                                  Provider.of<Batch_Provider>(
+                                                      context,
+                                                      listen: false);
+                                              provider.addBatchStockOnhand(
+                                                  List_StockOnhand);
+                                              showAlertDialog(context,
+                                                  "Item not found in this Document.");
+                                            }
                                           });
-                                        }
-                                      } else {
+                                        });
+                                      }
+                                    } else {
+                                      setState(() {
                                         itemMaster.code = "";
                                         itemMaster.name = "";
                                         itemMaster.uomCode = "";
                                         itemMaster.location = "";
-                                      }
-                                    });
+                                      });
+                                    }
                                   },
                                 )),
                                 Padding(
@@ -389,11 +401,6 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         batch_detail.qty = value.qty;
                                         batch_detail.countQty = value.countQty;
                                         countItem = batch_detail.countQty;
-                                        if (value.binLoc != null) {
-                                          batch_detail.binLoc = value.binLoc;
-                                        } else {
-                                          batch_detail.binLoc = "";
-                                        }
                                       });
                                     },
 
@@ -427,6 +434,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                             stockID: widget.bu_detail.id,
                                             bu_detail: widget.bu_detail,
                                           );
+                                          String rr = "";
                                         }));
                                       } else {
                                         if (itemMaster.code == "") {
@@ -603,6 +611,37 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
       //textController.text = cameraScanResult ?? "";
       //GetItemDetail(textController!.text);
       Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
+      if (Batch_List != null) {
+        ConvertList(); // แปลงจาก Future List เป็น List
+        Future.delayed(const Duration(
+                seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            .then((val) {
+          setState(() {
+            if (List_StockOnhand.length != 0) {
+              itemMaster.code = List_StockOnhand[0].itemCode;
+              itemMaster.name = List_StockOnhand[0].itemName;
+              itemMaster.uomCode = List_StockOnhand[0].uomCode;
+              itemMaster.location = List_StockOnhand[0].binLoc;
+              Batch_Provider provider =
+                  Provider.of<Batch_Provider>(context, listen: false);
+              provider.addBatchStockOnhand(List_StockOnhand);
+            } else {
+              itemMaster.code = "";
+              itemMaster.name = "";
+              itemMaster.uomCode = "";
+              itemMaster.location = "";
+              batch_detail.qty = 0;
+              countItem = 0;
+              Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+              ConvertList();
+              Batch_Provider provider =
+                  Provider.of<Batch_Provider>(context, listen: false);
+              provider.addBatchStockOnhand(List_StockOnhand);
+              showAlertDialog(context, "Item not found in this Document.");
+            }
+          });
+        });
+      }
     });
   }
 

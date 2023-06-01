@@ -70,12 +70,14 @@ class _Counting_ViewState extends State<Counting_View> {
     return Consumer2<Batch_Provider, Token_Provider>(builder: (context,
         Batch_Provider provider, Token_Provider token_provider, Widget? child) {
       return Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 120,
+            Flexible(
+              flex: 0,
+              ////////////////////////////////////////////////////////////////
+              //height: 150,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -99,29 +101,27 @@ class _Counting_ViewState extends State<Counting_View> {
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: Text(
-                            "Item Name : ",
-                            style: GoogleFonts.prompt(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 1, 57, 83)),
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        child: Text(
+                          "Item Name : ",
+                          style: GoogleFonts.prompt(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 1, 57, 83)),
                         ),
-                        SizedBox(
-                          child: Text(
-                            "${widget.itemMaster.name}",
-                            style: GoogleFonts.prompt(
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 1, 57, 83)),
-                          ),
+                      ),
+                      SizedBox(
+                        child: Text(
+                          "${widget.itemMaster.name}",
+                          style: GoogleFonts.prompt(
+                              fontSize: 18,
+                              color: Color.fromARGB(255, 1, 57, 83)),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                   Row(
                     children: [
@@ -150,6 +150,7 @@ class _Counting_ViewState extends State<Counting_View> {
             Expanded(
               child: RefreshIndicator(
                 child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
                     primary: false,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
