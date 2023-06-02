@@ -2,6 +2,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
 import 'package:flutter/material.dart';
+import 'package:stock_counting_app/components/text_field_container.dart';
 import 'package:stock_counting_app/model/faillogin.dart';
 import 'package:stock_counting_app/model/profile.dart';
 import 'package:form_field_validator/form_field_validator.dart';
@@ -195,202 +196,197 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               )*/
           ),
-          body: Column(
-            children: [
-              Image.asset("asset/images/PrincLogo.png"),
-              SingleChildScrollView(
-                child: Container(
-                  //margin: EdgeInsets.symmetric(vertical: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Form(
-                      key: formKey,
-                      child: SingleChildScrollView(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 5,
-                              ),
-                              /*Text(
-                                "User Name",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Color.fromARGB(255, 9, 1, 87)),
-                              ),*/
+          body: Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    alignment: Alignment.bottomCenter,
+                    image: AssetImage("asset/images/AppBG.png"),
+                    fit: BoxFit.none)),
+            child: Column(
+              children: [
+                Image.asset("asset/images/PrincLogo.png"),
+                SingleChildScrollView(
+                  child: Container(
+                    //margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Form(
+                        key: formKey,
+                        child: SingleChildScrollView(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                /*Text(
+                                  "User Name",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color.fromARGB(255, 9, 1, 87)),
+                                ),*/
 
-                              TextFormFieldContainer(
-                                child: TextFormField(
-                                  style: TextStyle(fontSize: 20),
-                                  decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      icon: Icon(
-                                        Icons.person,
-                                      ),
-                                      labelText: "User Name/E-mail"),
-                                  validator: MultiValidator([
-                                    RequiredValidator(
-                                        errorText:
-                                            "Please enter User Name or E-mail"),
-                                  ]),
-                                  onSaved: (email) {
-                                    profile.email = email ?? "";
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextFormFieldContainer(
-                                child: TextFormField(
-                                  style: TextStyle(fontSize: 20),
-                                  decoration: InputDecoration(
-                                      hintText: "Password",
-                                      border: InputBorder.none,
-                                      icon: Icon(
-                                        Icons.lock,
-                                      ),
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              _isObscured = !_isObscured;
-                                            });
-                                          },
-                                          icon: _isObscured
-                                              ? const Icon(Icons.visibility)
-                                              : const Icon(
-                                                  Icons.visibility_off))),
-                                  validator: RequiredValidator(
-                                      errorText: "Please enter password."),
-                                  obscureText: _isObscured,
-                                  onSaved: (password) {
-                                    profile.password = password ?? "";
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton.icon(
-                                  style: ButtonStyle(
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15))),
+                                TextFormFieldContainer(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 20),
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        icon: Icon(
+                                          Icons.person,
+                                        ),
+                                        labelText: "User Name/E-mail"),
+                                    validator: MultiValidator([
+                                      RequiredValidator(
+                                          errorText:
+                                              "Please enter User Name or E-mail"),
+                                    ]),
+                                    onSaved: (email) {
+                                      profile.email = email ?? "";
+                                    },
                                   ),
-                                  label: Text(
-                                    "Login",
-                                    style: GoogleFonts.prompt(
-                                        fontSize: 20, color: Colors.white),
-                                  ),
-                                  icon: Icon(
-                                    Icons.login,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
-                                  onPressed: () {
-                                    if (formKey.currentState?.validate() ==
-                                        true) {
-                                      formKey.currentState?.save();
-                                      api
-                                          .dioLogin(
-                                              profile.email, profile.password)
-                                          .then((result) {
-                                        // AppLogin(profile.email, profile.password)
-                                        //.then((result) {
-                                        if (result?.status == "success") {
-                                          Token_Provider provider =
-                                              Provider.of<Token_Provider>(
-                                                  context,
-                                                  listen: false);
-                                          provider.addToken(result!.token);
-                                          Navigator.pushReplacement(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return BU_Screen(
-                                                token: result.token,
-                                                userName: result.username);
-                                          }));
-                                        } else {
-                                          showAlertDialog(
-                                              context, result?.ErrorM);
-                                        }
-                                      });
-                                      //formKey.currentState?.reset();
-                                    }
-                                  },
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Container(
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormFieldContainer(
+                                  child: TextFormField(
+                                    style: TextStyle(fontSize: 20),
+                                    decoration: InputDecoration(
+                                        hintText: "Password",
+                                        border: InputBorder.none,
+                                        icon: Icon(
+                                          Icons.lock,
+                                        ),
+                                        suffixIcon: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _isObscured = !_isObscured;
+                                              });
+                                            },
+                                            icon: _isObscured
+                                                ? const Icon(Icons.visibility)
+                                                : const Icon(
+                                                    Icons.visibility_off))),
+                                    validator: RequiredValidator(
+                                        errorText: "Please enter password."),
+                                    obscureText: _isObscured,
+                                    onSaved: (password) {
+                                      profile.password = password ?? "";
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 25,
+                                ),
+                                SizedBox(
                                   width: double.infinity,
                                   height: 50,
-                                  color: Colors.white,
                                   child: ElevatedButton.icon(
-                                      style: ButtonStyle(
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15))),
-                                        backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Color.fromARGB(
-                                                    255, 1, 103, 166)),
-                                      ),
-                                      label: Text(
-                                        "Register",
-                                        style: GoogleFonts.prompt(
-                                            fontSize: 20, color: Colors.white),
-                                      ),
-                                      icon: Icon(
-                                        Icons.person_add_alt_1,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return Register_Screen(
-                                              token: _successData?.token);
-                                        }));
-                                      }))
-                            ]),
+                                    style: ButtonStyle(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15))),
+                                    ),
+                                    label: Text(
+                                      "Login",
+                                      style: GoogleFonts.prompt(
+                                          fontSize: 20, color: Colors.white),
+                                    ),
+                                    icon: Icon(
+                                      Icons.login,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      if (formKey.currentState?.validate() ==
+                                          true) {
+                                        formKey.currentState?.save();
+                                        api
+                                            .dioLogin(
+                                                profile.email, profile.password)
+                                            .then((result) {
+                                          // AppLogin(profile.email, profile.password)
+                                          //.then((result) {
+                                          if (result?.status == "success") {
+                                            Token_Provider provider =
+                                                Provider.of<Token_Provider>(
+                                                    context,
+                                                    listen: false);
+                                            provider.addToken(result!.token);
+                                            Navigator.pushReplacement(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return BU_Screen(
+                                                  token: result.token,
+                                                  userName: result.username);
+                                            }));
+                                          } else {
+                                            showAlertDialog(
+                                                context, result?.ErrorM);
+                                          }
+                                        });
+                                        //formKey.currentState?.reset();
+                                      }
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                    width: double.infinity,
+                                    height: 50,
+                                    color: Colors.white,
+                                    child: ElevatedButton.icon(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15))),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color.fromARGB(
+                                                      255, 1, 103, 166)),
+                                        ),
+                                        label: Text(
+                                          "Register",
+                                          style: GoogleFonts.prompt(
+                                              fontSize: 20,
+                                              color: Colors.white),
+                                        ),
+                                        icon: Icon(
+                                          Icons.person_add_alt_1,
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return Register_Screen(
+                                                token: _successData?.token);
+                                          }));
+                                        }))
+                              ]),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                /*Container(
+                  height: double.infinity,
+                  child: Opacity(
+                      opacity: 0.8, child: Image.asset("asset/images/AppBG.png")),
+                ),*/
+              ],
+            ),
           )),
-    );
-  }
-}
-
-class TextFormFieldContainer extends StatelessWidget {
-  final Widget child;
-  const TextFormFieldContainer({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 35, vertical: 4),
-      width: size.width,
-      decoration: BoxDecoration(
-          color: Color.fromARGB(255, 183, 231, 253),
-          borderRadius: BorderRadius.circular(20)),
-      child: child,
     );
   }
 }

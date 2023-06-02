@@ -62,6 +62,15 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     batch_detail.qty = 0;
     batch_detail.binLoc = "";
     batch_detail.countQty = 0;
+    Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+    ConvertList(); // แปลงจาก Future List เป็น List
+    Future.delayed(const Duration(
+            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+        .then((val) {
+      Batch_Provider provider =
+          Provider.of<Batch_Provider>(context, listen: false);
+      provider.addBatchStockOnhand(List_StockOnhand);
+    });
   }
 
   final api = stockCountingAPI();

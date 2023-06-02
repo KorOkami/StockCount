@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/components/text_field_container.dart';
 import 'package:stock_counting_app/model/registerResponse.dart';
 import 'package:stock_counting_app/model/register_detail.dart';
 import 'package:http/http.dart' as http;
@@ -52,9 +53,18 @@ class _Register_ScreenState extends State<Register_Screen> {
       res = "Success";
     } else {
       String bodyError = Response.body;
-      res = "Register Failed.";
+      res = "Register Failed. : ${bodyError}";
     }
     return res;
+  }
+
+  var _isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+    //_AppUrlString();
+    _isObscured = true;
   }
 
   @override
@@ -78,119 +88,148 @@ class _Register_ScreenState extends State<Register_Screen> {
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("Display Name",
+              Text("Your infomation",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               SizedBox(
                 height: 5,
               ),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Display Name',
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 157, 222, 250),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.face),
+                    border: InputBorder.none,
+                    labelText: 'Display Name',
+                  ),
+                  validator:
+                      RequiredValidator(errorText: "Please Enter Display Name"),
+                  onSaved: (displayname) {
+                    register.displayname = displayname ?? "";
+                  },
                 ),
-                validator:
-                    RequiredValidator(errorText: "Please Enter Display Name"),
-                onSaved: (displayname) {
-                  register.displayname = displayname ?? "";
-                },
+              ),
+              //Text("Department",
+              //style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              SizedBox(
+                height: 5,
+              ),
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 157, 222, 250),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.badge),
+                    border: InputBorder.none,
+                    labelText: 'Department',
+                  ),
+                  validator:
+                      RequiredValidator(errorText: "Please Enter Department"),
+                  onSaved: (department) {
+                    register.department = department ?? "";
+                  },
+                ),
               ),
               SizedBox(
                 height: 5,
               ),
-              Text("Department",
+              // Text("Job Title",
+              //  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 157, 222, 250),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.attribution),
+                    border: InputBorder.none,
+                    labelText: 'Job Title',
+                  ),
+                  validator:
+                      RequiredValidator(errorText: "Please Enter Job Title"),
+                  onSaved: (jobtitle) {
+                    register.jobtitle = jobtitle ?? "";
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Text("Login detail",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              SizedBox(
-                height: 5,
-              ),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Department',
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 217, 242, 253),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.email),
+                    border: InputBorder.none,
+                    labelText: 'E-mail',
+                  ),
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Please Enter E-mail"),
+                    EmailValidator(errorText: "Invalid E-mail Format")
+                  ]),
+                  keyboardType: TextInputType.emailAddress,
+                  onSaved: (email) {
+                    register.email = email ?? "";
+                  },
                 ),
-                validator:
-                    RequiredValidator(errorText: "Please Enter Department"),
-                onSaved: (department) {
-                  register.department = department ?? "";
-                },
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text("Job Title",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Job Title',
-                ),
-                validator:
-                    RequiredValidator(errorText: "Please Enter Job Title"),
-                onSaved: (jobtitle) {
-                  register.jobtitle = jobtitle ?? "";
-                },
               ),
               SizedBox(
                 height: 5,
               ),
-              Text("E-mail",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter E-mail',
+              //Text("User Name",
+              //style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 217, 242, 253),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.person),
+                    border: InputBorder.none,
+                    labelText: 'User Name',
+                  ),
+                  validator:
+                      RequiredValidator(errorText: "Please Enter User Name"),
+                  onSaved: (userName) {
+                    register.username = userName ?? "";
+                  },
                 ),
-                validator: MultiValidator([
-                  RequiredValidator(errorText: "Please Enter E-mail"),
-                  EmailValidator(errorText: "Invalid E-mail Format")
-                ]),
-                keyboardType: TextInputType.emailAddress,
-                onSaved: (email) {
-                  register.email = email ?? "";
-                },
               ),
               SizedBox(
                 height: 5,
               ),
-              Text("User Name",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter User Name',
+              //Text("Password",
+              // style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 217, 242, 253),
+                child: TextFormField(
+                  style: TextStyle(fontSize: 18),
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.lock),
+                      border: InputBorder.none,
+                      labelText: 'Password',
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscured = !_isObscured;
+                            });
+                          },
+                          icon: _isObscured
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off))),
+                  validator:
+                      RequiredValidator(errorText: "Please Enter Password"),
+                  obscureText: _isObscured,
+                  onSaved: (password) {
+                    register.password = password ?? "";
+                  },
                 ),
-                validator:
-                    RequiredValidator(errorText: "Please Enter User Name"),
-                onSaved: (userName) {
-                  register.username = userName ?? "";
-                },
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text("Password",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              TextFormField(
-                style: TextStyle(fontSize: 18),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Password',
-                ),
-                validator:
-                    RequiredValidator(errorText: "Please Enter Password"),
-                obscureText: true,
-                onSaved: (password) {
-                  register.password = password ?? "";
-                },
               ),
               SizedBox(
                 height: 10,
@@ -199,6 +238,11 @@ class _Register_ScreenState extends State<Register_Screen> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton.icon(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15))),
+                  ),
                   label: Text(
                     "Save",
                     style:
