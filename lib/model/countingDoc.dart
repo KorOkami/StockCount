@@ -63,6 +63,12 @@ class CountingDoc {
       };
 
   String userAsString() {
-    return '${this.buCode} - ${this.whsCode}';
+    // String BUName = "";
+    // if (buName!.length >= 18) {
+    //   BUName = buName!.substring(0, 18) + "...";
+    // } else {
+    //   BUName = buName!;
+    // }
+    return '${this.whsCode} - ${this.buCode}(${buName})';
   }
 }

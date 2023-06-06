@@ -201,6 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
             width: double.infinity,
             decoration: BoxDecoration(
                 image: DecorationImage(
+                    opacity: 0.2,
                     alignment: Alignment.bottomCenter,
                     image: AssetImage("asset/images/AppBG.png"),
                     fit: BoxFit.none)),
@@ -219,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  height: 5,
+                                  height: 20,
                                 ),
                                 /*Text(
                                   "User Name",
@@ -232,11 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: TextFormField(
                                     style: TextStyle(fontSize: 20),
                                     decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        icon: Icon(
-                                          Icons.person,
-                                        ),
-                                        labelText: "User Name/E-mail"),
+                                      border: InputBorder.none,
+                                      icon: Icon(
+                                        Icons.person,
+                                      ),
+                                      labelText: "UserName or E-mail",
+                                    ),
                                     validator: MultiValidator([
                                       RequiredValidator(
                                           errorText:

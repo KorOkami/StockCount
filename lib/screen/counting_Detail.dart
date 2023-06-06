@@ -26,12 +26,12 @@ class Counting_Detail extends StatefulWidget {
       required this.token,
       required this.onHandId,
       required this.BatchID,
-      required this.bu_detail,
+      required this.bu_ID,
       required this.itemCode});
   final String? token;
   final String? onHandId;
   final String? BatchID;
-  final BU_Detail bu_detail;
+  final String? bu_ID;
   final String? itemCode;
   @override
   State<Counting_Detail> createState() => _Counting_DetailState();
@@ -43,6 +43,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
   late List<CountingDetail>? countingDetailList = [];
   late String deleteRes = "";
   final api = stockCountingAPI();
+  late Future<List<StockOnhand>> Batch_List;
+  late List<StockOnhand> List_StockOnhand = [];
 
   /*Future<String> GetCountingDetail() async {
     List<CountingDetail> _countingDetail = [];
@@ -129,7 +131,6 @@ class _Counting_DetailState extends State<Counting_Detail> {
   void initState() {
     // TODO: implement initState
     futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
-    //ConvertList();
     Future.delayed(const Duration(
             seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
         .then((val) {
@@ -272,6 +273,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                           .then((result) {
                                                         if (result ==
                                                             "success") {
+                                                          refreshDataBatch(
+                                                              data.itemCode!);
                                                           setState(() {
                                                             data.countQty =
                                                                 int.parse(
@@ -285,7 +288,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   },
                                                   child: Text("Update",
                                                       style: GoogleFonts.prompt(
-                                                          fontSize: 15,
+                                                          fontSize: 20,
                                                           color: Colors.white)),
                                                 ),
                                               ),
@@ -307,6 +310,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                           DeleteCountingDetail(data.id!).then((result) {
                             if (result == "success") {
                               countingDetailList!.removeAt(index);
+                              refreshDataBatch(data.itemCode!);
                             } else {}
                           });
                         });
@@ -316,9 +320,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                     )
                   ]),
                   child: Card(
+                    shadowColor: Colors.lightBlue,
                     elevation: 5,
-                    //margin: const EdgeInsets.symmetric(
-                    //vertical: 8, horizontal: 5),
                     child: ListTile(
                       title: Text("Counted : ${data.countQty}",
                           style: GoogleFonts.prompt(
@@ -328,14 +331,6 @@ class _Counting_DetailState extends State<Counting_Detail> {
                           style: GoogleFonts.prompt(
                             fontSize: 15,
                           )),
-                      /*trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                          IconButton(
-                              onPressed: () {}, icon: Icon(Icons.delete)),
-                        ],
-                      ),*/
                     ),
                   ),
                 );
@@ -345,7 +340,23 @@ class _Counting_DetailState extends State<Counting_Detail> {
     );
   }
 
+  void refreshDataBatch(String itemcode) {
+    Batch_List = api.GetBatchList(widget.bu_ID ?? "", itemcode);
+    ConvertBatchList(); // แปลงจาก Future List เป็น List
+    Future.delayed(const Duration(
+            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+        .then((val) {
+      Batch_Provider provider =
+          Provider.of<Batch_Provider>(context, listen: false);
+      provider.addBatchStockOnhand(List_StockOnhand);
+    });
+  }
+
   void ConvertList() async {
     countingDetailList = await futurecountingDetailList;
+  }
+
+  void ConvertBatchList() async {
+    List_StockOnhand = await Batch_List;
   }
 }

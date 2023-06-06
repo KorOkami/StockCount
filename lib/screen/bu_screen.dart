@@ -13,6 +13,7 @@ import 'dart:async';
 
 import 'package:stock_counting_app/model/countingDoc.dart';
 import 'package:stock_counting_app/model/drugsMaster.dart';
+import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/successlogin.dart';
 import 'package:stock_counting_app/screen/count_screen.dart';
 import 'package:stock_counting_app/services/api.dart';
@@ -34,11 +35,16 @@ class _BU_ScreenState extends State<BU_Screen> {
   late Future<List<CountingDoc>> Document_List;
   BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "");
   late String? internalToken;
+  late ItemMaster _itemMaster = ItemMaster();
 
   @override
   void initState() {
     // TODO: implement initState
     Document_List = api.GetBU();
+    _itemMaster.code = "";
+    _itemMaster.name = "";
+    _itemMaster.uomCode = "";
+    _itemMaster.location = "";
     super.initState();
   }
 
@@ -312,6 +318,8 @@ class _BU_ScreenState extends State<BU_Screen> {
                                     token: widget.token,
                                     userName: widget.userName,
                                     bu_detail: BU,
+                                    itemCode: "",
+                                    itemMaster: _itemMaster,
                                   );
                                 }));
                               } else {

@@ -69,144 +69,155 @@ class _Counting_ViewState extends State<Counting_View> {
     final userStore = Provider.of<Batch_Provider>(context, listen: true);
     return Consumer2<Batch_Provider, Token_Provider>(builder: (context,
         Batch_Provider provider, Token_Provider token_provider, Widget? child) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              flex: 0,
-              ////////////////////////////////////////////////////////////////
-              //height: 150,
+      return provider.bList.length != 0
+          ? Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        child: Text(
-                          "Item Code : ",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 57, 83)),
+                  Flexible(
+                    flex: 0,
+                    ////////////////////////////////////////////////////////////////
+                    //height: 150,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              child: Text(
+                                "Item Code : ",
+                                style: GoogleFonts.prompt(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 1, 57, 83)),
+                              ),
+                            ),
+                            SizedBox(
+                              child: Text(
+                                "${widget.itemMaster.code}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 18, color: Colors.black),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(
-                        child: Text(
-                          "${widget.itemMaster.code}",
-                          style: GoogleFonts.prompt(
-                              fontSize: 18, color: Colors.black),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              child: Text(
+                                "Item Name : ",
+                                style: GoogleFonts.prompt(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 1, 57, 83)),
+                              ),
+                            ),
+                            SizedBox(
+                              child: Text(
+                                "${widget.itemMaster.name}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 1, 57, 83)),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        Row(
+                          children: [
+                            SizedBox(
+                              child: Text(
+                                "Base Uom : ",
+                                style: GoogleFonts.prompt(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 1, 57, 83)),
+                              ),
+                            ),
+                            SizedBox(
+                              child: Text(
+                                "${widget.itemMaster.uomCode}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 18,
+                                    color: Color.fromARGB(255, 1, 57, 83)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        child: Text(
-                          "Item Name : ",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                      SizedBox(
-                        child: Text(
-                          "${widget.itemMaster.name}",
-                          style: GoogleFonts.prompt(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        child: Text(
-                          "Base Uom : ",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                      SizedBox(
-                        child: Text(
-                          "${widget.itemMaster.uomCode}",
-                          style: GoogleFonts.prompt(
-                              fontSize: 18,
-                              color: Color.fromARGB(255, 1, 57, 83)),
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: RefreshIndicator(
+                      child: ListView.builder(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: provider.bList.length,
+                          itemBuilder: (context, int index) {
+                            StockOnhand data = provider.bList[index];
+                            if (data != null)
+                              return Card(
+                                shadowColor: Colors.lightBlue,
+                                color: Color.fromARGB(255, 239, 249, 253),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                elevation: 5,
+                                child: ListTile(
+                                  title: Text("Batch : ${data.batchId ?? ""}",
+                                      style: GoogleFonts.prompt(
+                                          fontSize: 17,
+                                          color:
+                                              Color.fromARGB(255, 1, 57, 83))),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("OnHand : ${data.qty ?? ""}",
+                                          style: GoogleFonts.prompt(
+                                            fontSize: 15,
+                                          )),
+                                      Text("Counted : ${data.countQty ?? ""}",
+                                          style: GoogleFonts.prompt(
+                                            fontSize: 15,
+                                          )),
+                                      Text("Diff : ${data.diffQty ?? ""}",
+                                          style: GoogleFonts.prompt(
+                                            fontSize: 15,
+                                          )),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    //print(Text("${data.id}"));
+
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return Counting_Detail(
+                                        token: token_provider.token,
+                                        onHandId: data.id,
+                                        BatchID: data.batchId,
+                                        bu_ID: widget.bu_detail.id,
+                                        itemCode: data.itemCode,
+                                      );
+                                    }));
+                                  },
+                                ),
+                              );
+                          }),
+                      onRefresh: _getData,
+                    ),
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    primary: false,
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: provider.bList.length,
-                    itemBuilder: (context, int index) {
-                      StockOnhand data = provider.bList[index];
-                      if (data != null)
-                        return Card(
-                          elevation: 5,
-                          //margin: const EdgeInsets.symmetric(
-                          //vertical: 8, horizontal: 5),
-                          child: ListTile(
-                            title: Text("Batch : ${data.batchId ?? ""}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 17,
-                                    color: Color.fromARGB(255, 1, 57, 83))),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("OnHand : ${data.qty ?? ""}",
-                                    style: GoogleFonts.prompt(
-                                      fontSize: 15,
-                                    )),
-                                Text("Counted : ${data.countQty ?? ""}",
-                                    style: GoogleFonts.prompt(
-                                      fontSize: 15,
-                                    )),
-                                Text("Diff : ${data.diffQty ?? ""}",
-                                    style: GoogleFonts.prompt(
-                                      fontSize: 15,
-                                    )),
-                              ],
-                            ),
-                            onTap: () {
-                              //print(Text("${data.id}"));
-
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return Counting_Detail(
-                                  token: token_provider.token,
-                                  onHandId: data.id,
-                                  BatchID: data.batchId,
-                                  bu_detail: widget.bu_detail,
-                                  itemCode: data.itemCode,
-                                );
-                              }));
-                            },
-                          ),
-                        );
-                    }),
-                onRefresh: _getData,
-              ),
-            ),
-          ],
-        ),
-      );
+            )
+          : Center(
+              child: Text("No Items found.",
+                  style: GoogleFonts.prompt(
+                    fontSize: 20,
+                  )),
+            );
     });
   }
 

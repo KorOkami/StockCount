@@ -88,23 +88,26 @@ class _Register_ScreenState extends State<Register_Screen> {
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              SizedBox(
+                height: 10,
+              ),
               Text("Your infomation",
                   style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               SizedBox(
                 height: 5,
               ),
               TextFormFieldContainerRegister(
-                colors: Color.fromARGB(255, 157, 222, 250),
+                colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
                   style: TextStyle(
                       fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.face),
                     border: InputBorder.none,
-                    labelText: 'Display Name',
+                    labelText: 'Full Name',
                   ),
                   validator:
-                      RequiredValidator(errorText: "Please Enter Display Name"),
+                      RequiredValidator(errorText: "Please Enter Full Name"),
                   onSaved: (displayname) {
                     register.displayname = displayname ?? "";
                   },
@@ -116,7 +119,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                 height: 5,
               ),
               TextFormFieldContainerRegister(
-                colors: Color.fromARGB(255, 157, 222, 250),
+                colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
                   style: TextStyle(
                       fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
@@ -125,8 +128,8 @@ class _Register_ScreenState extends State<Register_Screen> {
                     border: InputBorder.none,
                     labelText: 'Department',
                   ),
-                  validator:
-                      RequiredValidator(errorText: "Please Enter Department"),
+                  // validator:
+                  //     RequiredValidator(errorText: "Please Enter Department"),
                   onSaved: (department) {
                     register.department = department ?? "";
                   },
@@ -138,7 +141,7 @@ class _Register_ScreenState extends State<Register_Screen> {
               // Text("Job Title",
               //  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               TextFormFieldContainerRegister(
-                colors: Color.fromARGB(255, 157, 222, 250),
+                colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
                   style: TextStyle(
                       fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
@@ -147,18 +150,18 @@ class _Register_ScreenState extends State<Register_Screen> {
                     border: InputBorder.none,
                     labelText: 'Job Title',
                   ),
-                  validator:
-                      RequiredValidator(errorText: "Please Enter Job Title"),
+                  // validator:
+                  //     RequiredValidator(errorText: "Please Enter Job Title"),
                   onSaved: (jobtitle) {
                     register.jobtitle = jobtitle ?? "";
                   },
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 5,
               ),
-              Text("Login detail",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              // Text("Login detail",
+              //style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
@@ -232,7 +235,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 30,
               ),
               SizedBox(
                 width: double.infinity,

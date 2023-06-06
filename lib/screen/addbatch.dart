@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:stock_counting_app/components/text_field_container.dart';
 import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/registerResponse.dart';
@@ -12,6 +13,7 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:stock_counting_app/screen/count_screen.dart';
 import 'package:stock_counting_app/screen/scanItem.dart';
 import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/utility/alert.dart';
@@ -21,14 +23,18 @@ import 'package:uuid/uuid.dart';
 class AddBatch extends StatefulWidget {
   const AddBatch(
       {super.key,
-      //required this.token,
+      required this.token,
       required this.itemCode,
       required this.stockID,
-      required this.bu_detail});
-  //final String? token;
+      required this.bu_detail,
+      this.userName,
+      required this.itemMaster});
+  final String? token;
   final String? itemCode;
   final String? stockID;
   final BU_Detail bu_detail;
+  final String? userName;
+  final ItemMaster itemMaster;
   @override
   State<AddBatch> createState() => _AddBatchState();
 }
@@ -38,11 +44,13 @@ class _AddBatchState extends State<AddBatch> {
   Batch addBatch = Batch();
   TextEditingController dateController = TextEditingController();
   StockOnhand stockOnhand = StockOnhand();
+  String? res;
   @override
   void initState() {
     // TODO: implement initState
     stockOnhand.stockcountid = widget.stockID;
     stockOnhand.itemCode = widget.itemCode;
+    res = "";
     super.initState();
   }
 
@@ -96,7 +104,22 @@ class _AddBatchState extends State<AddBatch> {
         //automaticallyImplyLeading: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+          //onPressed: () => Navigator.of(context).pop(),
+          onPressed: () {
+            if (res == "success") {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return CountScan(
+                  token: widget.token,
+                  userName: widget.userName,
+                  bu_detail: widget.bu_detail,
+                  itemCode: widget.itemCode,
+                  itemMaster: widget.itemMaster,
+                );
+              }));
+            } else {
+              Navigator.of(context).pop();
+            }
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -106,92 +129,78 @@ class _AddBatchState extends State<AddBatch> {
             padding: const EdgeInsets.all(8.0),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("Batch :",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              // Text("Batch :",
+              //     style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               SizedBox(
                 height: 5,
               ),
-              TextFormField(
-                style: TextStyle(
-                    fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Enter Batch',
+              TextFormFieldContainerRegister(
+                colors: Color.fromARGB(255, 217, 242, 253),
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: 20, color: Color.fromARGB(255, 1, 103, 166)),
+                  decoration: InputDecoration(
+                    suffixIcon: Icon(
+                      Icons.keyboard,
+                      size: 30,
+                    ),
+                    border: InputBorder.none,
+                    labelText: 'Batch',
+                  ),
+                  validator: RequiredValidator(errorText: "Please Enter Batch"),
+                  onSaved: (batchNo) {
+                    addBatch.batchNumber = batchNo ?? "";
+                  },
                 ),
-                validator: RequiredValidator(errorText: "Please Enter Batch"),
-                onSaved: (batchNo) {
-                  addBatch.batchNumber = batchNo ?? "";
-                },
               ),
               SizedBox(
                 height: 5,
               ),
               Container(
-                height: 115,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Expire Date :",
-                        style: GoogleFonts.prompt(
-                            fontSize: 20, color: Colors.black),
+                child: TextFormFieldContainerRegister(
+                  colors: Color.fromARGB(255, 217, 242, 253),
+                  child: TextFormField(
+                      style: GoogleFonts.prompt(
+                          fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                      controller:
+                          dateController, //editing controller of this TextField
+                      validator: MultiValidator(
+                          [RequiredValidator(errorText: "Please select Date")]),
+                      decoration: const InputDecoration(
+                        labelText: "Expire Date",
+                        //contentPadding: EdgeInsets.zero,
+                        border: InputBorder.none,
+                        suffixIcon: Icon(
+                          Icons.calendar_today,
+                          color: Colors.black,
+                        ), //icon of text field
+                        // labelText: "Select Date",
+                        //labelStyle: TextStyle(fontSize: 25)
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Expanded(
-                        child: TextFormField(
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
-                            controller:
-                                dateController, //editing controller of this TextField
-                            validator: MultiValidator([
-                              RequiredValidator(errorText: "Please select Date")
-                            ]),
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.zero,
-
-                              suffixIcon: Icon(
-                                Icons.calendar_today,
-                                color: Colors.black,
-                              ), //icon of text field
-                              // labelText: "Select Date",
-                              //labelStyle: TextStyle(fontSize: 25)
-                            ),
-                            readOnly: true, // when true user cannot edit text
-                            onTap: () async {
-                              //when click we have to show the datepicker
-                              DateTime? pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate:
-                                      DateTime.now(), //get today's date
-                                  firstDate: DateTime(
-                                      2000), //DateTime.now() - not to allow to choose before today.
-                                  lastDate: DateTime(2101));
-                              setState(() {
-                                if (pickedDate != null) {
-                                  String formattedDate =
-                                      DateFormat('dd-MM-yyyy')
-                                          .format(pickedDate);
-                                  String SendformattedDate =
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(pickedDate);
-                                  dateController.text = formattedDate;
-                                  addBatch.epireDate = SendformattedDate;
-                                }
-                              });
-                            }),
-                      )
-                    ],
-                  ),
+                      readOnly: true, // when true user cannot edit text
+                      onTap: () async {
+                        //when click we have to show the datepicker
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(), //get today's date
+                            firstDate: DateTime(
+                                2000), //DateTime.now() - not to allow to choose before today.
+                            lastDate: DateTime(2101));
+                        setState(() {
+                          if (pickedDate != null) {
+                            String formattedDate =
+                                DateFormat('dd-MM-yyyy').format(pickedDate);
+                            String SendformattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            dateController.text = formattedDate;
+                            addBatch.epireDate = SendformattedDate;
+                          }
+                        });
+                      }),
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               SizedBox(
                 width: double.infinity,
@@ -212,6 +221,9 @@ class _AddBatchState extends State<AddBatch> {
                       formKey.currentState?.save();
                       api.AddBatchExpire(stockOnhand, addBatch).then((result) {
                         if (result == "success") {
+                          setState(() {
+                            res = result;
+                          });
                           showAddBatch_AlertDialog(context);
                           formKey.currentState?.reset();
                         } else if (result == "fail") {
