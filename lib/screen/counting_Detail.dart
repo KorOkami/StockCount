@@ -132,7 +132,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     // TODO: implement initState
     futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
     Future.delayed(const Duration(
-            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            milliseconds: 500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
         .then((val) {
       setState(() {
         ConvertList();

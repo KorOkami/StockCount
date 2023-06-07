@@ -56,7 +56,7 @@ class stockCountingAPI {
         //print(diff.inMinutes);
 
         Timer mytimer =
-            Timer.periodic(Duration(minutes: diff.inMinutes - 1), (timer) {
+            Timer.periodic(Duration(minutes: diff.inMinutes - 2), (timer) {
           refershtoken();
           //mytimer.cancel() //to terminate this timer
         });
@@ -171,6 +171,7 @@ class stockCountingAPI {
       }
     } on DioError catch (e) {
       result = "fail";
+      print(e.response?.data);
     }
     return result;
   }

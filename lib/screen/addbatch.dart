@@ -45,6 +45,8 @@ class _AddBatchState extends State<AddBatch> {
   TextEditingController dateController = TextEditingController();
   StockOnhand stockOnhand = StockOnhand();
   String? res;
+  // var formatter = new DateFormat('dd-MM-yyyy');
+  // DateTime? pickedDate;
   @override
   void initState() {
     // TODO: implement initState
@@ -160,43 +162,47 @@ class _AddBatchState extends State<AddBatch> {
                 child: TextFormFieldContainerRegister(
                   colors: Color.fromARGB(255, 217, 242, 253),
                   child: TextFormField(
-                      style: GoogleFonts.prompt(
-                          fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-                      controller:
-                          dateController, //editing controller of this TextField
-                      validator: MultiValidator(
-                          [RequiredValidator(errorText: "Please select Date")]),
-                      decoration: const InputDecoration(
-                        labelText: "Expire Date",
-                        //contentPadding: EdgeInsets.zero,
-                        border: InputBorder.none,
-                        suffixIcon: Icon(
-                          Icons.calendar_today,
-                          color: Colors.black,
-                        ), //icon of text field
-                        // labelText: "Select Date",
-                        //labelStyle: TextStyle(fontSize: 25)
-                      ),
-                      readOnly: true, // when true user cannot edit text
-                      onTap: () async {
-                        //when click we have to show the datepicker
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(), //get today's date
-                            firstDate: DateTime(
-                                2000), //DateTime.now() - not to allow to choose before today.
-                            lastDate: DateTime(2101));
-                        setState(() {
-                          if (pickedDate != null) {
-                            String formattedDate =
-                                DateFormat('dd-MM-yyyy').format(pickedDate);
-                            String SendformattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
-                            dateController.text = formattedDate;
-                            addBatch.epireDate = SendformattedDate;
-                          }
-                        });
-                      }),
+                    style: GoogleFonts.prompt(
+                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                    controller:
+                        dateController, //editing controller of this TextField
+                    validator: MultiValidator(
+                        [RequiredValidator(errorText: "Please select Date")]),
+                    decoration: const InputDecoration(
+                      labelText: "Expire Date",
+                      //contentPadding: EdgeInsets.zero,
+                      border: InputBorder.none,
+                      suffixIcon: Icon(
+                        Icons.calendar_today,
+                        color: Colors.black,
+                      ), //icon of text field
+                      // labelText: "Select Date",
+                      //labelStyle: TextStyle(fontSize: 25)
+                    ),
+                    readOnly: true, // when true user cannot edit text
+                    onTap: () async {
+                      //when click we have to show the datepicker
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(), //get today's date
+                          firstDate: DateTime(
+                              2000), //DateTime.now() - not to allow to choose before today.
+                          lastDate: DateTime(2101));
+                      setState(() {
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat('dd-MM-yyyy').format(pickedDate);
+                          String SendformattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          dateController.text = formattedDate;
+                          addBatch.epireDate = SendformattedDate;
+                        }
+                      });
+                    },
+                    // onSaved: (newValue) {
+                    //   dateController.text = newValue!;
+                    // },
+                  ),
                 ),
               ),
               SizedBox(

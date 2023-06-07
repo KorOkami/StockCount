@@ -256,7 +256,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               Container(
                                 alignment: Alignment.center,
                                 child: Text(
-                                    "${widget.bu_detail.buCode} - ${widget.bu_detail.whsCode}",
+                                    "${widget.bu_detail.whsCode} - ${widget.bu_detail.buCode}",
                                     style: GoogleFonts.prompt(
                                         fontSize: 40,
                                         color:
@@ -298,8 +298,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         if (Batch_List != null) {
                                           ConvertList(); // แปลงจาก Future List เป็น List
                                           Future.delayed(const Duration(
-                                                  seconds:
-                                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                                  milliseconds:
+                                                      500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                                               .then((val) {
                                             setState(() {
                                               if (widget.bu_detail.controlLot ==
@@ -742,7 +742,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
       if (Batch_List != null) {
         ConvertList(); // แปลงจาก Future List เป็น List
         Future.delayed(const Duration(
-                seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                milliseconds: 500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
             .then((val) {
           setState(() {
             if (List_StockOnhand.length != 0) {
@@ -781,7 +781,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     Batch_List = api.GetBatchList(widget.bu_detail.id, itemcode);
     ConvertList(); // แปลงจาก Future List เป็น List
     Future.delayed(const Duration(
-            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            milliseconds: 600)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
         .then((val) {
       Batch_Provider provider =
           Provider.of<Batch_Provider>(context, listen: false);
