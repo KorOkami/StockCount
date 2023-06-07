@@ -203,6 +203,18 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         }));
                         setState(() {
                           DropdownIndex = -1;
+                          Batch_List =
+                              api.GetBatchList(widget.bu_detail.id, "");
+                          ConvertList(); // แปลงจาก Future List เป็น List
+                          Future.delayed(const Duration(
+                                  seconds:
+                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                              .then((val) {
+                            Batch_Provider provider =
+                                Provider.of<Batch_Provider>(context,
+                                    listen: false);
+                            provider.addBatchStockOnhand(List_StockOnhand);
+                          });
                         });
                       } else if (value == 2) {
                         showLogout_AlertDialog(context);
@@ -487,11 +499,14 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                           hintText: "Batch"),
                                                   baseStyle: GoogleFonts.prompt(
                                                       fontSize: 18)),
-                                          // validator: (value) {
-                                          //   if (value == null) {
-                                          //     return 'Please select Batch.';
-                                          //   }
-                                          // },
+                                          validator: (value) {
+                                            // if (widget.bu_detail.controlLot ==
+                                            //  "Y") {
+                                            // if (value!.batchId == "") {
+                                            //   return 'Please select Batch.';
+                                            // }
+                                            //}
+                                          },
                                         ),
                                       ),
                                     ),
@@ -612,53 +627,38 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               SizedBox(
                                 height: 10,
                               ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Count :",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                      child: SizedBox(
-                                    // height: 50,
-                                    child: TextFormField(
-                                      style: TextStyle(fontSize: 20),
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Count Item',
-                                      ),
-                                      //validator:
-                                      //RequiredValidator(errorText: "Please Enter Count Qty."),
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return "Please Enter Count.";
-                                        } else if (double.parse(value).toInt() <
-                                            0) {
-                                          return "Count should be greater than 0";
-                                        }
-                                      },
-                                      keyboardType: TextInputType.number,
-                                      onSaved: (countItem1) {
-                                        setState(() {
-                                          countItem = countItem! +
-                                              int.parse(countItem1!);
-                                        });
+                              SizedBox(
+                                // height: 50,
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 20),
+                                  decoration: InputDecoration(
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Count Item',
+                                      suffixIcon: Icon(
+                                        Icons.calculate,
+                                        size: 40,
+                                      )),
+                                  //validator:
+                                  //RequiredValidator(errorText: "Please Enter Count Qty."),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "Please Enter Count.";
+                                    } else if (double.parse(value).toInt() <
+                                        0) {
+                                      return "Count should be greater than 0";
+                                    }
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  onSaved: (countItem1) {
+                                    setState(() {
+                                      countItem =
+                                          countItem! + int.parse(countItem1!);
+                                    });
 
-                                        batch_detail.countQty =
-                                            int.parse(countItem1!);
-                                      },
-                                    ),
-                                  ))
-                                ],
+                                    batch_detail.countQty =
+                                        int.parse(countItem1!);
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 20,
@@ -680,24 +680,36 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     if (formKey.currentState?.validate() ==
                                         true) {
                                       formKey.currentState?.save();
-                                      // batch_detail.id = List_StockOnhand[0].id;
-                                      api.AddStockActual(batch_detail)
-                                          .then((result) {
-                                        if (result == "success") {
-                                          //print(result);
-                                          //api.GetBatchList(widget.bu_detail.id,
-                                          //textController.text);
-                                          refreshDataBatch(textController.text);
-                                          setState(() {
-                                            //batch_detail.countQty =
-                                            //batch_detail.countQty! + countItem!;
+                                      if (widget.bu_detail.controlLot == "Y") {
+                                        if (batch_detail.id != null) {
+                                          api.AddStockActual(batch_detail)
+                                              .then((result) {
+                                            if (result == "success") {
+                                              refreshDataBatch(
+                                                  textController.text);
+                                              formKey.currentState?.reset();
+                                            } else if (result == "fail") {
+                                              showAlertDialog(context,
+                                                  "Add Stock Actual fail.");
+                                            }
                                           });
-                                          formKey.currentState?.reset();
-                                        } else if (result == "fail") {
-                                          showAlertDialog(context,
-                                              "Add Stock Actual fail.");
+                                        } else {
+                                          showAlertDialog(
+                                              context, "Please select batch.");
                                         }
-                                      });
+                                      } else {
+                                        api.AddStockActual(batch_detail)
+                                            .then((result) {
+                                          if (result == "success") {
+                                            refreshDataBatch(
+                                                textController.text);
+                                            formKey.currentState?.reset();
+                                          } else if (result == "fail") {
+                                            showAlertDialog(context,
+                                                "Add Stock Actual fail.");
+                                          }
+                                        });
+                                      }
 
                                       //formKey.currentState?.reset();
                                     }

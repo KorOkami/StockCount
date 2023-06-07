@@ -166,11 +166,15 @@ class _Counting_ViewState extends State<Counting_View> {
                                     borderRadius: BorderRadius.circular(10)),
                                 elevation: 5,
                                 child: ListTile(
-                                  title: Text("Batch : ${data.batchId ?? ""}",
-                                      style: GoogleFonts.prompt(
-                                          fontSize: 17,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83))),
+                                  title: data.batchId != ""
+                                      ? Text("Batch : ${data.batchId ?? ""}",
+                                          style: GoogleFonts.prompt(
+                                              fontSize: 17,
+                                              color: Color.fromARGB(
+                                                  255, 1, 57, 83)))
+                                      : Container(
+                                          height: 5,
+                                        ),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -187,6 +191,9 @@ class _Counting_ViewState extends State<Counting_View> {
                                           style: GoogleFonts.prompt(
                                             fontSize: 15,
                                           )),
+                                      SizedBox(
+                                        height: 5,
+                                      )
                                     ],
                                   ),
                                   onTap: () {

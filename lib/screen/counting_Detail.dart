@@ -160,184 +160,188 @@ class _Counting_DetailState extends State<Counting_Detail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Counting Detail",
-          style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
-        ),
-        //automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-      ),
-      body: Column(children: [
-        Container(
-          height: 50,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        "Batch : ",
-                        style: GoogleFonts.prompt(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Color.fromARGB(255, 1, 57, 83)),
-                      ),
-                    ),
-                    SizedBox(
-                      child: Text(
-                        "${widget.BatchID}",
-                        style: GoogleFonts.prompt(
-                            fontSize: 18, color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        appBar: AppBar(
+          title: Text(
+            "Counting Detail",
+            style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
+          ),
+          //automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-              primary: false,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: countingDetailList!.length,
-              itemBuilder: (context, index) {
-                CountingDetail data = countingDetailList![index];
-                return Slidable(
-                  key: Key('$data'),
-                  startActionPane:
-                      ActionPane(motion: const ScrollMotion(), children: [
-                    SlidableAction(
-                      onPressed: (context) {
-                        showDialog(
-                            context: context,
-                            builder: (context) => SimpleDialog(
-                                  children: [
-                                    Form(
-                                        key: formKey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Column(
-                                            children: [
-                                              TextFormField(
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  labelText:
-                                                      'Edit Counted Item',
-                                                ),
-                                                style: GoogleFonts.prompt(
-                                                    fontSize: 18,
-                                                    color: Colors.black),
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    strCounted = value;
-                                                  });
-                                                },
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "Please Enter Counted.";
-                                                  } else if (double.parse(value)
-                                                          .toInt() <=
-                                                      0) {
-                                                    return "Count should be greater than 0";
-                                                  }
-                                                },
-                                              ),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              SizedBox(
-                                                width: double.infinity,
-                                                height: 50,
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    if (formKey.currentState
-                                                            ?.validate() ==
-                                                        true) {
-                                                      formKey.currentState
-                                                          ?.save();
-
-                                                      api.EditCountingDetail(
-                                                              data.id!,
-                                                              strCounted)
-                                                          .then((result) {
-                                                        if (result ==
-                                                            "success") {
-                                                          refreshDataBatch(
-                                                              data.itemCode!);
-                                                          setState(() {
-                                                            data.countQty =
-                                                                int.parse(
-                                                                    strCounted);
-                                                          });
-                                                        } else {}
-                                                      });
-
-                                                      Navigator.pop(context);
+        body: Column(children: [
+          widget.BatchID != ""
+              ? Container(
+                  height: 50,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              SizedBox(
+                                child: Text(
+                                  "Batch : ",
+                                  style: GoogleFonts.prompt(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 1, 57, 83)),
+                                ),
+                              ),
+                              SizedBox(
+                                child: Text(
+                                  "${widget.BatchID}",
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 18, color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      )),
+                )
+              : Container(),
+          Expanded(
+            child: ListView.builder(
+                primary: false,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: countingDetailList!.length,
+                itemBuilder: (context, index) {
+                  CountingDetail data = countingDetailList![index];
+                  return Slidable(
+                    key: Key('$data'),
+                    startActionPane:
+                        ActionPane(motion: const ScrollMotion(), children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                    children: [
+                                      Form(
+                                          key: formKey,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                TextFormField(
+                                                  decoration: InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    labelText:
+                                                        'Edit Counted Item',
+                                                  ),
+                                                  style: GoogleFonts.prompt(
+                                                      fontSize: 18,
+                                                      color: Colors.black),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      strCounted = value;
+                                                    });
+                                                  },
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return "Please Enter Counted.";
+                                                    } else if (double.parse(
+                                                                value)
+                                                            .toInt() <=
+                                                        0) {
+                                                      return "Count should be greater than 0";
                                                     }
                                                   },
-                                                  child: Text("Update",
-                                                      style: GoogleFonts.prompt(
-                                                          fontSize: 20,
-                                                          color: Colors.white)),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ))
-                                  ],
-                                ));
-                      },
-                      backgroundColor: Colors.green,
-                      icon: Icons.edit,
-                    ),
-                  ]),
-                  endActionPane:
-                      ActionPane(motion: const ScrollMotion(), children: [
-                    SlidableAction(
-                      onPressed: (context) {
-                        setState(() {
-                          DeleteCountingDetail(data.id!).then((result) {
-                            if (result == "success") {
-                              countingDetailList!.removeAt(index);
-                              refreshDataBatch(data.itemCode!);
-                            } else {}
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      if (formKey.currentState
+                                                              ?.validate() ==
+                                                          true) {
+                                                        formKey.currentState
+                                                            ?.save();
+
+                                                        api.EditCountingDetail(
+                                                                data.id!,
+                                                                strCounted)
+                                                            .then((result) {
+                                                          if (result ==
+                                                              "success") {
+                                                            refreshDataBatch(
+                                                                data.itemCode!);
+                                                            setState(() {
+                                                              data.countQty =
+                                                                  int.parse(
+                                                                      strCounted);
+                                                            });
+                                                          } else {}
+                                                        });
+
+                                                        Navigator.pop(context);
+                                                      }
+                                                    },
+                                                    child: Text("Update",
+                                                        style:
+                                                            GoogleFonts.prompt(
+                                                                fontSize: 20,
+                                                                color: Colors
+                                                                    .white)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                    ],
+                                  ));
+                        },
+                        backgroundColor: Colors.green,
+                        icon: Icons.edit,
+                      ),
+                    ]),
+                    endActionPane:
+                        ActionPane(motion: const ScrollMotion(), children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          setState(() {
+                            DeleteCountingDetail(data.id!).then((result) {
+                              if (result == "success") {
+                                countingDetailList!.removeAt(index);
+                                refreshDataBatch(data.itemCode!);
+                              } else {}
+                            });
                           });
-                        });
-                      },
-                      backgroundColor: Colors.red,
-                      icon: Icons.delete,
-                    )
-                  ]),
-                  child: Card(
-                    shadowColor: Colors.lightBlue,
-                    elevation: 5,
-                    child: ListTile(
-                      title: Text("Counted : ${data.countQty}",
-                          style: GoogleFonts.prompt(
-                              fontSize: 17,
-                              color: Color.fromARGB(255, 1, 57, 83))),
-                      subtitle: Text("User : ${data.userName}",
-                          style: GoogleFonts.prompt(
-                            fontSize: 15,
-                          )),
+                        },
+                        backgroundColor: Colors.red,
+                        icon: Icons.delete,
+                      )
+                    ]),
+                    child: Card(
+                      shadowColor: Colors.lightBlue,
+                      elevation: 5,
+                      child: ListTile(
+                        title: Text("Counted : ${data.countQty}",
+                            style: GoogleFonts.prompt(
+                                fontSize: 17,
+                                color: Color.fromARGB(255, 1, 57, 83))),
+                        subtitle: Text("User : ${data.userName}",
+                            style: GoogleFonts.prompt(
+                              fontSize: 15,
+                            )),
+                      ),
                     ),
-                  ),
-                );
-              }),
-        ),
-      ]),
-    );
+                  );
+                }),
+          ),
+        ]));
   }
 
   void refreshDataBatch(String itemcode) {
