@@ -95,7 +95,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
         batch_detail.id = List_StockOnhand[0].id;
         itemMaster.code = List_StockOnhand[0].itemCode;
         itemMaster.name = List_StockOnhand[0].itemName;
-        itemMaster.uomCode = List_StockOnhand[0].uomCode;
+        itemMaster.uomCode = List_StockOnhand[0].uomName;
         itemMaster.location = List_StockOnhand[0].binLoc;
       }
     });
@@ -320,7 +320,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                     List_StockOnhand[0]
                                                         .itemName;
                                                 itemMaster.uomCode =
-                                                    List_StockOnhand[0].uomCode;
+                                                    List_StockOnhand[0].uomName;
                                                 itemMaster.location =
                                                     List_StockOnhand[0].binLoc;
                                                 Batch_Provider provider =
@@ -361,19 +361,6 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                       }
                                     },
                                   )),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(0, 0, 8, 18),
-                                  //   child: IconButton(
-                                  //     alignment: Alignment.topCenter,
-                                  //     onPressed: startScan,
-                                  //     icon: Icon(
-                                  //       Icons.qr_code_scanner,
-                                  //       color: Colors.black,
-                                  //       size: 50,
-                                  //     ),
-                                  //   ),
-                                  // )
                                 ],
                               ),
                               SizedBox(
@@ -457,8 +444,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                       child: IgnorePointer(
                                         ignoring: DisableDropdowmBatch,
                                         child: DropdownSearch<StockOnhand>(
-                                          autoValidateMode: AutovalidateMode
-                                              .onUserInteraction,
+                                          // autoValidateMode: AutovalidateMode
+                                          //     .onUserInteraction,
                                           popupProps: PopupProps.dialog(
                                             showSearchBox: true,
                                             searchFieldProps: TextFieldProps(
@@ -500,12 +487,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                   baseStyle: GoogleFonts.prompt(
                                                       fontSize: 18)),
                                           validator: (value) {
-                                            // if (widget.bu_detail.controlLot ==
-                                            //  "Y") {
-                                            // if (value!.batchId == "") {
-                                            //   return 'Please select Batch.';
-                                            // }
-                                            //}
+                                            if (value!.batchId == null) {
+                                              // if (batch_detail.id == "") {
+                                              return 'Please select Batch.';
+                                              //}
+                                            }
                                           },
                                         ),
                                       ),
@@ -575,7 +561,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   ),
                                   SizedBox(
                                     child: provider.bList.length != 0 &&
-                                            DropdownIndex != -1
+                                            DropdownIndex != -1 &&
+                                            provider.bList[0].itemCode != ""
                                         ? Text(
                                             "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
                                             style: GoogleFonts.prompt(
@@ -608,7 +595,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   ),
                                   SizedBox(
                                     child: provider.bList.length != 0 &&
-                                            DropdownIndex != -1
+                                            DropdownIndex != -1 &&
+                                            provider.bList[0].itemCode != ""
                                         ? Text(
                                             "${provider.bList[DropdownIndex].countQty}", //"${countItem}",
                                             style: GoogleFonts.prompt(
@@ -667,6 +655,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                 width: double.infinity,
                                 height: 50,
                                 child: ElevatedButton.icon(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Color.fromARGB(255, 5, 201, 13))),
                                   label: Text(
                                     "Save",
                                     style: GoogleFonts.prompt(
@@ -735,7 +727,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     String? cameraScanResult = await scanner.scan();
     textController.text = cameraScanResult ?? "";
     setState(() {
-      DropdownIndex = -1;
+      if (widget.bu_detail.controlLot == "N") {
+        DropdownIndex = 0;
+      } else {
+        DropdownIndex = -1;
+      }
       //textController.text = cameraScanResult ?? "";
       //GetItemDetail(textController!.text);
       Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
@@ -748,7 +744,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
             if (List_StockOnhand.length != 0) {
               itemMaster.code = List_StockOnhand[0].itemCode;
               itemMaster.name = List_StockOnhand[0].itemName;
-              itemMaster.uomCode = List_StockOnhand[0].uomCode;
+              itemMaster.uomCode = List_StockOnhand[0].uomName;
               itemMaster.location = List_StockOnhand[0].binLoc;
               Batch_Provider provider =
                   Provider.of<Batch_Provider>(context, listen: false);
