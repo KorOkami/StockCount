@@ -193,7 +193,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                labelText: "Warehose - Business Unit"),
+                                labelText: "Warehouse - Business Unit"),
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {

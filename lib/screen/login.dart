@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Profile profile = Profile("", "");
   Successlogin? _successData;
   Faillogin? _faillogin;
-
+  TextEditingController _textUserController = TextEditingController();
   /* String? urlNew;
 
   late Future<String> _url;
@@ -231,8 +231,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                 TextFormFieldContainer(
                                   child: TextFormField(
+                                    //controller: _textUserController,
                                     style: TextStyle(fontSize: 20),
                                     decoration: InputDecoration(
+                                      // suffixIcon: IconButton(
+                                      //   onPressed: _textUserController.clear,
+                                      //   icon: Icon(Icons.clear),
+                                      // ),
                                       border: InputBorder.none,
                                       icon: Icon(
                                         Icons.person,

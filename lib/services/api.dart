@@ -211,7 +211,7 @@ class stockCountingAPI {
     return result;
   }
 
-  Future<String> DeleteCountingDetail(String actualID) async {
+  /*Future<String> DeleteCountingDetail(String actualID) async {
     String result = "";
     String _deleteCountingUrl =
         'https://inventory-uat.princhealth.com/api/stockcounts/deleteactual/${actualID}';
@@ -226,5 +226,5 @@ class stockCountingAPI {
       print(e.response?.data);
     }
     return result;
-  }
+  }*/
 }

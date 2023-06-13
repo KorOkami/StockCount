@@ -104,7 +104,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                   decoration: InputDecoration(
                     icon: Icon(Icons.face),
                     border: InputBorder.none,
-                    labelText: 'Full Name',
+                    labelText: 'Full Name *',
                   ),
                   validator:
                       RequiredValidator(errorText: "Please Enter Full Name"),
@@ -170,7 +170,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     border: InputBorder.none,
-                    labelText: 'E-mail',
+                    labelText: 'E-mail *',
                   ),
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Please Enter E-mail"),
@@ -195,7 +195,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                   decoration: InputDecoration(
                     icon: Icon(Icons.person),
                     border: InputBorder.none,
-                    labelText: 'User Name',
+                    labelText: 'User Name (ห้ามเว้นวรรค) *',
                   ),
                   validator:
                       RequiredValidator(errorText: "Please Enter User Name"),
@@ -216,7 +216,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                   decoration: InputDecoration(
                       icon: Icon(Icons.lock),
                       border: InputBorder.none,
-                      labelText: 'Password',
+                      labelText: 'Password *',
                       suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -264,7 +264,7 @@ class _Register_ScreenState extends State<Register_Screen> {
                           showRegister_AlertDialog(context);
                           formKey.currentState?.reset();
                         } else {
-                          showAlertDialog(context, "Failed");
+                          showAlertDialog(context, result);
                         }
                       });
                     }
