@@ -21,6 +21,8 @@ import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-item.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_dynamic_calculator/flutter_dynamic_calculator.dart';
 
 class CountScan extends StatefulWidget {
   const CountScan(
@@ -42,6 +44,7 @@ class CountScan extends StatefulWidget {
 
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
+  //late TextEditingController textCountController;
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
   late Future<List<StockOnhand>> Batch_List;
@@ -618,14 +621,115 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               SizedBox(
                                 // height: 50,
                                 child: TextFormField(
+                                  // controller: textCountController,
                                   style: TextStyle(fontSize: 20),
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Count Item',
-                                      suffixIcon: Icon(
-                                        Icons.calculate,
-                                        size: 40,
-                                      )),
+                                      suffixIcon: Icon(Icons.keyboard, size: 40)
+                                      /*suffixIcon: IconButton(
+                                        icon: Icon(Icons.calculate, size: 40),
+                                        onPressed: () {
+                                          showModalBottomSheet(
+                                              isScrollControlled: true,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              barrierColor: Colors.transparent,
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade200,
+                                                  ),
+                                                  child: SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.6,
+                                                      child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 8.0,
+                                                                  bottom: 8.0,
+                                                                  left: 26.0,
+                                                                  right: 26.0),
+                                                          child:
+                                                              DynamicCalculator(
+                                                            value: 0,
+                                                            hideExpression:
+                                                                false,
+                                                            hideSurroundingBorder:
+                                                                true,
+                                                            showCalculatorDisplay:
+                                                                true,
+                                                            //autofocus: false,
+                                                            onChanged: (key,
+                                                                value,
+                                                                expression) {
+                                                              // setState(() {
+                                                              //   textCountController
+                                                              //           .text =
+                                                              //       value!
+                                                              //           .round()
+                                                              //           .toString();
+                                                              //   //print('$value');
+                                                              // });
+                                                            },
+                                                            theme:
+                                                                const CalculatorTheme(
+                                                              borderColor: Colors
+                                                                  .transparent,
+                                                              borderWidth: 0.0,
+                                                              displayCalculatorRadius:
+                                                                  10.0,
+                                                              displayBackgroundColor:
+                                                                  Colors.white,
+                                                              displayStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          30,
+                                                                      color: Colors
+                                                                          .green),
+                                                              expressionBackgroundColor:
+                                                                  Colors
+                                                                      .black12,
+                                                              expressionStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          14,
+                                                                      color: Colors
+                                                                          .black45),
+                                                              operatorColor:
+                                                                  Colors.green,
+                                                              operatorStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          24,
+                                                                      color: Colors
+                                                                          .white),
+                                                              commandColor:
+                                                                  Colors.white,
+                                                              commandStyle:
+                                                                  TextStyle(
+                                                                      fontSize:
+                                                                          24,
+                                                                      color: Colors
+                                                                          .green),
+                                                              numColor:
+                                                                  Colors.white,
+                                                              numStyle: TextStyle(
+                                                                  fontSize: 24,
+                                                                  color: Colors
+                                                                      .black87),
+                                                            ),
+                                                          ))),
+                                                );
+                                              });
+                                        },
+                                      )*/
+                                      ),
                                   //validator:
                                   //RequiredValidator(errorText: "Please Enter Count Qty."),
                                   validator: (value) {
@@ -679,6 +783,12 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                             if (result == "success") {
                                               refreshDataBatch(
                                                   textController.text);
+                                              // setState(() {
+                                              //   textCountController.clear;
+                                              //   textCountController.text = "";
+                                              //   String rr = "";
+                                              // });
+
                                               formKey.currentState?.reset();
                                             } else if (result == "fail") {
                                               showAlertDialog(context,
@@ -738,7 +848,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
       if (Batch_List != null) {
         ConvertList(); // แปลงจาก Future List เป็น List
         Future.delayed(const Duration(
-                milliseconds: 500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
             .then((val) {
           setState(() {
             if (List_StockOnhand.length != 0) {
