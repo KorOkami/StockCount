@@ -44,7 +44,7 @@ class CountScan extends StatefulWidget {
 
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
-  final TextEditingController textCountController = TextEditingController();
+//  TextEditingController _textCountController = TextEditingController();
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
   late Future<List<StockOnhand>> Batch_List;
@@ -58,6 +58,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   ItemMaster? itm_detail;
   bool showAddBatchButton = true;
   bool DisableDropdowmBatch = false;
+  int? _currentValue = 0;
+  bool flagSave = false;
   @override
   void initState() {
     super.initState();
@@ -109,6 +111,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _tabController!.dispose();
+    // _textCountController.dispose();
   }
 
   @override
@@ -529,7 +532,6 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                   bu_detail: widget.bu_detail,
                                                   itemMaster: itemMaster,
                                                 );
-                                                String rr = "";
                                               }));
                                             } else {
                                               if (itemMaster.code == "") {
@@ -629,7 +631,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               SizedBox(
                                 // height: 50,
                                 child: TextFormField(
-                                  controller: textCountController,
+                                  //controller: _textCountController,
+                                  controller: flagSave == false
+                                      ? TextEditingController(text: "")
+                                      : TextEditingController(
+                                          text: _currentValue.toString()),
                                   style: TextStyle(fontSize: 20),
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
@@ -672,17 +678,20 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                                 true,
                                                             showCalculatorDisplay:
                                                                 true,
-                                                            //autofocus: false,
+                                                            autofocus: false,
                                                             onChanged: (key,
                                                                 value,
                                                                 expression) {
                                                               setState(() {
-                                                                textCountController
-                                                                        .text =
+                                                                _currentValue =
                                                                     value!
-                                                                        .round()
-                                                                        .toString();
-                                                                //print('$value');
+                                                                        .round();
+                                                                flagSave = true;
+                                                                // _textCountController
+                                                                //         .text =
+                                                                //     value!
+                                                                //         .round()
+                                                                //         .toString();
                                                               });
                                                             },
                                                             theme:
@@ -742,11 +751,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Please Enter Count.";
+                                    } else if (double.parse(value).toInt() <
+                                        0) {
+                                      return "Count should be greater than 0";
                                     }
-                                    // else if (double.parse(value).toInt() <
-                                    //     0) {
-                                    //   return "Count should be greater than 0";
-                                    // }
                                   },
                                   keyboardType: TextInputType.number,
                                   onSaved: (countItem1) {
@@ -784,6 +792,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     if (formKey.currentState?.validate() ==
                                         true) {
                                       formKey.currentState?.save();
+
                                       if (widget.bu_detail.controlLot == "Y") {
                                         if (batch_detail.id != null) {
                                           api.AddStockActual(batch_detail)
@@ -792,9 +801,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                               refreshDataBatch(
                                                   textController.text);
                                               setState(() {
-                                                textCountController.clear;
-                                                textCountController.text = "";
-                                                String rr = "";
+                                                //_textCountController.clear();
+                                                flagSave = false;
                                               });
 
                                               formKey.currentState?.reset();
@@ -813,6 +821,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                           if (result == "success") {
                                             refreshDataBatch(
                                                 textController.text);
+                                            setState(() {
+                                              // _textCountController.clear();
+                                              flagSave = false;
+                                            });
                                             formKey.currentState?.reset();
                                           } else if (result == "fail") {
                                             showAlertDialog(context,
