@@ -44,7 +44,7 @@ class CountScan extends StatefulWidget {
 
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
-  //late TextEditingController textCountController;
+  final TextEditingController textCountController = TextEditingController();
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
   late Future<List<StockOnhand>> Batch_List;
@@ -261,12 +261,20 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                 child: Text(
                                     "${widget.bu_detail.whsCode} - ${widget.bu_detail.buCode}",
                                     style: GoogleFonts.prompt(
-                                        fontSize: 40,
+                                        fontSize: 30,
                                         color:
                                             Color.fromARGB(255, 1, 68, 122))),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 5,
+                              ),
+                              SizedBox(
+                                child: Text(
+                                    "Document No. : ${widget.bu_detail.docNum}"),
+                                //height: 10,
+                              ),
+                              SizedBox(
+                                height: 5,
                               ),
                               Text("Item QR/Barcode",
                                   style: GoogleFonts.prompt(
@@ -621,13 +629,13 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               SizedBox(
                                 // height: 50,
                                 child: TextFormField(
-                                  // controller: textCountController,
+                                  controller: textCountController,
                                   style: TextStyle(fontSize: 20),
                                   decoration: InputDecoration(
                                       border: OutlineInputBorder(),
                                       labelText: 'Count Item',
-                                      suffixIcon: Icon(Icons.keyboard, size: 40)
-                                      /*suffixIcon: IconButton(
+                                      // suffixIcon: Icon(Icons.keyboard, size: 40)
+                                      suffixIcon: IconButton(
                                         icon: Icon(Icons.calculate, size: 40),
                                         onPressed: () {
                                           showModalBottomSheet(
@@ -668,14 +676,14 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                             onChanged: (key,
                                                                 value,
                                                                 expression) {
-                                                              // setState(() {
-                                                              //   textCountController
-                                                              //           .text =
-                                                              //       value!
-                                                              //           .round()
-                                                              //           .toString();
-                                                              //   //print('$value');
-                                                              // });
+                                                              setState(() {
+                                                                textCountController
+                                                                        .text =
+                                                                    value!
+                                                                        .round()
+                                                                        .toString();
+                                                                //print('$value');
+                                                              });
                                                             },
                                                             theme:
                                                                 const CalculatorTheme(
@@ -728,17 +736,17 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                 );
                                               });
                                         },
-                                      )*/
-                                      ),
+                                      )),
                                   //validator:
                                   //RequiredValidator(errorText: "Please Enter Count Qty."),
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return "Please Enter Count.";
-                                    } else if (double.parse(value).toInt() <
-                                        0) {
-                                      return "Count should be greater than 0";
                                     }
+                                    // else if (double.parse(value).toInt() <
+                                    //     0) {
+                                    //   return "Count should be greater than 0";
+                                    // }
                                   },
                                   keyboardType: TextInputType.number,
                                   onSaved: (countItem1) {
@@ -783,11 +791,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                             if (result == "success") {
                                               refreshDataBatch(
                                                   textController.text);
-                                              // setState(() {
-                                              //   textCountController.clear;
-                                              //   textCountController.text = "";
-                                              //   String rr = "";
-                                              // });
+                                              setState(() {
+                                                textCountController.clear;
+                                                textCountController.text = "";
+                                                String rr = "";
+                                              });
 
                                               formKey.currentState?.reset();
                                             } else if (result == "fail") {
@@ -837,11 +845,6 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     String? cameraScanResult = await scanner.scan();
     textController.text = cameraScanResult ?? "";
     setState(() {
-      if (widget.bu_detail.controlLot == "N") {
-        DropdownIndex = 0;
-      } else {
-        DropdownIndex = -1;
-      }
       //textController.text = cameraScanResult ?? "";
       //GetItemDetail(textController!.text);
       Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
@@ -851,7 +854,13 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                 milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
             .then((val) {
           setState(() {
+            if (widget.bu_detail.controlLot == "N") {
+              DropdownIndex = 0;
+            } else {
+              DropdownIndex = -1;
+            }
             if (List_StockOnhand.length != 0) {
+              batch_detail.id = List_StockOnhand[0].id;
               itemMaster.code = List_StockOnhand[0].itemCode;
               itemMaster.name = List_StockOnhand[0].itemName;
               itemMaster.uomCode = List_StockOnhand[0].uomName;
