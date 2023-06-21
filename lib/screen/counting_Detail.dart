@@ -250,7 +250,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                       return "Please Enter Counted.";
                                                     } else if (double.parse(
                                                                 value)
-                                                            .toInt() <=
+                                                            .toInt() <
                                                         0) {
                                                       return "Count should be greater than 0";
                                                     }

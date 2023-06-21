@@ -69,6 +69,6 @@ class CountingDoc {
     // } else {
     //   BUName = buName!;
     // }
-    return '${this.whsCode} - ${this.buCode}(${buName})';
+    return '${this.buCode}(${buName}) \n- ${this.whsCode}(${whsName})';
   }
 }
