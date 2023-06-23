@@ -82,4 +82,9 @@ class StockOnhand {
         "diffQty": diffQty,
         "diffTotal": diffTotal,
       };
+
+  String batchstring() {
+    // return '${this.batchId} (Exp : ${this.expiryDate})';
+    return '${this.batchId}';
+  }
 }

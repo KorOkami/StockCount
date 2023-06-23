@@ -19,6 +19,8 @@ import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/services/store.dart';
+import 'package:stock_counting_app/utility/alert.dart';
+import 'package:flutter/services.dart';
 
 class Counting_Detail extends StatefulWidget {
   const Counting_Detail(
@@ -45,6 +47,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
   final api = stockCountingAPI();
   late Future<List<StockOnhand>> Batch_List;
   late List<StockOnhand> List_StockOnhand = [];
+  bool _isDelete = false;
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   /*Future<String> GetCountingDetail() async {
     List<CountingDetail> _countingDetail = [];
@@ -160,6 +165,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Text(
             "Counting Detail",
@@ -245,6 +251,12 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                       strCounted = value;
                                                     });
                                                   },
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                      RegExp("[0-9]"),
+                                                    ),
+                                                  ],
                                                   validator: (value) {
                                                     if (value!.isEmpty) {
                                                       return "Please Enter Counted.";
@@ -283,7 +295,11 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                                   int.parse(
                                                                       strCounted);
                                                             });
-                                                          } else {}
+                                                          } else {
+                                                            showAlertDialog(
+                                                                context,
+                                                                "Update Failed.");
+                                                          }
                                                         });
 
                                                         Navigator.pop(context);
@@ -312,12 +328,15 @@ class _Counting_DetailState extends State<Counting_Detail> {
                       SlidableAction(
                         onPressed: (context) {
                           setState(() {
-                            DeleteCountingDetail(data.id!).then((result) {
-                              if (result == "success") {
-                                countingDetailList!.removeAt(index);
-                                refreshDataBatch(data.itemCode!);
-                              } else {}
-                            });
+                            showDelete_AlertDialog(context, data, index);
+                            // if (_isDelete == true) {
+                            //   DeleteCountingDetail(data.id!).then((result) {
+                            //     if (result == "success") {
+                            //       countingDetailList!.removeAt(index);
+                            //       refreshDataBatch(data.itemCode!);
+                            //     } else {}
+                            //   });
+                            // }
                           });
                         },
                         backgroundColor: Colors.red,
@@ -362,5 +381,59 @@ class _Counting_DetailState extends State<Counting_Detail> {
 
   void ConvertBatchList() async {
     List_StockOnhand = await Batch_List;
+  }
+
+  showDelete_AlertDialog(BuildContext context, CountingDetail data, int index) {
+    // set up the buttons
+    Widget OkButton = TextButton(
+      child: Text(
+        "Yes",
+        style: GoogleFonts.prompt(fontSize: 20),
+      ),
+      onPressed: () {
+        setState(() {
+          _isDelete = true;
+          DeleteCountingDetail(data.id!).then((result) {
+            if (result == "success") {
+              countingDetailList!.removeAt(index);
+              refreshDataBatch(data.itemCode!);
+            } else {
+              showAlertDialog(context, "Delete Failed.");
+            }
+          });
+        });
+        Navigator.of(_scaffoldKey.currentContext!).pop();
+      },
+    );
+    Widget cancelButton = TextButton(
+        child: Text(
+          "No",
+          style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        onPressed: () => Navigator.of(_scaffoldKey.currentContext!).pop());
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        "Warning",
+        style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+      ),
+      content: Text(
+        "Are you sure you want to delete?",
+        style: GoogleFonts.prompt(fontSize: 16),
+      ),
+      actions: [
+        OkButton,
+        cancelButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

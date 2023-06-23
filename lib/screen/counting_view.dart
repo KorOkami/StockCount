@@ -151,6 +151,7 @@ class _Counting_ViewState extends State<Counting_View> {
                   Expanded(
                     child: RefreshIndicator(
                       child: ListView.builder(
+                          reverse: false,
                           physics: const AlwaysScrollableScrollPhysics(),
                           primary: false,
                           scrollDirection: Axis.vertical,
@@ -158,6 +159,7 @@ class _Counting_ViewState extends State<Counting_View> {
                           itemCount: provider.bList.length,
                           itemBuilder: (context, int index) {
                             StockOnhand data = provider.bList[index];
+
                             if (data != null)
                               return Card(
                                 shadowColor: Colors.lightBlue,
@@ -179,6 +181,24 @@ class _Counting_ViewState extends State<Counting_View> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
+                                      data.batchId != ""
+                                          ? checkexpDate(data.expiryDate!) ==
+                                                  true
+                                              ? Text(
+                                                  "Expire Date : ${data.expiryDate ?? ""}",
+                                                  style: GoogleFonts.prompt(
+                                                    color: Colors.red,
+                                                    fontSize: 12,
+                                                  ))
+                                              : Text(
+                                                  "Expire Date : ${data.expiryDate ?? ""}",
+                                                  style: GoogleFonts.prompt(
+                                                    color: Colors.green,
+                                                    fontSize: 12,
+                                                  ))
+                                          : Container(
+                                              height: 2,
+                                            ),
                                       Text("OnHand : ${data.qty ?? ""}",
                                           style: GoogleFonts.prompt(
                                             fontSize: 15,
@@ -249,5 +269,15 @@ class _Counting_ViewState extends State<Counting_View> {
 
   void ConvertBatchList() async {
     List_StockOnhand = await Batch_List;
+  }
+
+  bool checkexpDate(String expDate) {
+    bool result = false;
+    DateTime dtExp = DateTime.parse(expDate);
+    Duration diff = dtExp.difference(DateTime.now());
+    if (diff.inDays <= 30) {
+      result = true;
+    }
+    return result;
   }
 }

@@ -24,6 +24,8 @@ import 'package:motion_tab_bar_v2/motion-tab-item.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_dynamic_calculator/flutter_dynamic_calculator.dart';
 
+import 'package:flutter/services.dart';
+
 class CountScan extends StatefulWidget {
   const CountScan(
       {super.key,
@@ -60,6 +62,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   bool DisableDropdowmBatch = false;
   int? _currentValue = 0;
   bool flagSave = false;
+  bool _showSortmenu = false;
   @override
   void initState() {
     super.initState();
@@ -125,107 +128,117 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
         },
         child: Scaffold(
             appBar: AppBar(
-                elevation: 0,
-                title: Text(
-                  "Stock Counting",
-                  style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
-                ),
-                automaticallyImplyLeading: false,
-                leading: PopupMenuButton(
-                    elevation: 0,
-                    color: Color.fromARGB(255, 1, 68, 122),
-                    shadowColor: Colors.black,
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem<int>(
-                          value: 0,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.person_2,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("${widget.userName}",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20, color: Colors.white)),
-                            ],
-                          ),
+              elevation: 0,
+              title: Text(
+                "Stock Counting",
+                style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
+              ),
+              automaticallyImplyLeading: false,
+              leading: PopupMenuButton(
+                  elevation: 0,
+                  color: Color.fromARGB(255, 1, 68, 122),
+                  shadowColor: Colors.black,
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem<int>(
+                        value: 0,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.person_2,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("${widget.userName}",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
                         ),
-                        PopupMenuItem<int>(
-                          value: 1,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.home,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("Home",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20, color: Colors.white)),
-                            ],
-                          ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.home,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("Home",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
                         ),
-                        PopupMenuItem<int>(
-                          value: 2,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.logout,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Text("Logout",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20, color: Colors.white)),
-                            ],
-                          ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 2,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("Logout",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
                         ),
-                      ];
-                    },
-                    onSelected: (value) {
-                      if (value == 1) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return BU_Screen(
-                            token: widget.token,
-                            userName: widget.userName,
-                          );
-                        }));
-                        setState(() {
-                          DropdownIndex = -1;
-                          Batch_List =
-                              api.GetBatchList(widget.bu_detail.id, "");
-                          ConvertList(); // แปลงจาก Future List เป็น List
-                          Future.delayed(const Duration(
-                                  seconds:
-                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                              .then((val) {
-                            Batch_Provider provider =
-                                Provider.of<Batch_Provider>(context,
-                                    listen: false);
-                            provider.addBatchStockOnhand(List_StockOnhand);
-                          });
+                      ),
+                    ];
+                  },
+                  onSelected: (value) {
+                    if (value == 1) {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return BU_Screen(
+                          token: widget.token,
+                          userName: widget.userName,
+                        );
+                      }));
+                      setState(() {
+                        DropdownIndex = -1;
+                        Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+                        ConvertList(); // แปลงจาก Future List เป็น List
+                        Future.delayed(const Duration(
+                                seconds:
+                                    1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                            .then((val) {
+                          Batch_Provider provider = Provider.of<Batch_Provider>(
+                              context,
+                              listen: false);
+                          provider.addBatchStockOnhand(List_StockOnhand);
                         });
-                      } else if (value == 2) {
-                        showLogout_AlertDialog(context);
-                      }
-                    })),
+                      });
+                    } else if (value == 2) {
+                      showLogout_AlertDialog(context);
+                    }
+                  }),
+              // actions: [
+              //   Visibility(
+              //       visible: _showSortmenu,
+              //       child: IconButton(
+              //           onPressed: () {},
+              //           icon: Icon(
+              //             Icons.sort,
+              //             color: Colors.white,
+              //           )))
+              // ],
+            ),
             bottomNavigationBar: MotionTabBar(
               initialSelectedTab: "Count",
               useSafeArea: true, // default: true, apply safe area wrapper
@@ -243,6 +256,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
               onTabItemSelected: (int value) {
                 setState(() {
                   _tabController!.index = value;
+                  // if (value == 0) {
+                  //   _showSortmenu = false;
+                  // } else {
+                  //   _showSortmenu = true;
+                  // }
                 });
               },
             ),
@@ -468,10 +486,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                           ), // Popup search
 
                                           asyncItems: (filter) => Batch_List,
-
+                                          //กำหนดฟิลล์ที่ต้องการให้เลือก
                                           itemAsString: (StockOnhand? u) =>
-                                              u?.batchId ??
-                                              "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+                                              //u?.batchstring() ?? "",
+                                              u?.batchId ?? "",
                                           selectedItem: DropdownIndex != -1
                                               ? _selectedItem
                                               : _clearSelectedItem,
@@ -756,6 +774,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                       return "Count should be greater than 0";
                                     }
                                   },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                      RegExp("[0-9]"),
+                                    ),
+                                  ],
                                   keyboardType: TextInputType.number,
                                   onSaved: (countItem1) {
                                     setState(() {
@@ -804,7 +827,25 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                 //_textCountController.clear();
                                                 flagSave = false;
                                               });
-
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                duration:
+                                                    new Duration(seconds: 2),
+                                                elevation: 2.0,
+                                                behavior:
+                                                    SnackBarBehavior.fixed,
+                                                content: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                      "Counted Successful.",
+                                                      style: GoogleFonts.prompt(
+                                                          fontSize: 15,
+                                                          color: Colors.white)),
+                                                ),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 1, 114, 5),
+                                              ));
                                               formKey.currentState?.reset();
                                             } else if (result == "fail") {
                                               showAlertDialog(context,
@@ -836,6 +877,18 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                       //formKey.currentState?.reset();
                                     }
                                   },
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                child: SizedBox(
+                                  child: Text(
+                                    "หมายเหตุ",
+                                    style: GoogleFonts.prompt(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                  ),
                                 ),
                               )
                             ]),
