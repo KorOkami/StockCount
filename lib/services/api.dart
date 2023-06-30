@@ -147,6 +147,22 @@ class stockCountingAPI {
     return result;
   }
 
+  Future<String> updateComments(String _batchID, String _comments) async {
+    String result = "";
+    String _AddcommentsUrl =
+        'https://inventory-uat.princhealth.com/api/StockCounts/editOnhandComments/${_batchID}';
+    Map<String, dynamic> _commentsdata = {"comments": "${_comments}"};
+    try {
+      final response = await _dio.put(_AddcommentsUrl, data: _commentsdata);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+    }
+    return result;
+  }
+
   Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";

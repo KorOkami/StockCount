@@ -11,24 +11,24 @@ String stockOnhandToJson(List<StockOnhand> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class StockOnhand {
-  StockOnhand({
-    this.id,
-    this.stockcountid,
-    this.lineNum,
-    this.itemCode,
-    this.itemName,
-    this.binLoc,
-    this.batchId,
-    this.expiryDate,
-    this.qty,
-    this.uomCode,
-    this.uomName,
-    this.cost,
-    this.total,
-    this.countQty,
-    this.diffQty,
-    this.diffTotal,
-  });
+  StockOnhand(
+      {this.id,
+      this.stockcountid,
+      this.lineNum,
+      this.itemCode,
+      this.itemName,
+      this.binLoc,
+      this.batchId,
+      this.expiryDate,
+      this.qty,
+      this.uomCode,
+      this.uomName,
+      this.cost,
+      this.total,
+      this.countQty,
+      this.diffQty,
+      this.diffTotal,
+      this.comments});
 
   String? id;
   String? stockcountid;
@@ -46,24 +46,25 @@ class StockOnhand {
   int? countQty;
   int? diffQty;
   double? diffTotal;
+  String? comments;
 
   factory StockOnhand.fromJson(Map<String, dynamic> json) => StockOnhand(
-        id: json["id"],
-        lineNum: json["lineNum"],
-        itemCode: json["itemCode"],
-        itemName: json["itemName"],
-        binLoc: json["binLoc"],
-        batchId: json["batchID"],
-        expiryDate: json["expiryDate"],
-        qty: json["qty"],
-        uomCode: json["uomCode"],
-        uomName: json["uomName"],
-        cost: json["cost"],
-        total: json["total"]?.toDouble(),
-        countQty: json["countQty"],
-        diffQty: json["diffQty"],
-        diffTotal: json["diffTotal"],
-      );
+      id: json["id"],
+      lineNum: json["lineNum"],
+      itemCode: json["itemCode"],
+      itemName: json["itemName"],
+      binLoc: json["binLoc"],
+      batchId: json["batchID"],
+      expiryDate: json["expiryDate"],
+      qty: json["qty"],
+      uomCode: json["uomCode"],
+      uomName: json["uomName"],
+      cost: json["cost"],
+      total: json["total"]?.toDouble(),
+      countQty: json["countQty"],
+      diffQty: json["diffQty"],
+      diffTotal: json["diffTotal"],
+      comments: json["comments"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -81,10 +82,17 @@ class StockOnhand {
         "countQty": countQty,
         "diffQty": diffQty,
         "diffTotal": diffTotal,
+        "comments": comments
       };
 
   String batchstring() {
     // return '${this.batchId} (Exp : ${this.expiryDate})';
-    return '${this.batchId}';
+    String strBatchList = "";
+    if (this.batchId != null) {
+      strBatchList = '${this.batchId} \n(Exp : ${this.expiryDate})';
+      //strBatchList = '${this.batchId}';
+    }
+
+    return strBatchList;
   }
 }

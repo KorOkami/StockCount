@@ -47,8 +47,10 @@ class CountScan extends StatefulWidget {
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
 //  TextEditingController _textCountController = TextEditingController();
+  final TextEditingController textCommentsController = TextEditingController();
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
+  final formKeyComments = GlobalKey<FormState>();
   late Future<List<StockOnhand>> Batch_List;
   late StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand = [];
@@ -57,12 +59,15 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   late StockOnhand? _selectedItem = StockOnhand();
   late StockOnhand? _clearSelectedItem = StockOnhand();
   late int DropdownIndex = -1;
+  late int oldIndex;
   ItemMaster? itm_detail;
   bool showAddBatchButton = true;
   bool DisableDropdowmBatch = false;
   int? _currentValue = 0;
   bool flagSave = false;
   bool _showSortmenu = false;
+  bool _iscomments = false;
+  String _sortfield = "";
   @override
   void initState() {
     super.initState();
@@ -114,7 +119,6 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   void dispose() {
     super.dispose();
     _tabController!.dispose();
-    // _textCountController.dispose();
   }
 
   @override
@@ -228,15 +232,69 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                       showLogout_AlertDialog(context);
                     }
                   }),
-              // actions: [
+              // actions: [ // Sorting Menu
               //   Visibility(
-              //       visible: _showSortmenu,
-              //       child: IconButton(
-              //           onPressed: () {},
-              //           icon: Icon(
-              //             Icons.sort,
-              //             color: Colors.white,
-              //           )))
+              //     visible: _showSortmenu,
+              //     child: PopupMenuButton(
+              //         //elevation: 1,
+              //         //offset: Offset(0, 4),
+              //         color: Color.fromARGB(255, 4, 126, 226),
+              //         shadowColor: Colors.black,
+              //         icon: Icon(
+              //           Icons.sort,
+              //           color: Colors.white,
+              //           size: 35,
+              //         ),
+              //         itemBuilder: (context) {
+              //           return [
+              //             PopupMenuItem<int>(
+              //               value: 0,
+              //               child: Text("Batch",
+              //                   style: GoogleFonts.prompt(
+              //                       fontSize: 15, color: Colors.white)),
+              //             ),
+              //             PopupMenuItem<int>(
+              //               value: 1,
+              //               child: Text("ExpDate",
+              //                   style: GoogleFonts.prompt(
+              //                       fontSize: 15, color: Colors.white)),
+              //             ),
+              //             PopupMenuItem<int>(
+              //               value: 2,
+              //               child: Text("Onhand",
+              //                   style: GoogleFonts.prompt(
+              //                       fontSize: 15, color: Colors.white)),
+              //             ),
+              //             PopupMenuItem<int>(
+              //               value: 3,
+              //               child: Text("Count",
+              //                   style: GoogleFonts.prompt(
+              //                       fontSize: 15, color: Colors.white)),
+              //             ),
+              //             PopupMenuItem<int>(
+              //               value: 4,
+              //               child: Text("Diff",
+              //                   style: GoogleFonts.prompt(
+              //                       fontSize: 15, color: Colors.white)),
+              //             )
+              //           ];
+              //         },
+              //         onSelected: (value) {
+              //           setState(() {
+              //             if (value == 0) {
+              //               _sortfield = "Batch";
+              //             } else if (value == 1) {
+              //               _sortfield = "Exp";
+              //             } else if (value == 2) {
+              //               _sortfield = "Onhand";
+              //             } else if (value == 3) {
+              //               _sortfield = "Count";
+              //             } else if (value == 4) {
+              //               _sortfield = "Diff";
+              //             }
+              //           });
+              //         }),
+              //   )
               // ],
             ),
             bottomNavigationBar: MotionTabBar(
@@ -254,14 +312,27 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
               tabIconSelectedColor: Colors.white,
               tabBarColor: Color.fromARGB(255, 5, 169, 239),
               onTabItemSelected: (int value) {
-                setState(() {
-                  _tabController!.index = value;
-                  // if (value == 0) {
-                  //   _showSortmenu = false;
-                  // } else {
-                  //   _showSortmenu = true;
-                  // }
-                });
+                _tabController!.index = value;
+                // สำหรับการซ้อน Sorting menu และกำหนด value เดิม
+                //int tt = DropdownIndex;
+                // if (mounted) {
+                // setState(() {
+                //   if (value == 0) {
+                //     _showSortmenu = false;
+                //     //if (widget.bu_detail.controlLot == "Y") {
+                //     //DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
+                //     // }
+                //   } else {
+                //     if (widget.bu_detail.controlLot == "Y") {
+                //       _showSortmenu = true;
+                //       //DropdownIndex = oldIndex;
+                //       DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
+                //     } else {
+                //       _showSortmenu = false;
+                //     }
+                //   }
+                // });
+                // }
               },
             ),
             body: TabBarView(
@@ -324,6 +395,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         errorText: "Please Scan Item."),
                                     onEditingComplete: () {
                                       if (textController.text != "") {
+                                        //_selectedItem = _clearSelectedItem;
+                                        textCommentsController.clear();
                                         Batch_List = api.GetBatchList(
                                             widget.bu_detail.id,
                                             textController.text);
@@ -343,6 +416,14 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
 
                                               if (List_StockOnhand.length !=
                                                   0) {
+                                                textCommentsController.text =
+                                                    List_StockOnhand[0]
+                                                            .comments ??
+                                                        "";
+                                                _iscomments = checkValue(
+                                                    List_StockOnhand[0]
+                                                            .comments ??
+                                                        "");
                                                 batch_detail.id =
                                                     List_StockOnhand[0].id;
                                                 itemMaster.code =
@@ -488,8 +569,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                           asyncItems: (filter) => Batch_List,
                                           //กำหนดฟิลล์ที่ต้องการให้เลือก
                                           itemAsString: (StockOnhand? u) =>
-                                              //u?.batchstring() ?? "",
-                                              u?.batchId ?? "",
+                                              u?.batchstring() ?? "",
+                                          //u?.batchId ?? "",
                                           selectedItem: DropdownIndex != -1
                                               ? _selectedItem
                                               : _clearSelectedItem,
@@ -500,11 +581,16 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                   List_StockOnhand.indexOf(
                                                       value!);
                                               _selectedItem = value;
+                                              oldIndex = DropdownIndex;
                                               batch_detail.id = value.id;
                                               batch_detail.qty = value.qty;
                                               batch_detail.countQty =
                                                   value.countQty;
                                               countItem = batch_detail.countQty;
+                                              textCommentsController.text =
+                                                  value.comments ?? "";
+                                              _iscomments = checkValue(
+                                                  value.comments ?? "");
                                             });
                                           },
 
@@ -792,7 +878,173 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                 ),
                               ),
                               SizedBox(
-                                height: 20,
+                                height: 5,
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    child: Text(
+                                      "Comments",
+                                      style: GoogleFonts.prompt(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color:
+                                              Color.fromARGB(255, 1, 57, 83)),
+                                    ),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        bool show = false;
+                                        if (widget.bu_detail.controlLot ==
+                                            "Y") {
+                                          if (provider.bList.length > 0 &&
+                                              _selectedItem!.batchId != null) {
+                                            DropdownIndex != -1
+                                                ? textCommentsController
+                                                    .text = provider
+                                                        .bList[DropdownIndex]
+                                                        .comments ??
+                                                    ""
+                                                : "";
+                                            show = true;
+                                          }
+                                        } else {
+                                          if (provider.bList.length > 0) {
+                                            DropdownIndex != -1
+                                                ? textCommentsController
+                                                    .text = provider
+                                                        .bList[DropdownIndex]
+                                                        .comments ??
+                                                    ""
+                                                : "";
+                                            show = true;
+                                          }
+                                        }
+                                        if (show) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) => SimpleDialog(
+                                              children: [
+                                                Form(
+                                                    key: formKeyComments,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        children: [
+                                                          SingleChildScrollView(
+                                                            child:
+                                                                TextFormField(
+                                                              controller:
+                                                                  textCommentsController,
+                                                              minLines: 1,
+                                                              maxLines: 8,
+                                                              maxLength: 300,
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                border:
+                                                                    OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Edit Comments',
+                                                              ),
+                                                              style: GoogleFonts
+                                                                  .prompt(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .black),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                          SizedBox(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 50,
+                                                            child:
+                                                                ElevatedButton(
+                                                              onPressed: () {
+                                                                if (formKeyComments
+                                                                        .currentState
+                                                                        ?.validate() ==
+                                                                    true) {
+                                                                  formKeyComments
+                                                                      .currentState
+                                                                      ?.save();
+
+                                                                  api
+                                                                      .updateComments(
+                                                                          batch_detail
+                                                                              .id!,
+                                                                          textCommentsController
+                                                                              .text)
+                                                                      .then(
+                                                                          (result) {
+                                                                    if (result ==
+                                                                        "success") {
+                                                                      refreshDataBatch(
+                                                                          textController
+                                                                              .text);
+                                                                      setState(
+                                                                          () {
+                                                                        _iscomments =
+                                                                            checkValue(textCommentsController.text);
+                                                                      });
+                                                                    } else {
+                                                                      showAlertDialog(
+                                                                          context,
+                                                                          "Save Failed.");
+                                                                    }
+                                                                  });
+
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                }
+                                                              },
+                                                              child: Text(
+                                                                  "Save",
+                                                                  style: GoogleFonts.prompt(
+                                                                      fontSize:
+                                                                          20,
+                                                                      color: Colors
+                                                                          .white)),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ))
+                                              ],
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.edit_note,
+                                        size: 35,
+                                        color: Colors.grey,
+                                      ))
+                                ],
+                              ),
+                              Visibility(
+                                visible: _iscomments,
+                                child: SizedBox(
+                                  child: provider.bList.length != 0 &&
+                                          DropdownIndex != -1 &&
+                                          provider.bList[0].itemCode != ""
+                                      ? Text(
+                                          "${provider.bList[DropdownIndex].comments == null ? "" : provider.bList[DropdownIndex].comments}", //"${countItem}",
+                                          style: GoogleFonts.prompt(
+                                              fontSize: 16,
+                                              color: Colors.black),
+                                        )
+                                      : Text(""),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
                               ),
                               SizedBox(
                                 width: double.infinity,
@@ -815,82 +1067,69 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     if (formKey.currentState?.validate() ==
                                         true) {
                                       formKey.currentState?.save();
-
-                                      if (widget.bu_detail.controlLot == "Y") {
-                                        if (batch_detail.id != null) {
-                                          api.AddStockActual(batch_detail)
-                                              .then((result) {
-                                            if (result == "success") {
-                                              refreshDataBatch(
-                                                  textController.text);
-                                              setState(() {
-                                                //_textCountController.clear();
-                                                flagSave = false;
-                                              });
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                duration:
-                                                    new Duration(seconds: 2),
-                                                elevation: 2.0,
-                                                behavior:
-                                                    SnackBarBehavior.fixed,
-                                                content: Container(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text(
-                                                      "Counted Successful.",
-                                                      style: GoogleFonts.prompt(
-                                                          fontSize: 15,
-                                                          color: Colors.white)),
-                                                ),
-                                                backgroundColor: Color.fromARGB(
-                                                    255, 1, 114, 5),
-                                              ));
-                                              formKey.currentState?.reset();
-                                            } else if (result == "fail") {
-                                              showAlertDialog(context,
-                                                  "Add Stock Actual fail.");
-                                            }
-                                          });
-                                        } else {
-                                          showAlertDialog(
-                                              context, "Please select batch.");
-                                        }
-                                      } else {
+                                      // if (widget.bu_detail.controlLot == "Y") {
+                                      if (batch_detail.id != null) {
                                         api.AddStockActual(batch_detail)
                                             .then((result) {
                                           if (result == "success") {
                                             refreshDataBatch(
                                                 textController.text);
                                             setState(() {
-                                              // _textCountController.clear();
+                                              //_textCountController.clear();
                                               flagSave = false;
                                             });
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              duration:
+                                                  new Duration(seconds: 2),
+                                              elevation: 2.0,
+                                              behavior: SnackBarBehavior.fixed,
+                                              content: Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Text(
+                                                    "Counted Successful.",
+                                                    style: GoogleFonts.prompt(
+                                                        fontSize: 15,
+                                                        color: Colors.white)),
+                                              ),
+                                              backgroundColor: Color.fromARGB(
+                                                  255, 1, 114, 5),
+                                            ));
                                             formKey.currentState?.reset();
                                           } else if (result == "fail") {
                                             showAlertDialog(context,
                                                 "Add Stock Actual fail.");
                                           }
                                         });
+                                      } else {
+                                        showAlertDialog(
+                                            context, "Please select batch.");
                                       }
+                                      //}
+                                      // else {
+                                      //   api.AddStockActual(batch_detail)
+                                      //       .then((result) {
+                                      //     if (result == "success") {
+                                      //       refreshDataBatch(
+                                      //           textController.text);
+                                      //       setState(() {
+                                      //         // _textCountController.clear();
+                                      //         flagSave = false;
+                                      //       });
+                                      //       formKey.currentState?.reset();
+                                      //     } else if (result == "fail") {
+                                      //       showAlertDialog(context,
+                                      //           "Add Stock Actual fail.");
+                                      //     }
+                                      //   });
+                                      // }
 
                                       //formKey.currentState?.reset();
                                     }
                                   },
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.center,
-                                child: SizedBox(
-                                  child: Text(
-                                    "หมายเหตุ",
-                                    style: GoogleFonts.prompt(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 1, 57, 83)),
-                                  ),
-                                ),
-                              )
                             ]),
                       ),
                     ),
@@ -899,6 +1138,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                   Counting_View(
                     bu_detail: widget.bu_detail,
                     itemMaster: itemMaster,
+                    sortfield: _sortfield,
                   )
                 ])),
       );
@@ -925,6 +1165,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
               DropdownIndex = -1;
             }
             if (List_StockOnhand.length != 0) {
+              textCommentsController.text = List_StockOnhand[0].comments ?? "";
+              _iscomments = checkValue(List_StockOnhand[0].comments ?? "");
               batch_detail.id = List_StockOnhand[0].id;
               itemMaster.code = List_StockOnhand[0].itemCode;
               itemMaster.name = List_StockOnhand[0].itemName;
@@ -955,6 +1197,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
 
   void ConvertList() async {
     List_StockOnhand = await Batch_List;
+    //List_StockOnhand = getSorting(List_StockOnhand, _sortfield);
   }
 
   void refreshDataBatch(String itemcode) {
@@ -967,5 +1210,48 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
           Provider.of<Batch_Provider>(context, listen: false);
       provider.addBatchStockOnhand(List_StockOnhand);
     });
+  }
+
+  bool checkValue(String _comments) {
+    if (_comments != "") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  List<StockOnhand> getSorting(List<StockOnhand> batchlist, String srtfield) {
+    List<StockOnhand> resSorted = [];
+    if (srtfield == "Exp") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return DateTime.parse(a.expiryDate!)
+              .compareTo(DateTime.parse(b.expiryDate!));
+        });
+    } else if (srtfield == "Onhand") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.qty!.compareTo(a.qty!);
+        });
+    } else if (srtfield == "Count") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.countQty!.compareTo(a.countQty!);
+        });
+    } else if (srtfield == "Diff") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.diffQty!.compareTo(a.diffQty!);
+        });
+    } else if (srtfield == "Batch") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return a.batchId!.compareTo(b.batchId!);
+        });
+    } else {
+      resSorted = batchlist;
+    }
+
+    return resSorted;
   }
 }

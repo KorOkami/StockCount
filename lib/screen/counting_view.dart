@@ -18,9 +18,13 @@ import 'package:stock_counting_app/services/api.dart';
 
 class Counting_View extends StatefulWidget {
   const Counting_View(
-      {super.key, required this.bu_detail, required this.itemMaster});
+      {super.key,
+      required this.bu_detail,
+      required this.itemMaster,
+      required this.sortfield});
   final BU_Detail bu_detail;
   final ItemMaster itemMaster;
+  final String sortfield;
 
   @override
   State<Counting_View> createState() => _Counting_ViewState();
@@ -30,6 +34,8 @@ class _Counting_ViewState extends State<Counting_View> {
   late Future<List<StockOnhand>> Batch_List;
   final StockOnhand batch_detail = StockOnhand();
   late List<StockOnhand> List_StockOnhand = [];
+  late String _sortfield = widget.sortfield;
+  //final List<StockOnhand> List_test = [];
   /*Future<void> GetBatchList(
       String itemCode, String token, String onhandID) async {
     late List<StockOnhand> _StockOnhand;
@@ -150,16 +156,25 @@ class _Counting_ViewState extends State<Counting_View> {
                   ),
                   Expanded(
                     child: RefreshIndicator(
+                      onRefresh: _getData,
                       child: ListView.builder(
-                          reverse: false,
+                          // reverse: false,
                           physics: const AlwaysScrollableScrollPhysics(),
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemCount: provider.bList.length,
                           itemBuilder: (context, int index) {
-                            StockOnhand data = provider.bList[index];
-
+                            // final List_test = provider.bList
+                            //   ..sort((a, b) {
+                            //     //sorting in ascending order
+                            //     return DateTime.parse(b.expiryDate!)
+                            //         .compareTo(DateTime.parse(a.expiryDate!));
+                            //   });
+                            final List_test =
+                                getSorting(provider.bList, widget.sortfield);
+                            StockOnhand data = List_test[index];
+                            // StockOnhand data = provider.bList[index];
                             if (data != null)
                               return Card(
                                 shadowColor: Colors.lightBlue,
@@ -217,8 +232,6 @@ class _Counting_ViewState extends State<Counting_View> {
                                     ],
                                   ),
                                   onTap: () {
-                                    //print(Text("${data.id}"));
-
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return Counting_Detail(
@@ -233,7 +246,6 @@ class _Counting_ViewState extends State<Counting_View> {
                                 ),
                               );
                           }),
-                      onRefresh: _getData,
                     ),
                   ),
                 ],
@@ -269,15 +281,51 @@ class _Counting_ViewState extends State<Counting_View> {
 
   void ConvertBatchList() async {
     List_StockOnhand = await Batch_List;
+    //List_StockOnhand = getSorting(List_StockOnhand, widget.sortfield);
   }
 
   bool checkexpDate(String expDate) {
     bool result = false;
     DateTime dtExp = DateTime.parse(expDate);
     Duration diff = dtExp.difference(DateTime.now());
-    if (diff.inDays <= 30) {
+    if (diff.inDays <= 180) {
       result = true;
     }
     return result;
+  }
+
+  List<StockOnhand> getSorting(List<StockOnhand> batchlist, String srtfield) {
+    List<StockOnhand> resSorted = [];
+    if (srtfield == "Exp") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return DateTime.parse(a.expiryDate!)
+              .compareTo(DateTime.parse(b.expiryDate!));
+        });
+    } else if (srtfield == "Onhand") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.qty!.compareTo(a.qty!);
+        });
+    } else if (srtfield == "Count") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.countQty!.compareTo(a.countQty!);
+        });
+    } else if (srtfield == "Diff") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return b.diffQty!.compareTo(a.diffQty!);
+        });
+    } else if (srtfield == "Batch") {
+      resSorted = batchlist
+        ..sort((a, b) {
+          return a.batchId!.compareTo(b.batchId!);
+        });
+    } else {
+      resSorted = batchlist;
+    }
+
+    return resSorted;
   }
 }
