@@ -58,6 +58,7 @@ dependencies:
 
 flutter_icons:
   android: true
+  ios: true
   image_path: "asset/images/StockCountLogo.png"
 
 dev_dependencies:
