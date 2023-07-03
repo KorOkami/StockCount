@@ -17,6 +17,7 @@ import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 import 'package:motion_tab_bar_v2/motion-badge.widget.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
@@ -48,6 +49,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
 //  TextEditingController _textCountController = TextEditingController();
   final TextEditingController textCommentsController = TextEditingController();
+  //MobileScannerController cameraController = MobileScannerController();
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
   final formKeyComments = GlobalKey<FormState>();
@@ -384,7 +386,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         border: OutlineInputBorder(),
                                         labelText: 'Scan Item',
                                         suffixIcon: IconButton(
-                                          onPressed: startScan,
+                                          onPressed: () => barcodeScan(),
+                                          //startScan,
                                           icon: Icon(
                                             Icons.qr_code_scanner,
                                             color: Colors.grey,
@@ -1139,61 +1142,123 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                     bu_detail: widget.bu_detail,
                     itemMaster: itemMaster,
                     sortfield: _sortfield,
-                  )
+                  ),
                 ])),
       );
     });
   }
 
-  startScan() async {
-    String ttt = scanner.CameraAccessDenied;
-    String? cameraScanResult = await scanner.scan();
-    textController.text = cameraScanResult ?? "";
+  String _scanBarcode = 'Unknown';
+  Future<void> barcodeScan() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      //print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
     setState(() {
-      //textController.text = cameraScanResult ?? "";
-      //GetItemDetail(textController!.text);
-      Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
-      if (Batch_List != null) {
-        ConvertList(); // แปลงจาก Future List เป็น List
-        Future.delayed(const Duration(
-                milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-            .then((val) {
-          setState(() {
-            if (widget.bu_detail.controlLot == "N") {
-              DropdownIndex = 0;
-            } else {
-              DropdownIndex = -1;
-            }
-            if (List_StockOnhand.length != 0) {
-              textCommentsController.text = List_StockOnhand[0].comments ?? "";
-              _iscomments = checkValue(List_StockOnhand[0].comments ?? "");
-              batch_detail.id = List_StockOnhand[0].id;
-              itemMaster.code = List_StockOnhand[0].itemCode;
-              itemMaster.name = List_StockOnhand[0].itemName;
-              itemMaster.uomCode = List_StockOnhand[0].uomName;
-              itemMaster.location = List_StockOnhand[0].binLoc;
-              Batch_Provider provider =
-                  Provider.of<Batch_Provider>(context, listen: false);
-              provider.addBatchStockOnhand(List_StockOnhand);
-            } else {
-              itemMaster.code = "";
-              itemMaster.name = "";
-              itemMaster.uomCode = "";
-              itemMaster.location = "";
-              batch_detail.qty = 0;
-              countItem = 0;
-              Batch_List = api.GetBatchList(widget.bu_detail.id, "");
-              ConvertList();
-              Batch_Provider provider =
-                  Provider.of<Batch_Provider>(context, listen: false);
-              provider.addBatchStockOnhand(List_StockOnhand);
-              showAlertDialog(context, "No Items found.");
-            }
+      if (barcodeScanRes != "-1") {
+        _scanBarcode = barcodeScanRes;
+        /////////////////////////////////
+        textController.text = barcodeScanRes;
+        Batch_List = api.GetBatchList(widget.bu_detail.id, barcodeScanRes);
+        if (Batch_List != null) {
+          ConvertList(); // แปลงจาก Future List เป็น List
+          Future.delayed(const Duration(
+                  milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+              .then((val) {
+            setState(() {
+              if (widget.bu_detail.controlLot == "N") {
+                DropdownIndex = 0;
+              } else {
+                DropdownIndex = -1;
+              }
+              if (List_StockOnhand.length != 0) {
+                textCommentsController.text =
+                    List_StockOnhand[0].comments ?? "";
+                _iscomments = checkValue(List_StockOnhand[0].comments ?? "");
+                batch_detail.id = List_StockOnhand[0].id;
+                itemMaster.code = List_StockOnhand[0].itemCode;
+                itemMaster.name = List_StockOnhand[0].itemName;
+                itemMaster.uomCode = List_StockOnhand[0].uomName;
+                itemMaster.location = List_StockOnhand[0].binLoc;
+                Batch_Provider provider =
+                    Provider.of<Batch_Provider>(context, listen: false);
+                provider.addBatchStockOnhand(List_StockOnhand);
+              } else {
+                itemMaster.code = "";
+                itemMaster.name = "";
+                itemMaster.uomCode = "";
+                itemMaster.location = "";
+                batch_detail.qty = 0;
+                countItem = 0;
+                Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+                ConvertList();
+                Batch_Provider provider =
+                    Provider.of<Batch_Provider>(context, listen: false);
+                provider.addBatchStockOnhand(List_StockOnhand);
+                showAlertDialog(context, "No Items found.");
+              }
+            });
           });
-        });
+        }
       }
     });
   }
+
+  // startScan() async {
+  //   String ttt = scanner.CameraAccessDenied;
+  //   String? cameraScanResult = await scanner.scan();
+  //   textController.text = cameraScanResult ?? "";
+  //   setState(() {
+  //     //textController.text = cameraScanResult ?? "";
+  //     //GetItemDetail(textController!.text);
+  //     Batch_List = api.GetBatchList(widget.bu_detail.id, textController.text);
+  //     if (Batch_List != null) {
+  //       ConvertList(); // แปลงจาก Future List เป็น List
+  //       Future.delayed(const Duration(
+  //               milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+  //           .then((val) {
+  //         setState(() {
+  //           if (widget.bu_detail.controlLot == "N") {
+  //             DropdownIndex = 0;
+  //           } else {
+  //             DropdownIndex = -1;
+  //           }
+  //           if (List_StockOnhand.length != 0) {
+  //             textCommentsController.text = List_StockOnhand[0].comments ?? "";
+  //             _iscomments = checkValue(List_StockOnhand[0].comments ?? "");
+  //             batch_detail.id = List_StockOnhand[0].id;
+  //             itemMaster.code = List_StockOnhand[0].itemCode;
+  //             itemMaster.name = List_StockOnhand[0].itemName;
+  //             itemMaster.uomCode = List_StockOnhand[0].uomName;
+  //             itemMaster.location = List_StockOnhand[0].binLoc;
+  //             Batch_Provider provider =
+  //                 Provider.of<Batch_Provider>(context, listen: false);
+  //             provider.addBatchStockOnhand(List_StockOnhand);
+  //           } else {
+  //             itemMaster.code = "";
+  //             itemMaster.name = "";
+  //             itemMaster.uomCode = "";
+  //             itemMaster.location = "";
+  //             batch_detail.qty = 0;
+  //             countItem = 0;
+  //             Batch_List = api.GetBatchList(widget.bu_detail.id, "");
+  //             ConvertList();
+  //             Batch_Provider provider =
+  //                 Provider.of<Batch_Provider>(context, listen: false);
+  //             provider.addBatchStockOnhand(List_StockOnhand);
+  //             showAlertDialog(context, "No Items found.");
+  //           }
+  //         });
+  //       });
+  //     }
+  //   });
+  // }
 
   void ConvertList() async {
     List_StockOnhand = await Batch_List;
