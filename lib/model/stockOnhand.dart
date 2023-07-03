@@ -3,6 +3,7 @@
 //     final stockOnhand = stockOnhandFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 List<StockOnhand> stockOnhandFromJson(String str) => List<StockOnhand>.from(
     json.decode(str).map((x) => StockOnhand.fromJson(x)));
@@ -89,7 +90,9 @@ class StockOnhand {
     // return '${this.batchId} (Exp : ${this.expiryDate})';
     String strBatchList = "";
     if (this.batchId != null) {
-      strBatchList = '${this.batchId} \n(Exp : ${this.expiryDate})';
+      DateTime date = DateTime.parse(this.expiryDate ?? "");
+      String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+      strBatchList = '${this.batchId} \n(Exp : ${formattedDate})';
       //strBatchList = '${this.batchId}';
     }
 

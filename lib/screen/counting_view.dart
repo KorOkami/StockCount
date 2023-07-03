@@ -9,6 +9,8 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:async';
 
+import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
@@ -200,13 +202,13 @@ class _Counting_ViewState extends State<Counting_View> {
                                           ? checkexpDate(data.expiryDate!) ==
                                                   true
                                               ? Text(
-                                                  "Expire Date : ${data.expiryDate ?? ""}",
+                                                  "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
                                                   style: GoogleFonts.prompt(
                                                     color: Colors.red,
                                                     fontSize: 12,
                                                   ))
                                               : Text(
-                                                  "Expire Date : ${data.expiryDate ?? ""}",
+                                                  "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
                                                   style: GoogleFonts.prompt(
                                                     color: Colors.green,
                                                     fontSize: 12,
