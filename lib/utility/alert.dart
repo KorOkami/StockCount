@@ -97,7 +97,7 @@ showRegister_AlertDialog(BuildContext context) {
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
     title: Text(
-      "Resiter successfully",
+      "Register successfully",
       style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
     ),
     actions: [
