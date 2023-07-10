@@ -62,8 +62,9 @@ class _history_screenState extends State<history_screen> {
               return Card(
                 child: ListTile(
                   title: Text(
-                      DateFormat('dd/MM/yyyy : HH:mm:ss')
-                          .format(DateTime.parse(data.createDate!)),
+                      DateFormat('dd/MM/yyyy : HH:mm:ss').format(
+                          DateTime.parse(data.createDate!)
+                              .add(Duration(hours: 14))),
                       style: GoogleFonts.prompt(
                           fontSize: 16,
                           color: Colors.black,
