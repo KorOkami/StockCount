@@ -5,12 +5,14 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_counting_app/model/bu_detail.dart';
+import 'package:stock_counting_app/model/history_model.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
 import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
+import 'package:stock_counting_app/screen/history.dart';
 import 'package:stock_counting_app/screen/scanItem.dart';
 import 'package:stock_counting_app/services/api.dart';
 
@@ -70,6 +72,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   bool _showSortmenu = false;
   bool _iscomments = false;
   String _sortfield = "";
+  late Future<List<history>> history_List;
+  late List<history> _List_history = [];
+
   @override
   void initState() {
     super.initState();
@@ -133,6 +138,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
           return false; //ป้องการกดปุ่มยอนกลับบน mobile
         },
         child: Scaffold(
+            //drawer: Drawer(),
             appBar: AppBar(
               elevation: 0,
               title: Text(
@@ -192,6 +198,24 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         child: Row(
                           children: [
                             Icon(
+                              Icons.history,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text("History",
+                                style: GoogleFonts.prompt(
+                                    fontSize: 20, color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 3,
+                        child: Row(
+                          children: [
+                            Icon(
                               Icons.logout,
                               color: Colors.white,
                               size: 25,
@@ -231,6 +255,21 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         });
                       });
                     } else if (value == 2) {
+                      history_List = api.GetHistory(
+                          widget.bu_detail.id, widget.userName ?? "");
+                      ConverthistoryList();
+                      Future.delayed(const Duration(
+                              seconds:
+                                  1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                          .then((val) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return history_screen(
+                            history_list: _List_history,
+                          );
+                        }));
+                      });
+                    } else if (value == 3) {
                       showLogout_AlertDialog(context);
                     }
                   }),
@@ -1318,5 +1357,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     }
 
     return resSorted;
+  }
+
+  void ConverthistoryList() async {
+    _List_history = await history_List;
   }
 }

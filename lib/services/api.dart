@@ -6,6 +6,7 @@ import 'package:stock_counting_app/interceptors/dio_interceptor.dart';
 import 'package:stock_counting_app/model/bu_detail.dart';
 import 'package:stock_counting_app/model/countingDetail.dart';
 import 'package:stock_counting_app/model/countingDoc.dart';
+import 'package:stock_counting_app/model/history_model.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/profile.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
@@ -243,4 +244,23 @@ class stockCountingAPI {
     }
     return result;
   }*/
+
+  Future<List<history>> GetHistory(String bu_detail_Id, String username) async {
+    late List<history> _history = [];
+    String _historyListUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/${bu_detail_Id}/history?username=${username}';
+    try {
+      final response = await _dio.get(_historyListUrl);
+
+      if (response.statusCode == 200) {
+        response.data.forEach((e) {
+          _history.add(history.fromJson(e));
+        });
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
+    }
+
+    return _history;
+  }
 }
