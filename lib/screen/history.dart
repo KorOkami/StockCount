@@ -84,10 +84,15 @@ class _history_screenState extends State<history_screen> {
                           style: GoogleFonts.prompt(
                             fontSize: 15,
                           )),
-                      Text("Expiry Date : ${data.expiryDate!}",
-                          style: GoogleFonts.prompt(
-                            fontSize: 15,
-                          )),
+                      data.expiryDate != null
+                          ? Text("Expiry Date : ${data.expiryDate!}",
+                              style: GoogleFonts.prompt(
+                                fontSize: 15,
+                              ))
+                          : Text("Expiry Date : ",
+                              style: GoogleFonts.prompt(
+                                fontSize: 15,
+                              )),
                       Text("Count Qty : ${data.countQty!}",
                           style: GoogleFonts.prompt(
                             fontSize: 15,

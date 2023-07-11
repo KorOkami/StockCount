@@ -137,1052 +137,1073 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
         onWillPop: () async {
           return false; //ป้องการกดปุ่มยอนกลับบน mobile
         },
-        child: Scaffold(
-            //drawer: Drawer(),
-            appBar: AppBar(
-              elevation: 0,
-              title: Text(
-                "Stock Counting",
-                style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
-              ),
-              automaticallyImplyLeading: false,
-              leading: PopupMenuButton(
-                  elevation: 0,
-                  color: Color.fromARGB(255, 1, 68, 122),
-                  shadowColor: Colors.black,
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                    size: 35,
-                  ),
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem<int>(
-                        value: 0,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.person_2,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("${widget.userName}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
-                          ],
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+              //drawer: Drawer(),
+              appBar: AppBar(
+                elevation: 0,
+                title: Text(
+                  "Stock Counting",
+                  style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
+                ),
+                automaticallyImplyLeading: false,
+                leading: PopupMenuButton(
+                    elevation: 0,
+                    color: Color.fromARGB(255, 1, 68, 122),
+                    shadowColor: Colors.black,
+                    icon: Icon(
+                      Icons.menu,
+                      color: Colors.white,
+                      size: 35,
+                    ),
+                    itemBuilder: (context) {
+                      return [
+                        PopupMenuItem<int>(
+                          value: 0,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.person_2,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("${widget.userName}",
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 20, color: Colors.white)),
+                            ],
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.home,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("Home",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
-                          ],
+                        PopupMenuItem<int>(
+                          value: 1,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.home,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Home",
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 20, color: Colors.white)),
+                            ],
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 2,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.history,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("History",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
-                          ],
+                        PopupMenuItem<int>(
+                          value: 2,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.history,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("History",
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 20, color: Colors.white)),
+                            ],
+                          ),
                         ),
-                      ),
-                      PopupMenuItem<int>(
-                        value: 3,
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.logout,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text("Logout",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
-                          ],
+                        PopupMenuItem<int>(
+                          value: 3,
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.logout,
+                                color: Colors.white,
+                                size: 25,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Logout",
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 20, color: Colors.white)),
+                            ],
+                          ),
                         ),
-                      ),
-                    ];
-                  },
-                  onSelected: (value) {
-                    if (value == 1) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return BU_Screen(
-                          token: widget.token,
-                          userName: widget.userName,
-                        );
-                      }));
-                      setState(() {
-                        DropdownIndex = -1;
-                        Batch_List = api.GetBatchList(widget.bu_detail.id, "");
-                        ConvertList(); // แปลงจาก Future List เป็น List
+                      ];
+                    },
+                    onSelected: (value) {
+                      if (value == 1) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return BU_Screen(
+                            token: widget.token,
+                            userName: widget.userName,
+                          );
+                        }));
+                        setState(() {
+                          DropdownIndex = -1;
+                          Batch_List =
+                              api.GetBatchList(widget.bu_detail.id, "");
+                          ConvertList(); // แปลงจาก Future List เป็น List
+                          Future.delayed(const Duration(
+                                  seconds:
+                                      1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                              .then((val) {
+                            Batch_Provider provider =
+                                Provider.of<Batch_Provider>(context,
+                                    listen: false);
+                            provider.addBatchStockOnhand(List_StockOnhand);
+                          });
+                        });
+                      } else if (value == 2) {
+                        history_List = api.GetHistory(
+                            widget.bu_detail.id, widget.userName ?? "");
+                        ConverthistoryList();
                         Future.delayed(const Duration(
                                 seconds:
                                     1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                             .then((val) {
-                          Batch_Provider provider = Provider.of<Batch_Provider>(
-                              context,
-                              listen: false);
-                          provider.addBatchStockOnhand(List_StockOnhand);
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return history_screen(
+                              history_list: _List_history,
+                            );
+                          }));
                         });
-                      });
-                    } else if (value == 2) {
-                      history_List = api.GetHistory(
-                          widget.bu_detail.id, widget.userName ?? "");
-                      ConverthistoryList();
-                      Future.delayed(const Duration(
-                              seconds:
-                                  1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                          .then((val) {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return history_screen(
-                            history_list: _List_history,
-                          );
-                        }));
-                      });
-                    } else if (value == 3) {
-                      showLogout_AlertDialog(context);
-                    }
-                  }),
-              // actions: [ // Sorting Menu
-              //   Visibility(
-              //     visible: _showSortmenu,
-              //     child: PopupMenuButton(
-              //         //elevation: 1,
-              //         //offset: Offset(0, 4),
-              //         color: Color.fromARGB(255, 4, 126, 226),
-              //         shadowColor: Colors.black,
-              //         icon: Icon(
-              //           Icons.sort,
-              //           color: Colors.white,
-              //           size: 35,
-              //         ),
-              //         itemBuilder: (context) {
-              //           return [
-              //             PopupMenuItem<int>(
-              //               value: 0,
-              //               child: Text("Batch",
-              //                   style: GoogleFonts.prompt(
-              //                       fontSize: 15, color: Colors.white)),
-              //             ),
-              //             PopupMenuItem<int>(
-              //               value: 1,
-              //               child: Text("ExpDate",
-              //                   style: GoogleFonts.prompt(
-              //                       fontSize: 15, color: Colors.white)),
-              //             ),
-              //             PopupMenuItem<int>(
-              //               value: 2,
-              //               child: Text("Onhand",
-              //                   style: GoogleFonts.prompt(
-              //                       fontSize: 15, color: Colors.white)),
-              //             ),
-              //             PopupMenuItem<int>(
-              //               value: 3,
-              //               child: Text("Count",
-              //                   style: GoogleFonts.prompt(
-              //                       fontSize: 15, color: Colors.white)),
-              //             ),
-              //             PopupMenuItem<int>(
-              //               value: 4,
-              //               child: Text("Diff",
-              //                   style: GoogleFonts.prompt(
-              //                       fontSize: 15, color: Colors.white)),
-              //             )
-              //           ];
-              //         },
-              //         onSelected: (value) {
-              //           setState(() {
-              //             if (value == 0) {
-              //               _sortfield = "Batch";
-              //             } else if (value == 1) {
-              //               _sortfield = "Exp";
-              //             } else if (value == 2) {
-              //               _sortfield = "Onhand";
-              //             } else if (value == 3) {
-              //               _sortfield = "Count";
-              //             } else if (value == 4) {
-              //               _sortfield = "Diff";
-              //             }
-              //           });
-              //         }),
-              //   )
-              // ],
-            ),
-            bottomNavigationBar: MotionTabBar(
-              initialSelectedTab: "Count",
-              useSafeArea: true, // default: true, apply safe area wrapper
-              labels: const ["Count", "View"],
-              icons: const [
-                Icons.library_add_rounded,
-                Icons.format_list_bulleted_rounded,
-              ],
-              tabIconColor: Colors.white,
-              tabIconSize: 28.0,
-              tabIconSelectedSize: 26.0,
-              tabSelectedColor: Colors.black,
-              tabIconSelectedColor: Colors.white,
-              tabBarColor: Color.fromARGB(255, 5, 169, 239),
-              onTabItemSelected: (int value) {
-                _tabController!.index = value;
-                // สำหรับการซ้อน Sorting menu และกำหนด value เดิม
-                //int tt = DropdownIndex;
-                // if (mounted) {
-                // setState(() {
-                //   if (value == 0) {
-                //     _showSortmenu = false;
-                //     //if (widget.bu_detail.controlLot == "Y") {
-                //     //DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
-                //     // }
-                //   } else {
-                //     if (widget.bu_detail.controlLot == "Y") {
-                //       _showSortmenu = true;
-                //       //DropdownIndex = oldIndex;
-                //       DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
-                //     } else {
-                //       _showSortmenu = false;
-                //     }
-                //   }
-                // });
-                // }
-              },
-            ),
-            body: TabBarView(
-                physics:
-                    NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
-                controller: _tabController,
-                children: <Widget>[
-                  SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Form(
-                        key: formKey,
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                alignment: Alignment.center,
-                                child: Text(
-                                    "${widget.bu_detail.whsCode} - ${widget.bu_detail.buCode}",
+                      } else if (value == 3) {
+                        showLogout_AlertDialog(context);
+                      }
+                    }),
+                // actions: [ // Sorting Menu
+                //   Visibility(
+                //     visible: _showSortmenu,
+                //     child: PopupMenuButton(
+                //         //elevation: 1,
+                //         //offset: Offset(0, 4),
+                //         color: Color.fromARGB(255, 4, 126, 226),
+                //         shadowColor: Colors.black,
+                //         icon: Icon(
+                //           Icons.sort,
+                //           color: Colors.white,
+                //           size: 35,
+                //         ),
+                //         itemBuilder: (context) {
+                //           return [
+                //             PopupMenuItem<int>(
+                //               value: 0,
+                //               child: Text("Batch",
+                //                   style: GoogleFonts.prompt(
+                //                       fontSize: 15, color: Colors.white)),
+                //             ),
+                //             PopupMenuItem<int>(
+                //               value: 1,
+                //               child: Text("ExpDate",
+                //                   style: GoogleFonts.prompt(
+                //                       fontSize: 15, color: Colors.white)),
+                //             ),
+                //             PopupMenuItem<int>(
+                //               value: 2,
+                //               child: Text("Onhand",
+                //                   style: GoogleFonts.prompt(
+                //                       fontSize: 15, color: Colors.white)),
+                //             ),
+                //             PopupMenuItem<int>(
+                //               value: 3,
+                //               child: Text("Count",
+                //                   style: GoogleFonts.prompt(
+                //                       fontSize: 15, color: Colors.white)),
+                //             ),
+                //             PopupMenuItem<int>(
+                //               value: 4,
+                //               child: Text("Diff",
+                //                   style: GoogleFonts.prompt(
+                //                       fontSize: 15, color: Colors.white)),
+                //             )
+                //           ];
+                //         },
+                //         onSelected: (value) {
+                //           setState(() {
+                //             if (value == 0) {
+                //               _sortfield = "Batch";
+                //             } else if (value == 1) {
+                //               _sortfield = "Exp";
+                //             } else if (value == 2) {
+                //               _sortfield = "Onhand";
+                //             } else if (value == 3) {
+                //               _sortfield = "Count";
+                //             } else if (value == 4) {
+                //               _sortfield = "Diff";
+                //             }
+                //           });
+                //         }),
+                //   )
+                // ],
+              ),
+              bottomNavigationBar: MotionTabBar(
+                initialSelectedTab: "Count",
+                useSafeArea: true, // default: true, apply safe area wrapper
+                labels: const ["Count", "View"],
+                icons: const [
+                  Icons.library_add_rounded,
+                  Icons.format_list_bulleted_rounded,
+                ],
+                tabIconColor: Colors.white,
+                tabIconSize: 28.0,
+                tabIconSelectedSize: 26.0,
+                tabSelectedColor: Colors.black,
+                tabIconSelectedColor: Colors.white,
+                tabBarColor: Color.fromARGB(255, 5, 169, 239),
+                onTabItemSelected: (int value) {
+                  _tabController!.index = value;
+                  // สำหรับการซ้อน Sorting menu และกำหนด value เดิม
+                  //int tt = DropdownIndex;
+                  // if (mounted) {
+                  // setState(() {
+                  //   if (value == 0) {
+                  //     _showSortmenu = false;
+                  //     //if (widget.bu_detail.controlLot == "Y") {
+                  //     //DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
+                  //     // }
+                  //   } else {
+                  //     if (widget.bu_detail.controlLot == "Y") {
+                  //       _showSortmenu = true;
+                  //       //DropdownIndex = oldIndex;
+                  //       DropdownIndex = List_StockOnhand.indexOf(_selectedItem!);
+                  //     } else {
+                  //       _showSortmenu = false;
+                  //     }
+                  //   }
+                  // });
+                  // }
+                },
+              ),
+              body: TabBarView(
+                  physics:
+                      NeverScrollableScrollPhysics(), // swipe navigation handling is not supported
+                  controller: _tabController,
+                  children: <Widget>[
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: formKey,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                      "${widget.bu_detail.whsCode} - ${widget.bu_detail.buCode}",
+                                      style: GoogleFonts.prompt(
+                                          fontSize: 30,
+                                          color:
+                                              Color.fromARGB(255, 1, 68, 122))),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                SizedBox(
+                                  child: Text(
+                                      "Document No. : ${widget.bu_detail.docNum}"),
+                                  //height: 10,
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text("Item QR/Barcode",
                                     style: GoogleFonts.prompt(
-                                        fontSize: 30,
-                                        color:
-                                            Color.fromARGB(255, 1, 68, 122))),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              SizedBox(
-                                child: Text(
-                                    "Document No. : ${widget.bu_detail.docNum}"),
-                                //height: 10,
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text("Item QR/Barcode",
-                                  style: GoogleFonts.prompt(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                      color: Color.fromARGB(255, 1, 57, 83))),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                      child: TextFormField(
-                                    controller: textController,
-                                    style: TextStyle(fontSize: 20),
-                                    decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Scan Item',
-                                        suffixIcon: IconButton(
-                                          onPressed: () => barcodeScan(),
-                                          //startScan,
-                                          icon: Icon(
-                                            Icons.qr_code_scanner,
-                                            color: Colors.grey,
-                                          ),
-                                          iconSize: 40,
-                                        )),
-                                    validator: RequiredValidator(
-                                        errorText: "Please Scan Item."),
-                                    onEditingComplete: () {
-                                      if (textController.text != "") {
-                                        //_selectedItem = _clearSelectedItem;
-                                        textCommentsController.clear();
-                                        Batch_List = api.GetBatchList(
-                                            widget.bu_detail.id,
-                                            textController.text);
-                                        if (Batch_List != null) {
-                                          ConvertList(); // แปลงจาก Future List เป็น List
-                                          Future.delayed(const Duration(
-                                                  milliseconds:
-                                                      500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                                              .then((val) {
-                                            setState(() {
-                                              if (widget.bu_detail.controlLot ==
-                                                  "N") {
-                                                DropdownIndex = 0;
-                                              } else {
-                                                DropdownIndex = -1;
-                                              }
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 1, 57, 83))),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                        child: TextFormField(
+                                      controller: textController,
+                                      style: TextStyle(fontSize: 20),
+                                      decoration: InputDecoration(
+                                          border: OutlineInputBorder(),
+                                          labelText: 'Scan Item',
+                                          suffixIcon: IconButton(
+                                            onPressed: () => barcodeScan(),
+                                            //startScan,
+                                            icon: Icon(
+                                              Icons.qr_code_scanner,
+                                              color: Colors.grey,
+                                            ),
+                                            iconSize: 40,
+                                          )),
+                                      validator: RequiredValidator(
+                                          errorText: "Please Scan Item."),
+                                      onEditingComplete: () {
+                                        if (textController.text != "") {
+                                          //_selectedItem = _clearSelectedItem;
+                                          textCommentsController.clear();
+                                          Batch_List = api.GetBatchList(
+                                              widget.bu_detail.id,
+                                              textController.text);
+                                          if (Batch_List != null) {
+                                            ConvertList(); // แปลงจาก Future List เป็น List
+                                            Future.delayed(const Duration(
+                                                    milliseconds:
+                                                        500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                                .then((val) {
+                                              setState(() {
+                                                if (widget
+                                                        .bu_detail.controlLot ==
+                                                    "N") {
+                                                  DropdownIndex = 0;
+                                                } else {
+                                                  DropdownIndex = -1;
+                                                }
 
-                                              if (List_StockOnhand.length !=
-                                                  0) {
-                                                textCommentsController.text =
-                                                    List_StockOnhand[0]
-                                                            .comments ??
-                                                        "";
-                                                _iscomments = checkValue(
-                                                    List_StockOnhand[0]
-                                                            .comments ??
-                                                        "");
-                                                batch_detail.id =
-                                                    List_StockOnhand[0].id;
-                                                itemMaster.code =
-                                                    List_StockOnhand[0]
-                                                        .itemCode;
-                                                itemMaster.name =
-                                                    List_StockOnhand[0]
-                                                        .itemName;
-                                                itemMaster.uomCode =
-                                                    List_StockOnhand[0].uomName;
-                                                itemMaster.location =
-                                                    List_StockOnhand[0].binLoc;
-                                                Batch_Provider provider =
-                                                    Provider.of<Batch_Provider>(
-                                                        context,
-                                                        listen: false);
-                                                provider.addBatchStockOnhand(
-                                                    List_StockOnhand);
-                                              } else {
-                                                itemMaster.code = "";
-                                                itemMaster.name = "";
-                                                itemMaster.uomCode = "";
-                                                itemMaster.location = "";
-                                                batch_detail.qty = 0;
-                                                countItem = 0;
-                                                Batch_List = api.GetBatchList(
-                                                    widget.bu_detail.id, "");
-                                                ConvertList();
-                                                Batch_Provider provider =
-                                                    Provider.of<Batch_Provider>(
-                                                        context,
-                                                        listen: false);
-                                                provider.addBatchStockOnhand(
-                                                    List_StockOnhand);
-                                                showAlertDialog(
-                                                    context, "No Items found.");
-                                              }
+                                                if (List_StockOnhand.length !=
+                                                    0) {
+                                                  textCommentsController.text =
+                                                      List_StockOnhand[0]
+                                                              .comments ??
+                                                          "";
+                                                  _iscomments = checkValue(
+                                                      List_StockOnhand[0]
+                                                              .comments ??
+                                                          "");
+                                                  batch_detail.id =
+                                                      List_StockOnhand[0].id;
+                                                  itemMaster.code =
+                                                      List_StockOnhand[0]
+                                                          .itemCode;
+                                                  itemMaster.name =
+                                                      List_StockOnhand[0]
+                                                          .itemName;
+                                                  itemMaster.uomCode =
+                                                      List_StockOnhand[0]
+                                                          .uomName;
+                                                  itemMaster.location =
+                                                      List_StockOnhand[0]
+                                                          .binLoc;
+                                                  Batch_Provider provider =
+                                                      Provider.of<
+                                                              Batch_Provider>(
+                                                          context,
+                                                          listen: false);
+                                                  provider.addBatchStockOnhand(
+                                                      List_StockOnhand);
+                                                } else {
+                                                  itemMaster.code = "";
+                                                  itemMaster.name = "";
+                                                  itemMaster.uomCode = "";
+                                                  itemMaster.location = "";
+                                                  batch_detail.qty = 0;
+                                                  countItem = 0;
+                                                  Batch_List = api.GetBatchList(
+                                                      widget.bu_detail.id, "");
+                                                  ConvertList();
+                                                  Batch_Provider provider =
+                                                      Provider.of<
+                                                              Batch_Provider>(
+                                                          context,
+                                                          listen: false);
+                                                  provider.addBatchStockOnhand(
+                                                      List_StockOnhand);
+                                                  showAlertDialog(context,
+                                                      "No Items found.");
+                                                }
+                                              });
                                             });
+                                          }
+                                        } else {
+                                          setState(() {
+                                            itemMaster.code = "";
+                                            itemMaster.name = "";
+                                            itemMaster.uomCode = "";
+                                            itemMaster.location = "";
                                           });
                                         }
-                                      } else {
-                                        setState(() {
-                                          itemMaster.code = "";
-                                          itemMaster.name = "";
-                                          itemMaster.uomCode = "";
-                                          itemMaster.location = "";
-                                        });
-                                      }
-                                    },
-                                  )),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
+                                      },
+                                    )),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  child: Text(
+                                    "Item Name : ",
+                                    style: GoogleFonts.prompt(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  child: Text(
+                                    "${itemMaster.name}",
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      child: Text(
+                                        "Location : ",
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      child: Text(
+                                        "${itemMaster.location}",
+                                        style: GoogleFonts.prompt(
+                                            fontSize: 20, color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      child: Text(
+                                        "Base Uom : ",
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      child: Text(
+                                        "${itemMaster.uomCode}",
+                                        style: GoogleFonts.prompt(
+                                            fontSize: 20, color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                /*SizedBox(
                                 child: Text(
-                                  "Item Name : ",
+                                  "Batch",
                                   style: GoogleFonts.prompt(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20,
                                       color: Color.fromARGB(255, 1, 57, 83)),
                                 ),
-                              ),
-                              SizedBox(
-                                child: Text(
-                                  "${itemMaster.name}",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20, color: Colors.black),
+                              ),*/
+                                SizedBox(
+                                  height: 10,
                                 ),
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Location : ",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    child: Text(
-                                      "${itemMaster.location}",
-                                      style: GoogleFonts.prompt(
-                                          fontSize: 20, color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Base Uom : ",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    child: Text(
-                                      "${itemMaster.uomCode}",
-                                      style: GoogleFonts.prompt(
-                                          fontSize: 20, color: Colors.black),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              /*SizedBox(
-                              child: Text(
-                                "Batch",
-                                style: GoogleFonts.prompt(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
-                              ),
-                            ),*/
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Visibility(
-                                visible: showAddBatchButton,
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: IgnorePointer(
-                                        ignoring: DisableDropdowmBatch,
-                                        child: DropdownSearch<StockOnhand>(
-                                          // autoValidateMode: AutovalidateMode
-                                          //     .onUserInteraction,
-                                          popupProps: PopupProps.dialog(
-                                            showSearchBox: true,
-                                            searchFieldProps: TextFieldProps(
-                                                decoration: InputDecoration(
-                                                    labelText: "Search...")),
-                                          ), // Popup search
+                                Visibility(
+                                  visible: showAddBatchButton,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: IgnorePointer(
+                                          ignoring: DisableDropdowmBatch,
+                                          child: DropdownSearch<StockOnhand>(
+                                            // autoValidateMode: AutovalidateMode
+                                            //     .onUserInteraction,
+                                            popupProps: PopupProps.dialog(
+                                              showSearchBox: true,
+                                              searchFieldProps: TextFieldProps(
+                                                  decoration: InputDecoration(
+                                                      labelText: "Search...")),
+                                            ), // Popup search
 
-                                          asyncItems: (filter) => Batch_List,
-                                          //กำหนดฟิลล์ที่ต้องการให้เลือก
-                                          itemAsString: (StockOnhand? u) =>
-                                              u?.batchstring() ?? "",
-                                          //u?.batchId ?? "",
-                                          selectedItem: DropdownIndex != -1
-                                              ? _selectedItem
-                                              : _clearSelectedItem,
+                                            asyncItems: (filter) => Batch_List,
+                                            //กำหนดฟิลล์ที่ต้องการให้เลือก
+                                            itemAsString: (StockOnhand? u) =>
+                                                u?.batchstring() ?? "",
+                                            //u?.batchId ?? "",
+                                            selectedItem: DropdownIndex != -1
+                                                ? _selectedItem
+                                                : _clearSelectedItem,
 
-                                          onChanged: (value) {
-                                            setState(() {
-                                              DropdownIndex =
-                                                  List_StockOnhand.indexOf(
-                                                      value!);
-                                              _selectedItem = value;
-                                              oldIndex = DropdownIndex;
-                                              batch_detail.id = value.id;
-                                              batch_detail.qty = value.qty;
-                                              batch_detail.countQty =
-                                                  value.countQty;
-                                              countItem = batch_detail.countQty;
-                                              textCommentsController.text =
-                                                  value.comments ?? "";
-                                              _iscomments = checkValue(
-                                                  value.comments ?? "");
-                                            });
-                                          },
-
-                                          dropdownDecoratorProps:
-                                              DropDownDecoratorProps(
-                                                  dropdownSearchDecoration:
-                                                      InputDecoration(
-                                                          border:
-                                                              OutlineInputBorder(),
-                                                          labelText: "Batch",
-                                                          hintText: "Batch"),
-                                                  baseStyle: GoogleFonts.prompt(
-                                                      fontSize: 18)),
-                                          validator: (value) {
-                                            if (value!.batchId == null) {
-                                              // if (batch_detail.id == "") {
-                                              return 'Please select Batch.';
-                                              //}
-                                            }
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 8, 18),
-                                      child: Visibility(
-                                        visible: showAddBatchButton,
-                                        child: IconButton(
-                                          alignment: Alignment.topCenter,
-                                          onPressed: () {
-                                            if (itemMaster.code != "" &&
-                                                widget.bu_detail.controlLot ==
-                                                    "Y") {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return AddBatch(
-                                                  token: widget.token,
-                                                  userName: widget.userName,
-                                                  itemCode: itemMaster.code,
-                                                  stockID: widget.bu_detail.id,
-                                                  bu_detail: widget.bu_detail,
-                                                  itemMaster: itemMaster,
-                                                );
-                                              }));
-                                            } else {
-                                              if (itemMaster.code == "") {
-                                                showAlertDialog(context,
-                                                    "Item Code is not null");
-                                              } else if (widget
-                                                      .bu_detail.controlLot ==
-                                                  "N") {
-                                                showAlertDialog(context,
-                                                    "This document is not Control Lot");
-                                              }
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.add_box_rounded,
-                                            color: Color.fromARGB(
-                                                255, 242, 233, 58),
-                                            size: 50,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Onhand : ",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    child: provider.bList.length != 0 &&
-                                            DropdownIndex != -1 &&
-                                            provider.bList[0].itemCode != ""
-                                        ? Text(
-                                            "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
-                                            style: GoogleFonts.prompt(
-                                                fontSize: 20,
-                                                color: Colors.black),
-                                          )
-                                        : Text(
-                                            "",
-                                            style: GoogleFonts.prompt(
-                                                fontSize: 20,
-                                                color: Colors.black),
-                                          ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Counted : ",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    child: provider.bList.length != 0 &&
-                                            DropdownIndex != -1 &&
-                                            provider.bList[0].itemCode != ""
-                                        ? Text(
-                                            "${provider.bList[DropdownIndex].countQty}", //"${countItem}",
-                                            style: GoogleFonts.prompt(
-                                                fontSize: 20,
-                                                color: Colors.black),
-                                          )
-                                        : Text(
-                                            "",
-                                            style: GoogleFonts.prompt(
-                                                fontSize: 20,
-                                                color: Colors.black),
-                                          ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                // height: 50,
-                                child: TextFormField(
-                                  //controller: _textCountController,
-                                  controller: flagSave == false
-                                      ? TextEditingController(text: "")
-                                      : TextEditingController(
-                                          text: _currentValue.toString()),
-                                  style: TextStyle(fontSize: 20),
-                                  decoration: InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Count Item',
-                                      // suffixIcon: Icon(Icons.keyboard, size: 40)
-                                      suffixIcon: IconButton(
-                                        icon: Icon(Icons.calculate, size: 40),
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              barrierColor: Colors.transparent,
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey.shade200,
-                                                  ),
-                                                  child: SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.6,
-                                                      child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  top: 8.0,
-                                                                  bottom: 8.0,
-                                                                  left: 26.0,
-                                                                  right: 26.0),
-                                                          child:
-                                                              DynamicCalculator(
-                                                            value: 0,
-                                                            hideExpression:
-                                                                false,
-                                                            hideSurroundingBorder:
-                                                                true,
-                                                            showCalculatorDisplay:
-                                                                true,
-                                                            autofocus: false,
-                                                            onChanged: (key,
-                                                                value,
-                                                                expression) {
-                                                              setState(() {
-                                                                _currentValue =
-                                                                    value!
-                                                                        .round();
-                                                                flagSave = true;
-                                                                // _textCountController
-                                                                //         .text =
-                                                                //     value!
-                                                                //         .round()
-                                                                //         .toString();
-                                                              });
-                                                            },
-                                                            theme:
-                                                                const CalculatorTheme(
-                                                              borderColor: Colors
-                                                                  .transparent,
-                                                              borderWidth: 0.0,
-                                                              displayCalculatorRadius:
-                                                                  10.0,
-                                                              displayBackgroundColor:
-                                                                  Colors.white,
-                                                              displayStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          30,
-                                                                      color: Colors
-                                                                          .green),
-                                                              expressionBackgroundColor:
-                                                                  Colors
-                                                                      .black12,
-                                                              expressionStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          14,
-                                                                      color: Colors
-                                                                          .black45),
-                                                              operatorColor:
-                                                                  Colors.green,
-                                                              operatorStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          24,
-                                                                      color: Colors
-                                                                          .white),
-                                                              commandColor:
-                                                                  Colors.white,
-                                                              commandStyle:
-                                                                  TextStyle(
-                                                                      fontSize:
-                                                                          24,
-                                                                      color: Colors
-                                                                          .green),
-                                                              numColor:
-                                                                  Colors.white,
-                                                              numStyle: TextStyle(
-                                                                  fontSize: 24,
-                                                                  color: Colors
-                                                                      .black87),
-                                                            ),
-                                                          ))),
-                                                );
+                                            onChanged: (value) {
+                                              setState(() {
+                                                DropdownIndex =
+                                                    List_StockOnhand.indexOf(
+                                                        value!);
+                                                _selectedItem = value;
+                                                oldIndex = DropdownIndex;
+                                                batch_detail.id = value.id;
+                                                batch_detail.qty = value.qty;
+                                                batch_detail.countQty =
+                                                    value.countQty;
+                                                countItem =
+                                                    batch_detail.countQty;
+                                                textCommentsController.text =
+                                                    value.comments ?? "";
+                                                _iscomments = checkValue(
+                                                    value.comments ?? "");
                                               });
-                                        },
-                                      )),
-                                  //validator:
-                                  //RequiredValidator(errorText: "Please Enter Count Qty."),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return "Please Enter Count.";
-                                    } else if (double.parse(value).toInt() <
-                                        0) {
-                                      return "Count should be greater than 0";
-                                    }
-                                  },
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp("[0-9]"),
+                                            },
+
+                                            dropdownDecoratorProps:
+                                                DropDownDecoratorProps(
+                                                    dropdownSearchDecoration:
+                                                        InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            labelText: "Batch",
+                                                            hintText: "Batch"),
+                                                    baseStyle:
+                                                        GoogleFonts.prompt(
+                                                            fontSize: 18)),
+                                            validator: (value) {
+                                              if (value!.batchId == null) {
+                                                // if (batch_detail.id == "") {
+                                                return 'Please select Batch.';
+                                                //}
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 8, 18),
+                                        child: Visibility(
+                                          visible: showAddBatchButton,
+                                          child: IconButton(
+                                            alignment: Alignment.topCenter,
+                                            onPressed: () {
+                                              if (itemMaster.code != "" &&
+                                                  widget.bu_detail.controlLot ==
+                                                      "Y") {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return AddBatch(
+                                                    token: widget.token,
+                                                    userName: widget.userName,
+                                                    itemCode: itemMaster.code,
+                                                    stockID:
+                                                        widget.bu_detail.id,
+                                                    bu_detail: widget.bu_detail,
+                                                    itemMaster: itemMaster,
+                                                  );
+                                                }));
+                                              } else {
+                                                if (itemMaster.code == "") {
+                                                  showAlertDialog(context,
+                                                      "Item Code is not null");
+                                                } else if (widget
+                                                        .bu_detail.controlLot ==
+                                                    "N") {
+                                                  showAlertDialog(context,
+                                                      "This document is not Control Lot");
+                                                }
+                                              }
+                                            },
+                                            icon: Icon(
+                                              Icons.add_box_rounded,
+                                              color: Color.fromARGB(
+                                                  255, 242, 233, 58),
+                                              size: 50,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      child: Text(
+                                        "Onhand : ",
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      child: provider.bList.length != 0 &&
+                                              DropdownIndex != -1 &&
+                                              provider.bList[0].itemCode != ""
+                                          ? Text(
+                                              "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
+                                              style: GoogleFonts.prompt(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            )
+                                          : Text(
+                                              "",
+                                              style: GoogleFonts.prompt(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            ),
                                     ),
                                   ],
-                                  keyboardType: TextInputType.number,
-                                  onSaved: (countItem1) {
-                                    setState(() {
-                                      countItem =
-                                          countItem! + int.parse(countItem1!);
-                                    });
-
-                                    batch_detail.countQty =
-                                        int.parse(countItem1!);
-                                  },
                                 ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    child: Text(
-                                      "Comments",
-                                      style: GoogleFonts.prompt(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                          color:
-                                              Color.fromARGB(255, 1, 57, 83)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      child: Text(
+                                        "Counted : ",
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)),
+                                      ),
                                     ),
-                                  ),
-                                  IconButton(
-                                      onPressed: () {
-                                        bool show = false;
-                                        if (widget.bu_detail.controlLot ==
-                                            "Y") {
-                                          if (provider.bList.length > 0 &&
-                                              _selectedItem!.batchId != null) {
-                                            DropdownIndex != -1
-                                                ? textCommentsController
-                                                    .text = provider
-                                                        .bList[DropdownIndex]
-                                                        .comments ??
-                                                    ""
-                                                : "";
-                                            show = true;
-                                          }
-                                        } else {
-                                          if (provider.bList.length > 0) {
-                                            DropdownIndex != -1
-                                                ? textCommentsController
-                                                    .text = provider
-                                                        .bList[DropdownIndex]
-                                                        .comments ??
-                                                    ""
-                                                : "";
-                                            show = true;
-                                          }
-                                        }
-                                        if (show) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => SimpleDialog(
-                                              children: [
-                                                Form(
-                                                    key: formKeyComments,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Column(
-                                                        children: [
-                                                          SingleChildScrollView(
-                                                            child:
-                                                                TextFormField(
-                                                              controller:
-                                                                  textCommentsController,
-                                                              minLines: 1,
-                                                              maxLines: 8,
-                                                              maxLength: 300,
-                                                              decoration:
-                                                                  InputDecoration(
-                                                                border:
-                                                                    OutlineInputBorder(),
-                                                                labelText:
-                                                                    'Edit Comments',
-                                                              ),
-                                                              style: GoogleFonts
-                                                                  .prompt(
-                                                                      fontSize:
-                                                                          18,
-                                                                      color: Colors
-                                                                          .black),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            height: 50,
-                                                            child:
-                                                                ElevatedButton(
-                                                              onPressed: () {
-                                                                if (formKeyComments
-                                                                        .currentState
-                                                                        ?.validate() ==
-                                                                    true) {
-                                                                  formKeyComments
-                                                                      .currentState
-                                                                      ?.save();
-
-                                                                  api
-                                                                      .updateComments(
-                                                                          batch_detail
-                                                                              .id!,
-                                                                          textCommentsController
-                                                                              .text)
-                                                                      .then(
-                                                                          (result) {
-                                                                    if (result ==
-                                                                        "success") {
-                                                                      refreshDataBatch(
-                                                                          textController
-                                                                              .text);
-                                                                      setState(
-                                                                          () {
-                                                                        _iscomments =
-                                                                            checkValue(textCommentsController.text);
-                                                                      });
-                                                                    } else {
-                                                                      showAlertDialog(
-                                                                          context,
-                                                                          "Save Failed.");
-                                                                    }
-                                                                  });
-
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                  "Save",
-                                                                  style: GoogleFonts.prompt(
-                                                                      fontSize:
-                                                                          20,
-                                                                      color: Colors
-                                                                          .white)),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ))
-                                              ],
+                                    SizedBox(
+                                      child: provider.bList.length != 0 &&
+                                              DropdownIndex != -1 &&
+                                              provider.bList[0].itemCode != ""
+                                          ? Text(
+                                              "${provider.bList[DropdownIndex].countQty}", //"${countItem}",
+                                              style: GoogleFonts.prompt(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
+                                            )
+                                          : Text(
+                                              "",
+                                              style: GoogleFonts.prompt(
+                                                  fontSize: 20,
+                                                  color: Colors.black),
                                             ),
-                                          );
-                                        }
-                                      },
-                                      icon: Icon(
-                                        Icons.edit_note,
-                                        size: 35,
-                                        color: Colors.grey,
-                                      ))
-                                ],
-                              ),
-                              Visibility(
-                                visible: _iscomments,
-                                child: SizedBox(
-                                  child: provider.bList.length != 0 &&
-                                          DropdownIndex != -1 &&
-                                          provider.bList[0].itemCode != ""
-                                      ? Text(
-                                          "${provider.bList[DropdownIndex].comments == null ? "" : provider.bList[DropdownIndex].comments}", //"${countItem}",
-                                          style: GoogleFonts.prompt(
-                                              fontSize: 16,
-                                              color: Colors.black),
-                                        )
-                                      : Text(""),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton.icon(
-                                  style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Color.fromARGB(255, 5, 201, 13))),
-                                  label: Text(
-                                    "Save",
-                                    style: GoogleFonts.prompt(
-                                        fontSize: 20, color: Colors.white),
-                                  ),
-                                  icon: Icon(
-                                    Icons.save,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    if (formKey.currentState?.validate() ==
-                                        true) {
-                                      formKey.currentState?.save();
-                                      // if (widget.bu_detail.controlLot == "Y") {
-                                      if (batch_detail.id != null) {
-                                        api.AddStockActual(batch_detail)
-                                            .then((result) {
-                                          if (result == "success") {
-                                            refreshDataBatch(
-                                                textController.text);
-                                            setState(() {
-                                              //_textCountController.clear();
-                                              flagSave = false;
-                                            });
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                              duration:
-                                                  new Duration(seconds: 2),
-                                              elevation: 2.0,
-                                              behavior: SnackBarBehavior.fixed,
-                                              content: Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Text(
-                                                    "Counted Successful.",
-                                                    style: GoogleFonts.prompt(
-                                                        fontSize: 15,
-                                                        color: Colors.white)),
-                                              ),
-                                              backgroundColor: Color.fromARGB(
-                                                  255, 1, 114, 5),
-                                            ));
-                                            formKey.currentState?.reset();
-                                          } else if (result == "fail") {
-                                            showAlertDialog(context,
-                                                "Add Stock Actual fail.");
-                                          }
-                                        });
-                                      } else {
-                                        showAlertDialog(
-                                            context, "Please select batch.");
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  // height: 50,
+                                  child: TextFormField(
+                                    //controller: _textCountController,
+                                    controller: flagSave == false
+                                        ? TextEditingController(text: "")
+                                        : TextEditingController(
+                                            text: _currentValue.toString()),
+                                    style: TextStyle(fontSize: 20),
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: 'Count Item',
+                                        // suffixIcon: Icon(Icons.keyboard, size: 40)
+                                        suffixIcon: IconButton(
+                                          icon: Icon(Icons.calculate, size: 40),
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                                isScrollControlled: true,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                barrierColor:
+                                                    Colors.transparent,
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Container(
+                                                    decoration: BoxDecoration(
+                                                      color:
+                                                          Colors.grey.shade200,
+                                                    ),
+                                                    child: SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.6,
+                                                        child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 8.0,
+                                                                    bottom: 8.0,
+                                                                    left: 26.0,
+                                                                    right:
+                                                                        26.0),
+                                                            child:
+                                                                DynamicCalculator(
+                                                              value: 0,
+                                                              hideExpression:
+                                                                  false,
+                                                              hideSurroundingBorder:
+                                                                  true,
+                                                              showCalculatorDisplay:
+                                                                  true,
+                                                              autofocus: false,
+                                                              onChanged: (key,
+                                                                  value,
+                                                                  expression) {
+                                                                setState(() {
+                                                                  _currentValue =
+                                                                      value!
+                                                                          .round();
+                                                                  flagSave =
+                                                                      true;
+                                                                  // _textCountController
+                                                                  //         .text =
+                                                                  //     value!
+                                                                  //         .round()
+                                                                  //         .toString();
+                                                                });
+                                                              },
+                                                              theme:
+                                                                  const CalculatorTheme(
+                                                                borderColor: Colors
+                                                                    .transparent,
+                                                                borderWidth:
+                                                                    0.0,
+                                                                displayCalculatorRadius:
+                                                                    10.0,
+                                                                displayBackgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                displayStyle: TextStyle(
+                                                                    fontSize:
+                                                                        30,
+                                                                    color: Colors
+                                                                        .green),
+                                                                expressionBackgroundColor:
+                                                                    Colors
+                                                                        .black12,
+                                                                expressionStyle:
+                                                                    TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: Colors
+                                                                            .black45),
+                                                                operatorColor:
+                                                                    Colors
+                                                                        .green,
+                                                                operatorStyle: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    color: Colors
+                                                                        .white),
+                                                                commandColor:
+                                                                    Colors
+                                                                        .white,
+                                                                commandStyle: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    color: Colors
+                                                                        .green),
+                                                                numColor: Colors
+                                                                    .white,
+                                                                numStyle: TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    color: Colors
+                                                                        .black87),
+                                                              ),
+                                                            ))),
+                                                  );
+                                                });
+                                          },
+                                        )),
+                                    //validator:
+                                    //RequiredValidator(errorText: "Please Enter Count Qty."),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return "Please Enter Count.";
+                                      } else if (double.parse(value).toInt() <
+                                          0) {
+                                        return "Count should be greater than 0";
                                       }
-                                      //}
-                                      // else {
-                                      //   api.AddStockActual(batch_detail)
-                                      //       .then((result) {
-                                      //     if (result == "success") {
-                                      //       refreshDataBatch(
-                                      //           textController.text);
-                                      //       setState(() {
-                                      //         // _textCountController.clear();
-                                      //         flagSave = false;
-                                      //       });
-                                      //       formKey.currentState?.reset();
-                                      //     } else if (result == "fail") {
-                                      //       showAlertDialog(context,
-                                      //           "Add Stock Actual fail.");
-                                      //     }
-                                      //   });
-                                      // }
+                                    },
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp("[0-9]"),
+                                      ),
+                                    ],
+                                    keyboardType: TextInputType.number,
+                                    onSaved: (countItem1) {
+                                      setState(() {
+                                        countItem =
+                                            countItem! + int.parse(countItem1!);
+                                      });
 
-                                      //formKey.currentState?.reset();
-                                    }
-                                  },
+                                      batch_detail.countQty =
+                                          int.parse(countItem1!);
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ]),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      child: Text(
+                                        "Comments",
+                                        style: GoogleFonts.prompt(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)),
+                                      ),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          bool show = false;
+                                          if (widget.bu_detail.controlLot ==
+                                              "Y") {
+                                            if (provider.bList.length > 0 &&
+                                                _selectedItem!.batchId !=
+                                                    null) {
+                                              DropdownIndex != -1
+                                                  ? textCommentsController
+                                                      .text = provider
+                                                          .bList[DropdownIndex]
+                                                          .comments ??
+                                                      ""
+                                                  : "";
+                                              show = true;
+                                            }
+                                          } else {
+                                            if (provider.bList.length > 0) {
+                                              DropdownIndex != -1
+                                                  ? textCommentsController
+                                                      .text = provider
+                                                          .bList[DropdownIndex]
+                                                          .comments ??
+                                                      ""
+                                                  : "";
+                                              show = true;
+                                            }
+                                          }
+                                          if (show) {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  SimpleDialog(
+                                                children: [
+                                                  Form(
+                                                      key: formKeyComments,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            SingleChildScrollView(
+                                                              child:
+                                                                  TextFormField(
+                                                                controller:
+                                                                    textCommentsController,
+                                                                minLines: 1,
+                                                                maxLines: 8,
+                                                                maxLength: 300,
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  border:
+                                                                      OutlineInputBorder(),
+                                                                  labelText:
+                                                                      'Edit Comments',
+                                                                ),
+                                                                style: GoogleFonts.prompt(
+                                                                    fontSize:
+                                                                        18,
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 5,
+                                                            ),
+                                                            SizedBox(
+                                                              width: double
+                                                                  .infinity,
+                                                              height: 50,
+                                                              child:
+                                                                  ElevatedButton(
+                                                                onPressed: () {
+                                                                  if (formKeyComments
+                                                                          .currentState
+                                                                          ?.validate() ==
+                                                                      true) {
+                                                                    formKeyComments
+                                                                        .currentState
+                                                                        ?.save();
+
+                                                                    api
+                                                                        .updateComments(
+                                                                            batch_detail
+                                                                                .id!,
+                                                                            textCommentsController
+                                                                                .text)
+                                                                        .then(
+                                                                            (result) {
+                                                                      if (result ==
+                                                                          "success") {
+                                                                        refreshDataBatch(
+                                                                            textController.text);
+                                                                        setState(
+                                                                            () {
+                                                                          _iscomments =
+                                                                              checkValue(textCommentsController.text);
+                                                                        });
+                                                                      } else {
+                                                                        showAlertDialog(
+                                                                            context,
+                                                                            "Save Failed.");
+                                                                      }
+                                                                    });
+
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  }
+                                                                },
+                                                                child: Text(
+                                                                    "Save",
+                                                                    style: GoogleFonts.prompt(
+                                                                        fontSize:
+                                                                            20,
+                                                                        color: Colors
+                                                                            .white)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.edit_note,
+                                          size: 35,
+                                          color: Colors.grey,
+                                        ))
+                                  ],
+                                ),
+                                Visibility(
+                                  visible: _iscomments,
+                                  child: SizedBox(
+                                    child: provider.bList.length != 0 &&
+                                            DropdownIndex != -1 &&
+                                            provider.bList[0].itemCode != ""
+                                        ? Text(
+                                            "${provider.bList[DropdownIndex].comments == null ? "" : provider.bList[DropdownIndex].comments}", //"${countItem}",
+                                            style: GoogleFonts.prompt(
+                                                fontSize: 16,
+                                                color: Colors.black),
+                                          )
+                                        : Text(""),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: ElevatedButton.icon(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Color.fromARGB(
+                                                    255, 5, 201, 13))),
+                                    label: Text(
+                                      "Save",
+                                      style: GoogleFonts.prompt(
+                                          fontSize: 20, color: Colors.white),
+                                    ),
+                                    icon: Icon(
+                                      Icons.save,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      if (formKey.currentState?.validate() ==
+                                          true) {
+                                        formKey.currentState?.save();
+                                        // if (widget.bu_detail.controlLot == "Y") {
+                                        if (batch_detail.id != null) {
+                                          api.AddStockActual(batch_detail)
+                                              .then((result) {
+                                            if (result == "success") {
+                                              refreshDataBatch(
+                                                  textController.text);
+                                              setState(() {
+                                                //_textCountController.clear();
+                                                flagSave = false;
+                                              });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                duration:
+                                                    new Duration(seconds: 2),
+                                                elevation: 2.0,
+                                                behavior:
+                                                    SnackBarBehavior.fixed,
+                                                content: Container(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                      "Counted Successful.",
+                                                      style: GoogleFonts.prompt(
+                                                          fontSize: 15,
+                                                          color: Colors.white)),
+                                                ),
+                                                backgroundColor: Color.fromARGB(
+                                                    255, 1, 114, 5),
+                                              ));
+                                              formKey.currentState?.reset();
+                                            } else if (result == "fail") {
+                                              showAlertDialog(context,
+                                                  "Add Stock Actual fail.");
+                                            }
+                                          });
+                                        } else {
+                                          showAlertDialog(
+                                              context, "Please select batch.");
+                                        }
+                                        //}
+                                        // else {
+                                        //   api.AddStockActual(batch_detail)
+                                        //       .then((result) {
+                                        //     if (result == "success") {
+                                        //       refreshDataBatch(
+                                        //           textController.text);
+                                        //       setState(() {
+                                        //         // _textCountController.clear();
+                                        //         flagSave = false;
+                                        //       });
+                                        //       formKey.currentState?.reset();
+                                        //     } else if (result == "fail") {
+                                        //       showAlertDialog(context,
+                                        //           "Add Stock Actual fail.");
+                                        //     }
+                                        //   });
+                                        // }
+
+                                        //formKey.currentState?.reset();
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ]),
+                        ),
                       ),
                     ),
-                  ),
-                  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                  Counting_View(
-                    bu_detail: widget.bu_detail,
-                    itemMaster: itemMaster,
-                    sortfield: _sortfield,
-                  ),
-                ])),
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    Counting_View(
+                      bu_detail: widget.bu_detail,
+                      itemMaster: itemMaster,
+                      sortfield: _sortfield,
+                    ),
+                  ])),
+        ),
       );
     });
   }
