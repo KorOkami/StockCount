@@ -75,6 +75,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   late Future<List<history>> history_List;
   late List<history> _List_history = [];
 
+  final TextEditingController CounttextController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -138,7 +140,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
           return false; //ป้องการกดปุ่มยอนกลับบน mobile
         },
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            //flagSave = true;
+          },
+          //onTap: () => FocusScope.of(context).unfocus(),
           child: Scaffold(
               //drawer: Drawer(),
               appBar: AppBar(
@@ -788,7 +794,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                 SizedBox(
                                   // height: 50,
                                   child: TextFormField(
-                                    //controller: _textCountController,
+                                    //controller: CounttextController,
                                     controller: flagSave == false
                                         ? TextEditingController(text: "")
                                         : TextEditingController(
@@ -1138,6 +1144,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                               setState(() {
                                                 //_textCountController.clear();
                                                 flagSave = false;
+                                                //CounttextController.clear();
                                               });
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
