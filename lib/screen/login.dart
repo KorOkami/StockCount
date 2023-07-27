@@ -344,42 +344,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(
                                   height: 10,
                                 ),
-                                // Container(
-                                //     width: double.infinity,
-                                //     height: 50,
-                                //     color: Colors.white,
-                                //     child: ElevatedButton.icon(
-                                //         style: ButtonStyle(
-                                //           shape: MaterialStateProperty.all<
-                                //                   RoundedRectangleBorder>(
-                                //               RoundedRectangleBorder(
-                                //                   borderRadius:
-                                //                       BorderRadius.circular(
-                                //                           15))),
-                                //           backgroundColor:
-                                //               MaterialStateProperty.all(
-                                //                   Color.fromARGB(
-                                //                       255, 1, 103, 166)),
-                                //         ),
-                                //         label: Text(
-                                //           "Register",
-                                //           style: GoogleFonts.prompt(
-                                //               fontSize: 20,
-                                //               color: Colors.white),
-                                //         ),
-                                //         icon: Icon(
-                                //           Icons.person_add_alt_1,
-                                //           color: Colors.white,
-                                //           size: 30,
-                                //         ),
-                                //         onPressed: () {
-                                //           Navigator.push(context,
-                                //               MaterialPageRoute(
-                                //                   builder: (context) {
-                                //             return Register_Screen(
-                                //                 token: _successData?.token);
-                                //           }));
-                                //         }))
+                                Container(
+                                    width: double.infinity,
+                                    height: 50,
+                                    color: Colors.white,
+                                    child: ElevatedButton.icon(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          15))),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Color.fromARGB(
+                                                      255, 1, 103, 166)),
+                                        ),
+                                        label: Text(
+                                          "Register",
+                                          style: GoogleFonts.prompt(
+                                              fontSize: 20,
+                                              color: Colors.white),
+                                        ),
+                                        icon: Icon(
+                                          Icons.person_add_alt_1,
+                                          color: Colors.white,
+                                          size: 30,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return Register_Screen(
+                                                token: _successData?.token);
+                                          }));
+                                        }))
                               ]),
                         ),
                       ),
