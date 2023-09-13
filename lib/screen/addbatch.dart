@@ -226,14 +226,14 @@ class _AddBatchState extends State<AddBatch> {
                     if (formKey.currentState?.validate() == true) {
                       formKey.currentState?.save();
                       api.AddBatchExpire(stockOnhand, addBatch).then((result) {
-                        if (result == "success") {
+                        if (result?.status == "success") {
                           setState(() {
-                            res = result;
+                            res = result?.status;
                           });
                           showAddBatch_AlertDialog(context);
                           formKey.currentState?.reset();
-                        } else if (result == "fail") {
-                          showAlertDialog(context, "Add Batch Failed.");
+                        } else if (result?.status == "fail") {
+                          showAlertDialog(context, result?.ErrorM);
                         }
                       });
                     }

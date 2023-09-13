@@ -213,7 +213,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                               SizedBox(
                                 width: 5,
                               ),
-                              Text("History",
+                              Text("Counting Log",
                                   style: GoogleFonts.prompt(
                                       fontSize: 20, color: Colors.white)),
                             ],

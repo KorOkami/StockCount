@@ -164,7 +164,9 @@ class stockCountingAPI {
     return result;
   }
 
-  Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
+  Future<ResponseBatch?> AddBatchExpire(
+      StockOnhand _stockOnhand, Batch batch) async {
+    ResponseBatch res = new ResponseBatch("", "");
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";
     var uuid = Uuid();
@@ -185,12 +187,16 @@ class stockCountingAPI {
       final response = await _dio.post(_AddBatchUrl, data: _AddBatchdata);
       if (response.statusCode == 200) {
         result = "success";
+        res.status = "success";
       }
     } on DioError catch (e) {
       result = "fail";
-      print(e.response?.data);
+      res.status = "fail";
+      Map<String, dynamic> error_res = e.response?.data["errors"];
+      res.ErrorM = error_res['error'][0];
+      //print(e.response?.data);
     }
-    return result;
+    return res;
   }
 
   Future<List<CountingDetail>> GetCountingDetail(String onHandID) async {

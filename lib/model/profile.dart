@@ -13,6 +13,12 @@ class ResponseLogin {
   ResponseLogin(this.status, this.token, this.username, this.ErrorM);
 }
 
+class ResponseBatch {
+  String status;
+  String ErrorM;
+  ResponseBatch(this.status, this.ErrorM);
+}
+
 class CallPO {
   String BU;
   String PONum;

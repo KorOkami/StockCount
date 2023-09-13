@@ -41,7 +41,7 @@ class _history_screenState extends State<history_screen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "History",
+          "Counting Log",
           style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
         ),
         leading: IconButton(
