@@ -19,6 +19,7 @@ class CountingDetail {
     this.expiryDate,
     this.countQty,
     this.userName,
+    //this.comments,
   });
 
   String? id;
@@ -27,6 +28,7 @@ class CountingDetail {
   String? expiryDate;
   int? countQty;
   String? userName;
+  //String? comments;
 
   factory CountingDetail.fromJson(Map<String, dynamic> json) => CountingDetail(
         id: json["id"],
@@ -35,6 +37,7 @@ class CountingDetail {
         expiryDate: json["expiryDate"],
         countQty: json["countQty"],
         userName: json["userName"],
+        //userName: json["userName"],
       );
 
   Map<String, dynamic> toJson() => {

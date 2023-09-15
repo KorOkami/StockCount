@@ -351,10 +351,22 @@ class _Counting_DetailState extends State<Counting_Detail> {
                             style: GoogleFonts.prompt(
                                 fontSize: 17,
                                 color: Color.fromARGB(255, 1, 57, 83))),
-                        subtitle: Text("User : ${data.userName}",
-                            style: GoogleFonts.prompt(
-                              fontSize: 15,
-                            )),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("User : ${data.userName}",
+                                style: GoogleFonts.prompt(
+                                  fontSize: 15,
+                                )),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text("Remark : ",
+                                style: GoogleFonts.prompt(
+                                  fontSize: 14,
+                                ))
+                          ],
+                        ),
                       ),
                     ),
                   );
