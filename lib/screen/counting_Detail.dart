@@ -449,7 +449,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                   fontSize: 15,
                                 )),
                             SizedBox(
-                              height: 5,
+                              height: 10,
                             ),
                             Text("Remark : ",
                                 style: GoogleFonts.prompt(

@@ -234,6 +234,23 @@ class stockCountingAPI {
     return result;
   }
 
+  Future<String> EditCountingDetail_comments(
+      String actualID, String comments) async {
+    String result = "";
+    String _editCountingUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/editactualcomments/${actualID}?comments=${comments}';
+    try {
+      final response = await _dio.put(_editCountingUrl);
+      if (response.statusCode == 200) {
+        result = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+      print(e.response?.data);
+    }
+    return result;
+  }
+
   /*Future<String> DeleteCountingDetail(String actualID) async {
     String result = "";
     String _deleteCountingUrl =
