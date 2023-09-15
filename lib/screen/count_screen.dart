@@ -530,6 +530,19 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         }
                                       },
                                     )),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 8, 18),
+                                      child: IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.add_box_rounded,
+                                          color:
+                                              Color.fromARGB(255, 242, 233, 58),
+                                          size: 50,
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                                 SizedBox(
@@ -637,7 +650,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                     List_StockOnhand.indexOf(
                                                         value!);
                                                 _selectedItem = value;
-                                                oldIndex = DropdownIndex;
+                                                //oldIndex = DropdownIndex;
                                                 batch_detail.id = value.id;
                                                 batch_detail.qty = value.qty;
                                                 batch_detail.countQty =
@@ -740,7 +753,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                               DropdownIndex != -1 &&
                                               provider.bList[0].itemCode != ""
                                           ? Text(
-                                              "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
+                                              widget.bu_detail.controlLot == "N"
+                                                  ? "${provider.bList[0].qty}"
+                                                  : "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
                                               style: GoogleFonts.prompt(
                                                   fontSize: 20,
                                                   color: Colors.black),
@@ -951,7 +966,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   children: [
                                     SizedBox(
                                       child: Text(
-                                        "Comments",
+                                        "Remark :",
                                         style: GoogleFonts.prompt(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -959,7 +974,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                 Color.fromARGB(255, 1, 57, 83)),
                                       ),
                                     ),
-                                    IconButton(
+
+                                    /*IconButton(
                                         onPressed: () {
                                           bool show = false;
                                           if (widget.bu_detail.controlLot ==
@@ -1091,24 +1107,39 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                           Icons.edit_note,
                                           size: 35,
                                           color: Colors.grey,
-                                        ))
+                                        ))*/
                                   ],
                                 ),
-                                Visibility(
-                                  visible: _iscomments,
-                                  child: SizedBox(
-                                    child: provider.bList.length != 0 &&
-                                            DropdownIndex != -1 &&
-                                            provider.bList[0].itemCode != ""
-                                        ? Text(
-                                            "${provider.bList[DropdownIndex].comments == null ? "" : provider.bList[DropdownIndex].comments}", //"${countItem}",
-                                            style: GoogleFonts.prompt(
-                                                fontSize: 16,
-                                                color: Colors.black),
-                                          )
-                                        : Text(""),
-                                  ),
+                                SizedBox(
+                                  height: 5,
                                 ),
+                                TextFormField(
+                                  //controller: textCommentsController,
+                                  minLines: 1,
+                                  maxLines: 8,
+                                  maxLength: 100,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Add Remark',
+                                  ),
+                                  style: GoogleFonts.prompt(
+                                      fontSize: 18, color: Colors.black),
+                                ),
+                                // Visibility(
+                                //   visible: _iscomments,
+                                //   child: SizedBox(
+                                //     child: provider.bList.length != 0 &&
+                                //             DropdownIndex != -1 &&
+                                //             provider.bList[0].itemCode != ""
+                                //         ? Text(
+                                //             "${provider.bList[DropdownIndex].comments == null ? "" : provider.bList[DropdownIndex].comments}", //"${countItem}",
+                                //             style: GoogleFonts.prompt(
+                                //                 fontSize: 16,
+                                //                 color: Colors.black),
+                                //           )
+                                //         : Text(""),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: 10,
                                 ),
