@@ -9,6 +9,7 @@ import 'package:stock_counting_app/model/history_model.dart';
 import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:stock_counting_app/providers/batch_provider.dart';
+import 'package:stock_counting_app/screen/add_Item_screen.dart';
 import 'package:stock_counting_app/screen/addbatch.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/counting_view.dart';
@@ -534,7 +535,16 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 0, 8, 18),
                                       child: IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return AddItem(
+                                              batchControl:
+                                                  widget.bu_detail.controlLot,
+                                            );
+                                          }));
+                                        },
                                         icon: Icon(
                                           Icons.add_box_rounded,
                                           color:

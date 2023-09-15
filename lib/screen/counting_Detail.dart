@@ -235,6 +235,95 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                             child: Column(
                                               children: [
                                                 TextFormField(
+                                                  minLines: 1,
+                                                  maxLines: 8,
+                                                  maxLength: 100,
+                                                  decoration: InputDecoration(
+                                                    border:
+                                                        OutlineInputBorder(),
+                                                    labelText: 'Edit Remark',
+                                                  ),
+                                                  style: GoogleFonts.prompt(
+                                                      fontSize: 18,
+                                                      color: Colors.black),
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      strCounted = value;
+                                                    });
+                                                  },
+                                                ),
+                                                SizedBox(
+                                                  height: 5,
+                                                ),
+                                                SizedBox(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      /* if (formKey.currentState
+                                                              ?.validate() ==
+                                                          true) {
+                                                        formKey.currentState
+                                                            ?.save();
+
+                                                        api.EditCountingDetail(
+                                                                data.id!,
+                                                                strCounted)
+                                                            .then((result) {
+                                                          if (result ==
+                                                              "success") {
+                                                            refreshDataBatch(
+                                                                data.itemCode!);
+                                                            setState(() {
+                                                              data.countQty =
+                                                                  int.parse(
+                                                                      strCounted);
+                                                            });
+                                                          } else {
+                                                            showAlertDialog(
+                                                                context,
+                                                                "Update Failed.");
+                                                          }
+                                                        });
+
+                                                        Navigator.pop(context);
+                                                      }*/
+                                                    },
+                                                    child: Text("Update",
+                                                        style:
+                                                            GoogleFonts.prompt(
+                                                                fontSize: 20,
+                                                                color: Colors
+                                                                    .white)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ))
+                                    ],
+                                  ));
+                        },
+                        backgroundColor: Color.fromARGB(255, 49, 3, 253),
+                        foregroundColor: Colors.white,
+                        icon: Icons.edit_note,
+                        label: 'Remark',
+                      ),
+                      SlidableAction(
+                        label: 'Counted',
+                        onPressed: (context) {
+                          showDialog(
+                              context: context,
+                              builder: (context) => SimpleDialog(
+                                    children: [
+                                      Form(
+                                          key: formKey,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Column(
+                                              children: [
+                                                TextFormField(
                                                   decoration: InputDecoration(
                                                     border:
                                                         OutlineInputBorder(),
@@ -326,6 +415,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                     endActionPane:
                         ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
+                        label: 'Delete',
                         onPressed: (context) {
                           setState(() {
                             showDelete_AlertDialog(context, data, index);
@@ -363,8 +453,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                             ),
                             Text("Remark : ",
                                 style: GoogleFonts.prompt(
-                                  fontSize: 14,
-                                ))
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 1, 57, 83)))
                           ],
                         ),
                       ),
