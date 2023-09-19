@@ -5,7 +5,10 @@ import 'package:form_field_validator/form_field_validator.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:stock_counting_app/model/itemMaster.dart';
 import 'package:stock_counting_app/screen/count_screen.dart';
+import 'package:stock_counting_app/services/api.dart';
+import 'package:stock_counting_app/utility/alert.dart';
 
 import '../components/text_field_container.dart';
 
@@ -25,6 +28,8 @@ class _AddItemState extends State<AddItem> {
   TextEditingController dateController = TextEditingController();
   bool showAddBatch = true;
   final formKey = GlobalKey<FormState>();
+  late Future<ItemMaster> fItemMaster;
+  ItemMaster _ItemMaster = ItemMaster();
 
   @override
   void initState() {
@@ -32,7 +37,14 @@ class _AddItemState extends State<AddItem> {
     if (widget.batchControl == "N") {
       showAddBatch = false;
     }
+    _ItemMaster = ItemMaster();
+    _ItemMaster.code = "";
+    _ItemMaster.name = "";
+    _ItemMaster.uomCode = "";
+    _ItemMaster.location = "";
   }
+
+  final api = stockCountingAPI();
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +101,33 @@ class _AddItemState extends State<AddItem> {
                             )),
                         validator:
                             RequiredValidator(errorText: "Please Scan Item."),
-                        onEditingComplete: () {},
+                        onEditingComplete: () {
+                          if (textController.text != "") {
+                            fItemMaster =
+                                api.GetItemMaster(textController.text);
+                            if (fItemMaster != null) {
+                              ConvertItem();
+                              Future.delayed(const Duration(
+                                      milliseconds:
+                                          500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                  .then((val) {
+                                setState(() {
+                                  if (_ItemMaster.name == "") {
+                                    showAlertDialog(context, "No Items found.");
+                                  }
+                                });
+                              });
+                            }
+                          } else {
+                            setState(() {
+                              _ItemMaster.code = "";
+                              _ItemMaster.name = "";
+                              _ItemMaster.uomCode = "";
+                              _ItemMaster.location = "";
+                            });
+                            showAlertDialog(context, "No Items found.");
+                          }
+                        },
                       ),
                       SizedBox(
                         height: 10,
@@ -103,13 +141,13 @@ class _AddItemState extends State<AddItem> {
                               color: Color.fromARGB(255, 1, 57, 83)),
                         ),
                       ),
-                      // SizedBox(
-                      //   child: Text(
-                      //     "${itemMaster.name}",
-                      //     style: GoogleFonts.prompt(
-                      //         fontSize: 20, color: Colors.black),
-                      //   ),
-                      // ),
+                      SizedBox(
+                        child: Text(
+                          "${_ItemMaster.name}",
+                          style: GoogleFonts.prompt(
+                              fontSize: 20, color: Colors.black),
+                        ),
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -127,13 +165,13 @@ class _AddItemState extends State<AddItem> {
                                   color: Color.fromARGB(255, 1, 57, 83)),
                             ),
                           ),
-                          // SizedBox(
-                          //   child: Text(
-                          //     "${itemMaster.uomCode}",
-                          //     style: GoogleFonts.prompt(
-                          //         fontSize: 20, color: Colors.black),
-                          //   ),
-                          // ),
+                          SizedBox(
+                            child: Text(
+                              "${_ItemMaster.uomCode == null ? "" : _ItemMaster.uomCode}",
+                              style: GoogleFonts.prompt(
+                                  fontSize: 20, color: Colors.black),
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -269,5 +307,9 @@ class _AddItemState extends State<AddItem> {
             ),
           ),
         ));
+  }
+
+  void ConvertItem() async {
+    _ItemMaster = await fItemMaster;
   }
 }

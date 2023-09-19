@@ -57,6 +57,7 @@ class _AddBatchState extends State<AddBatch> {
   }
 
   final api = stockCountingAPI();
+
   /*Future<String> AddBatchExpire(StockOnhand _stockOnhand, Batch batch) async {
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";

@@ -286,4 +286,27 @@ class stockCountingAPI {
 
     return _history;
   }
+
+  Future<ItemMaster> GetItemMaster(String _itemCode) async {
+    String result = "";
+    ItemMaster _ItemMaster = ItemMaster();
+    String _GetItemMasterUrl =
+        'https://inventory-uat.princhealth.com/api/itemmasters/${_itemCode}';
+    try {
+      final response = await _dio.get(_GetItemMasterUrl);
+      if (response.statusCode == 200) {
+        _ItemMaster.code = response.data['code'];
+        _ItemMaster.name = response.data['name'];
+        _ItemMaster.uomCode = response.data['uomCode'];
+        _ItemMaster.uomName = response.data['uomName'];
+      }
+    } on DioError catch (e) {
+      // print(e.response?.data);
+      _ItemMaster.code = "";
+      _ItemMaster.name = "";
+      _ItemMaster.uomCode = "";
+      _ItemMaster.uomName = "";
+    }
+    return _ItemMaster;
+  }
 }

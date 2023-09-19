@@ -193,7 +193,8 @@ class _BU_ScreenState extends State<BU_Screen> {
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                                labelText: "Warehouse - Business Unit"),
+                                labelText:
+                                    "Warehouse - Business Unit - Subject"),
                             baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
@@ -202,7 +203,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                         },
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -244,7 +245,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -292,7 +293,55 @@ class _BU_ScreenState extends State<BU_Screen> {
                         ),
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 10,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            child: Icon(
+                              Icons.subject,
+                              color: Color.fromARGB(255, 1, 57, 83),
+                              size: 35,
+                            ),
+                          ),
+                          Text(
+                            " Subject",
+                            style: GoogleFonts.prompt(
+                                fontSize: 20,
+                                color: Color.fromARGB(255, 1, 57, 83)),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 177, 226, 248),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  child: Text(
+                                    "",
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 20,
+                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                       SizedBox(
                         width: double.infinity,
