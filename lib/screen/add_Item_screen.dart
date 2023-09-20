@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 
 import '../components/text_field_container.dart';
+import 'package:flutter/services.dart';
 
 class AddItem extends StatefulWidget {
   const AddItem({
@@ -91,8 +93,8 @@ class _AddItemState extends State<AddItem> {
                             border: OutlineInputBorder(),
                             labelText: 'Scan new item',
                             suffixIcon: IconButton(
-                              //onPressed: () => barcodeScan(),
-                              onPressed: () {},
+                              onPressed: () => barcodeScan(),
+                              //onPressed: () {},
                               icon: Icon(
                                 Icons.qr_code_scanner,
                                 color: Colors.grey,
@@ -311,5 +313,47 @@ class _AddItemState extends State<AddItem> {
 
   void ConvertItem() async {
     _ItemMaster = await fItemMaster;
+  }
+
+  String _scanBarcode = 'Unknown';
+  Future<void> barcodeScan() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.QR);
+      //print(barcodeScanRes);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+    setState(() {
+      if (barcodeScanRes != "-1") {
+        _scanBarcode = barcodeScanRes;
+        textController.text = barcodeScanRes;
+        if (textController.text != "") {
+          fItemMaster = api.GetItemMaster(textController.text);
+          if (fItemMaster != null) {
+            ConvertItem();
+            Future.delayed(const Duration(
+                    milliseconds:
+                        500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                .then((val) {
+              setState(() {
+                if (_ItemMaster.name == "") {
+                  showAlertDialog(context, "No Items found.");
+                }
+              });
+            });
+          }
+        } else {
+          _ItemMaster.code = "";
+          _ItemMaster.name = "";
+          _ItemMaster.uomCode = "";
+          _ItemMaster.location = "";
+          showAlertDialog(context, "No Items found.");
+        }
+      }
+    });
   }
 }
