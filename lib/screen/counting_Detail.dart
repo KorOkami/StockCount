@@ -29,12 +29,14 @@ class Counting_Detail extends StatefulWidget {
       required this.onHandId,
       required this.BatchID,
       required this.bu_ID,
-      required this.itemCode});
+      required this.itemCode,
+      required this.userName});
   final String? token;
   final String? onHandId;
   final String? BatchID;
   final String? bu_ID;
   final String? itemCode;
+  final String? userName;
   @override
   State<Counting_Detail> createState() => _Counting_DetailState();
 }
@@ -162,6 +164,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     return sumMap;
   }*/
   String strCounted = '';
+  String comments = "";
 
   @override
   Widget build(BuildContext context) {
@@ -236,6 +239,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                             child: Column(
                                               children: [
                                                 TextFormField(
+                                                  controller:
+                                                      TextEditingController(
+                                                          text: data.comments),
                                                   minLines: 1,
                                                   maxLines: 8,
                                                   maxLength: 100,
@@ -250,9 +256,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   keyboardType:
                                                       TextInputType.number,
                                                   onChanged: (value) {
-                                                    // setState(() {
-                                                    //   strCounted = value;
-                                                    // });
+                                                    setState(() {
+                                                      comments = value;
+                                                    });
                                                   },
                                                   // validator: RequiredValidator(
                                                   //     errorText:
@@ -274,27 +280,29 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                             .currentState
                                                             ?.save();
 
-                                                        // api.EditCountingDetail(
-                                                        //         data.id!,
-                                                        //         strCounted)
-                                                        //     .then((result) {
-                                                        //   if (result ==
-                                                        //       "success") {
-                                                        //     refreshDataBatch(
-                                                        //         data.itemCode!);
-                                                        //     setState(() {
-                                                        //       data.countQty =
-                                                        //           int.parse(
-                                                        //               strCounted);
-                                                        //     });
-                                                        //   } else {
-                                                        //     showAlertDialog(
-                                                        //         context,
-                                                        //         "Update Failed.");
-                                                        //   }
-                                                        // });
+                                                        api.EditCountingDetail_comments(
+                                                                data.id!,
+                                                                comments ?? "")
+                                                            .then((result) {
+                                                          if (result ==
+                                                              "success") {
+                                                            refreshDataBatch(
+                                                                data.itemCode!);
+                                                            setState(() {
+                                                              data.comments =
+                                                                  comments;
+                                                              data.userName =
+                                                                  widget
+                                                                      .userName;
+                                                            });
+                                                          } else {
+                                                            showAlertDialog(
+                                                                context,
+                                                                "Update Failed.");
+                                                          }
+                                                        });
 
-                                                        // Navigator.pop(context);
+                                                        Navigator.pop(context);
                                                       }
                                                     },
                                                     child: Text("Update",
@@ -389,6 +397,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                               data.countQty =
                                                                   int.parse(
                                                                       strCounted);
+                                                              data.userName =
+                                                                  widget
+                                                                      .userName;
                                                             });
                                                           } else {
                                                             showAlertDialog(
@@ -457,10 +468,14 @@ class _Counting_DetailState extends State<Counting_Detail> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text("Remark : ${data.comments}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 1, 57, 83)))
+                            data.comments != null && data.comments != ""
+                                ? Text("Remark : ${data.comments}",
+                                    style: GoogleFonts.prompt(
+                                        fontSize: 14,
+                                        color: Color.fromARGB(255, 1, 57, 83)))
+                                : SizedBox(
+                                    height: 0,
+                                  )
                           ],
                         ),
                       ),

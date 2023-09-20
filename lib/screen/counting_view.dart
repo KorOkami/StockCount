@@ -19,14 +19,17 @@ import 'package:stock_counting_app/screen/counting_Detail.dart';
 import 'package:stock_counting_app/services/api.dart';
 
 class Counting_View extends StatefulWidget {
-  const Counting_View(
-      {super.key,
-      required this.bu_detail,
-      required this.itemMaster,
-      required this.sortfield});
+  const Counting_View({
+    super.key,
+    required this.bu_detail,
+    required this.itemMaster,
+    required this.sortfield,
+    required this.userName,
+  });
   final BU_Detail bu_detail;
   final ItemMaster itemMaster;
   final String sortfield;
+  final String userName;
 
   @override
   State<Counting_View> createState() => _Counting_ViewState();
@@ -242,6 +245,7 @@ class _Counting_ViewState extends State<Counting_View> {
                                         BatchID: data.batchId,
                                         bu_ID: widget.bu_detail.id,
                                         itemCode: data.itemCode,
+                                        userName: widget.userName,
                                       );
                                     }));
                                   },

@@ -1259,6 +1259,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                       bu_detail: widget.bu_detail,
                       itemMaster: itemMaster,
                       sortfield: _sortfield,
+                      userName: widget.userName ?? "",
                     ),
                   ])),
         ),
