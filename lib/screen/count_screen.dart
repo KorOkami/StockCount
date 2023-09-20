@@ -69,6 +69,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   bool showAddBatchButton = true;
   bool DisableDropdowmBatch = false;
   int? _currentValue = 0;
+  String? _currentComments = "";
   bool flagSave = false;
   bool _showSortmenu = false;
   bool _iscomments = false;
@@ -1125,6 +1126,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                 ),
                                 TextFormField(
                                   //controller: textCommentsController,
+                                  controller: flagSave == false
+                                      ? TextEditingController(text: "")
+                                      : TextEditingController(
+                                          text: _currentComments.toString()),
                                   minLines: 1,
                                   maxLines: 8,
                                   maxLength: 100,
@@ -1134,6 +1139,9 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   ),
                                   style: GoogleFonts.prompt(
                                       fontSize: 18, color: Colors.black),
+                                  onSaved: (newValue) {
+                                    _currentComments = newValue;
+                                  },
                                 ),
                                 // Visibility(
                                 //   visible: _iscomments,
@@ -1177,12 +1185,14 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                         formKey.currentState?.save();
                                         // if (widget.bu_detail.controlLot == "Y") {
                                         if (batch_detail.id != null) {
-                                          api.AddStockActual(batch_detail)
+                                          api.AddStockActual(batch_detail,
+                                                  _currentComments ?? "")
                                               .then((result) {
                                             if (result == "success") {
                                               refreshDataBatch(
                                                   textController.text);
                                               setState(() {
+                                                textCommentsController.clear();
                                                 //_textCountController.clear();
                                                 flagSave = false;
                                                 //CounttextController.clear();

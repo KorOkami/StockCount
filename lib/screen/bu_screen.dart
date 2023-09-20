@@ -33,7 +33,7 @@ class BU_Screen extends StatefulWidget {
 class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
   late Future<List<CountingDoc>> Document_List;
-  BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "");
+  BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "", "");
   late String? internalToken;
   late ItemMaster _itemMaster = ItemMaster();
 
@@ -189,6 +189,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                             BU.controlLot = value.controlLot ?? "";
                             BU.remark = value.remarks ?? "";
                             BU.status = value.status ?? "";
+                            BU.subject = value.subject ?? "";
                           });
                         },
                         dropdownDecoratorProps: DropDownDecoratorProps(
@@ -329,7 +330,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                               children: [
                                 SizedBox(
                                   child: Text(
-                                    "",
+                                    "${BU.subject}",
                                     style: GoogleFonts.prompt(
                                         fontSize: 20,
                                         color: Color.fromARGB(255, 1, 57, 83)),

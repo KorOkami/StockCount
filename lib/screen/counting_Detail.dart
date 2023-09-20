@@ -457,8 +457,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text(
-                                "Remark : lsdhfahfd;aljshfksjdhfsdjfhsldhfsjdhfksadjhfkasdjhfksjdfhksjdfhkjh",
+                            Text("Remark : ${data.comments}",
                                 style: GoogleFonts.prompt(
                                     fontSize: 14,
                                     color: Color.fromARGB(255, 1, 57, 83)))

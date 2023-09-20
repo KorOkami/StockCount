@@ -22,6 +22,7 @@ class CountingDoc {
     this.controlLot,
     this.remarks,
     this.status,
+    this.subject,
   });
 
   String? id;
@@ -34,6 +35,7 @@ class CountingDoc {
   String? controlLot;
   String? remarks;
   String? status;
+  String? subject;
 
   factory CountingDoc.fromJson(Map<String, dynamic> json) => CountingDoc(
         id: json["id"],
@@ -47,6 +49,7 @@ class CountingDoc {
         controlLot: json["controlLot"],
         remarks: json["remarks"],
         status: json["status"],
+        subject: json["subject"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -60,6 +63,7 @@ class CountingDoc {
         "controlLot": controlLot,
         "remarks": remarks,
         "status": status,
+        "subject": subject,
       };
 
   String userAsString() {
@@ -69,6 +73,6 @@ class CountingDoc {
     // } else {
     //   BUName = buName!;
     // }
-    return '${this.buCode}(${buName}) \n- ${this.whsCode}(${whsName})';
+    return '${this.buCode}(${buName}) \n- ${this.whsCode}(${whsName})\n- ${this.subject}';
   }
 }

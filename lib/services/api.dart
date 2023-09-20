@@ -126,7 +126,8 @@ class stockCountingAPI {
     return _DocumentCounting;
   }
 
-  Future<String> AddStockActual(StockOnhand _stockOnhand) async {
+  Future<String> AddStockActual(
+      StockOnhand _stockOnhand, String _comments) async {
     ItemMaster _ItemMaster = ItemMaster();
     String result = "";
     var uuid = Uuid();
@@ -135,7 +136,8 @@ class stockCountingAPI {
     Map<String, dynamic> _actualdata = {
       "id": "${uuid.v4()}",
       "onhandId": "${_stockOnhand.id}",
-      "countQty": _stockOnhand.countQty
+      "countQty": _stockOnhand.countQty,
+      "comments": _comments,
     };
     try {
       final response = await _dio.post(_AddActualUrl, data: _actualdata);
