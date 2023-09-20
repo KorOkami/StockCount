@@ -41,6 +41,7 @@ class Counting_Detail extends StatefulWidget {
 
 class _Counting_DetailState extends State<Counting_Detail> {
   final formKey = GlobalKey<FormState>();
+  final formKeyComments = GlobalKey<FormState>();
   late Future<List<CountingDetail>> futurecountingDetailList;
   late List<CountingDetail>? countingDetailList = [];
   late String deleteRes = "";
@@ -229,7 +230,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                               builder: (context) => SimpleDialog(
                                     children: [
                                       Form(
-                                          key: formKey,
+                                          key: formKeyComments,
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Column(
@@ -249,10 +250,13 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   keyboardType:
                                                       TextInputType.number,
                                                   onChanged: (value) {
-                                                    setState(() {
-                                                      strCounted = value;
-                                                    });
+                                                    // setState(() {
+                                                    //   strCounted = value;
+                                                    // });
                                                   },
+                                                  // validator: RequiredValidator(
+                                                  //     errorText:
+                                                  //         "Please Enter Remark."),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -262,34 +266,36 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   height: 50,
                                                   child: ElevatedButton(
                                                     onPressed: () {
-                                                      /* if (formKey.currentState
+                                                      if (formKeyComments
+                                                              .currentState
                                                               ?.validate() ==
                                                           true) {
-                                                        formKey.currentState
+                                                        formKeyComments
+                                                            .currentState
                                                             ?.save();
 
-                                                        api.EditCountingDetail(
-                                                                data.id!,
-                                                                strCounted)
-                                                            .then((result) {
-                                                          if (result ==
-                                                              "success") {
-                                                            refreshDataBatch(
-                                                                data.itemCode!);
-                                                            setState(() {
-                                                              data.countQty =
-                                                                  int.parse(
-                                                                      strCounted);
-                                                            });
-                                                          } else {
-                                                            showAlertDialog(
-                                                                context,
-                                                                "Update Failed.");
-                                                          }
-                                                        });
+                                                        // api.EditCountingDetail(
+                                                        //         data.id!,
+                                                        //         strCounted)
+                                                        //     .then((result) {
+                                                        //   if (result ==
+                                                        //       "success") {
+                                                        //     refreshDataBatch(
+                                                        //         data.itemCode!);
+                                                        //     setState(() {
+                                                        //       data.countQty =
+                                                        //           int.parse(
+                                                        //               strCounted);
+                                                        //     });
+                                                        //   } else {
+                                                        //     showAlertDialog(
+                                                        //         context,
+                                                        //         "Update Failed.");
+                                                        //   }
+                                                        // });
 
-                                                        Navigator.pop(context);
-                                                      }*/
+                                                        // Navigator.pop(context);
+                                                      }
                                                     },
                                                     child: Text("Update",
                                                         style:
@@ -451,7 +457,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text("Remark : ",
+                            Text(
+                                "Remark : lsdhfahfd;aljshfksjdhfsdjfhsldhfsjdhfksadjhfkasdjhfksjdfhksjdfhkjh",
                                 style: GoogleFonts.prompt(
                                     fontSize: 14,
                                     color: Color.fromARGB(255, 1, 57, 83)))
