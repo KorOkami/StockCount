@@ -253,8 +253,6 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   style: GoogleFonts.prompt(
                                                       fontSize: 18,
                                                       color: Colors.black),
-                                                  keyboardType:
-                                                      TextInputType.number,
                                                   onChanged: (value) {
                                                     setState(() {
                                                       comments = value;
@@ -282,7 +280,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
 
                                                         api.EditCountingDetail_comments(
                                                                 data.id!,
-                                                                comments ?? "")
+                                                                comments)
                                                             .then((result) {
                                                           if (result ==
                                                               "success") {
