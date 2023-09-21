@@ -312,6 +312,8 @@ class _AddItemState extends State<AddItem> {
                                     _ItemMaster.uomCode = "";
                                     flagSave = false;
                                     flagSaveDate = false;
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   });
                                   showAddNewItem_AlertDialog(context);
                                   formKey.currentState?.reset();

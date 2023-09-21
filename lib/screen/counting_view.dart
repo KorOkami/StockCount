@@ -148,7 +148,7 @@ class _Counting_ViewState extends State<Counting_View> {
                             ),
                             SizedBox(
                               child: Text(
-                                "${widget.itemMaster.uomCode}",
+                                "${widget.itemMaster.uomCode == null ? "" : widget.itemMaster.uomCode}",
                                 style: GoogleFonts.prompt(
                                     fontSize: 18,
                                     color: Color.fromARGB(255, 1, 57, 83)),

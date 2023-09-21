@@ -45,8 +45,9 @@ class _AddBatchState extends State<AddBatch> {
   TextEditingController dateController = TextEditingController();
   StockOnhand stockOnhand = StockOnhand();
   String? res;
-  // var formatter = new DateFormat('dd-MM-yyyy');
-  // DateTime? pickedDate;
+  bool flagSaveDate = true;
+  String? _currentDate = "";
+
   @override
   void initState() {
     // TODO: implement initState
@@ -98,150 +99,166 @@ class _AddBatchState extends State<AddBatch> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Add Batch/Expire",
-          style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Add Batch/Expire",
+            style: GoogleFonts.prompt(fontSize: 25, color: Colors.white),
+          ),
+          //automaticallyImplyLeading: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            //onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              if (res == "success") {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return CountScan(
+                    token: widget.token,
+                    userName: widget.userName,
+                    bu_detail: widget.bu_detail,
+                    itemCode: widget.itemCode,
+                    itemMaster: widget.itemMaster,
+                  );
+                }));
+              } else {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
         ),
-        //automaticallyImplyLeading: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          //onPressed: () => Navigator.of(context).pop(),
-          onPressed: () {
-            if (res == "success") {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return CountScan(
-                  token: widget.token,
-                  userName: widget.userName,
-                  bu_detail: widget.bu_detail,
-                  itemCode: widget.itemCode,
-                  itemMaster: widget.itemMaster,
-                );
-              }));
-            } else {
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // Text("Batch :",
-              //     style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
-              SizedBox(
-                height: 5,
-              ),
-              TextFormFieldContainerRegister(
-                colors: Color.fromARGB(255, 217, 242, 253),
-                child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 20, color: Color.fromARGB(255, 1, 103, 166)),
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(
-                      Icons.keyboard,
-                      size: 30,
+        body: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text("Batch :",
+                    //     style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+                    SizedBox(
+                      height: 5,
                     ),
-                    border: InputBorder.none,
-                    labelText: 'Batch',
-                  ),
-                  validator: RequiredValidator(errorText: "Please Enter Batch"),
-                  onSaved: (batchNo) {
-                    addBatch.batchNumber = batchNo ?? "";
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                child: TextFormFieldContainerRegister(
-                  colors: Color.fromARGB(255, 217, 242, 253),
-                  child: TextFormField(
-                    style: GoogleFonts.prompt(
-                        fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
-                    controller:
-                        dateController, //editing controller of this TextField
-                    validator: MultiValidator(
-                        [RequiredValidator(errorText: "Please select Date")]),
-                    decoration: const InputDecoration(
-                      labelText: "Expire Date",
-                      //contentPadding: EdgeInsets.zero,
-                      border: InputBorder.none,
-                      suffixIcon: Icon(
-                        Icons.calendar_today,
-                        color: Colors.black,
-                      ), //icon of text field
-                      // labelText: "Select Date",
-                      //labelStyle: TextStyle(fontSize: 25)
+                    TextFormFieldContainerRegister(
+                      colors: Color.fromARGB(255, 217, 242, 253),
+                      child: TextFormField(
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 1, 103, 166)),
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.keyboard,
+                            size: 30,
+                          ),
+                          border: InputBorder.none,
+                          labelText: 'Batch',
+                        ),
+                        validator:
+                            RequiredValidator(errorText: "Please Enter Batch"),
+                        onSaved: (batchNo) {
+                          addBatch.batchNumber = batchNo ?? "";
+                        },
+                      ),
                     ),
-                    readOnly: true, // when true user cannot edit text
-                    onTap: () async {
-                      //when click we have to show the datepicker
-                      DateTime? pickedDate = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(), //get today's date
-                          firstDate: DateTime(
-                              2000), //DateTime.now() - not to allow to choose before today.
-                          lastDate: DateTime(2101));
-                      setState(() {
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormat('dd-MM-yyyy').format(pickedDate);
-                          String SendformattedDate =
-                              DateFormat('yyyy-MM-dd').format(pickedDate);
-                          dateController.text = formattedDate;
-                          addBatch.epireDate = SendformattedDate;
-                        }
-                      });
-                    },
-                    // onSaved: (newValue) {
-                    //   dateController.text = newValue!;
-                    // },
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton.icon(
-                  label: Text(
-                    "Save",
-                    style:
-                        GoogleFonts.prompt(fontSize: 20, color: Colors.white),
-                  ),
-                  icon: Icon(
-                    Icons.save,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    if (formKey.currentState?.validate() == true) {
-                      formKey.currentState?.save();
-                      api.AddBatchExpire(stockOnhand, addBatch).then((result) {
-                        if (result?.status == "success") {
-                          setState(() {
-                            res = result?.status;
-                          });
-                          showAddBatch_AlertDialog(context);
-                          formKey.currentState?.reset();
-                        } else if (result?.status == "fail") {
-                          showAlertDialog(context, result?.ErrorM);
-                        }
-                      });
-                    }
-                  },
-                ),
-              )
-            ]),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Container(
+                      child: TextFormFieldContainerRegister(
+                        colors: Color.fromARGB(255, 217, 242, 253),
+                        child: TextFormField(
+                          style: GoogleFonts.prompt(
+                              fontSize: 20,
+                              color: Color.fromARGB(255, 1, 57, 83)),
+                          //controller: dateController, //editing controller of this TextField
+                          controller: flagSaveDate == false
+                              ? TextEditingController(text: "")
+                              : TextEditingController(text: _currentDate),
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: "Please select Date")
+                          ]),
+                          decoration: const InputDecoration(
+                            labelText: "Expire Date",
+                            //contentPadding: EdgeInsets.zero,
+                            border: InputBorder.none,
+                            suffixIcon: Icon(
+                              Icons.calendar_today,
+                              color: Colors.black,
+                            ), //icon of text field
+                            // labelText: "Select Date",
+                            //labelStyle: TextStyle(fontSize: 25)
+                          ),
+                          readOnly: true, // when true user cannot edit text
+                          onTap: () async {
+                            //when click we have to show the datepicker
+                            DateTime? pickedDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(), //get today's date
+                                firstDate: DateTime(
+                                    2000), //DateTime.now() - not to allow to choose before today.
+                                lastDate: DateTime(2101));
+                            setState(() {
+                              if (pickedDate != null) {
+                                String formattedDate =
+                                    DateFormat('dd-MM-yyyy').format(pickedDate);
+                                String SendformattedDate =
+                                    DateFormat('yyyy-MM-dd').format(pickedDate);
+                                flagSaveDate = true;
+                                _currentDate = formattedDate;
+                                addBatch.epireDate = SendformattedDate;
+                              }
+                            });
+                          },
+                          // onSaved: (newValue) {
+                          //   dateController.text = newValue!;
+                          // },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        label: Text(
+                          "Save",
+                          style: GoogleFonts.prompt(
+                              fontSize: 20, color: Colors.white),
+                        ),
+                        icon: Icon(
+                          Icons.save,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          if (formKey.currentState?.validate() == true) {
+                            formKey.currentState?.save();
+                            api.AddBatchExpire(stockOnhand, addBatch)
+                                .then((result) {
+                              if (result?.status == "success") {
+                                setState(() {
+                                  res = result?.status;
+                                  flagSaveDate = false;
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                });
+                                showAddBatch_AlertDialog(context);
+                                formKey.currentState?.reset();
+                              } else if (result?.status == "fail") {
+                                showAlertDialog(context, result?.ErrorM);
+                              }
+                            });
+                          }
+                        },
+                      ),
+                    )
+                  ]),
+            ),
           ),
         ),
       ),
