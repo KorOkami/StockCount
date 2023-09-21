@@ -143,3 +143,33 @@ showAddBatch_AlertDialog(BuildContext context) {
     },
   );
 }
+
+showAddNewItem_AlertDialog(BuildContext context) {
+  // set up the buttons
+  Widget OkButton = TextButton(
+    child: Text(
+      "OK",
+      style: GoogleFonts.prompt(fontSize: 20),
+    ),
+    onPressed: () => Navigator.pop(context),
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text(
+      "Add New Item successfully",
+      style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.normal),
+    ),
+    actions: [
+      OkButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

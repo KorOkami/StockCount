@@ -18,8 +18,10 @@ class AddItem extends StatefulWidget {
   const AddItem({
     super.key,
     required this.batchControl,
+    required this.stockID,
   });
   final String? batchControl;
+  final String? stockID;
 
   @override
   State<AddItem> createState() => _AddItemState();
@@ -28,10 +30,16 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   final TextEditingController textController = TextEditingController();
   TextEditingController dateController = TextEditingController();
+  Batch addBatch = Batch();
   bool showAddBatch = true;
   final formKey = GlobalKey<FormState>();
   late Future<ItemMaster> fItemMaster;
   ItemMaster _ItemMaster = ItemMaster();
+  String? res;
+  bool flagSave = true;
+  bool flagSaveDate = true;
+  String? _currentItemValue = "";
+  String? _currentDate = "";
 
   @override
   void initState() {
@@ -87,7 +95,10 @@ class _AddItemState extends State<AddItem> {
                         height: 5,
                       ),
                       TextFormField(
-                        controller: textController,
+                        // controller: textController,
+                        controller: flagSave == false
+                            ? TextEditingController(text: "")
+                            : TextEditingController(text: _currentItemValue),
                         style: TextStyle(fontSize: 20),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -103,10 +114,13 @@ class _AddItemState extends State<AddItem> {
                             )),
                         validator:
                             RequiredValidator(errorText: "Please Scan Item."),
+                        onChanged: (value) {
+                          _currentItemValue = value;
+                          flagSave = true;
+                        },
                         onEditingComplete: () {
-                          if (textController.text != "") {
-                            fItemMaster =
-                                api.GetItemMaster(textController.text);
+                          if (_currentItemValue != "") {
+                            fItemMaster = api.GetItemMaster(_currentItemValue!);
                             if (fItemMaster != null) {
                               ConvertItem();
                               Future.delayed(const Duration(
@@ -169,7 +183,7 @@ class _AddItemState extends State<AddItem> {
                           ),
                           SizedBox(
                             child: Text(
-                              "${_ItemMaster.uomCode == null ? "" : _ItemMaster.uomCode}",
+                              "${_ItemMaster.uomName == null ? "" : _ItemMaster.uomName}",
                               style: GoogleFonts.prompt(
                                   fontSize: 20, color: Colors.black),
                             ),
@@ -201,7 +215,7 @@ class _AddItemState extends State<AddItem> {
                                   validator: RequiredValidator(
                                       errorText: "Please Enter Batch"),
                                   onSaved: (batchNo) {
-                                    //addBatch.batchNumber = batchNo ?? "";
+                                    addBatch.batchNumber = batchNo ?? "";
                                   },
                                 ),
                               ),
@@ -216,8 +230,11 @@ class _AddItemState extends State<AddItem> {
                                   style: GoogleFonts.prompt(
                                       fontSize: 20,
                                       color: Color.fromARGB(255, 1, 57, 83)),
-                                  controller:
-                                      dateController, //editing controller of this TextField
+                                  //controller: dateController, //editing controller of this TextField
+                                  controller: flagSaveDate == false
+                                      ? TextEditingController(text: "")
+                                      : TextEditingController(
+                                          text: _currentDate),
                                   validator: MultiValidator([
                                     RequiredValidator(
                                         errorText: "Please select Date")
@@ -252,14 +269,12 @@ class _AddItemState extends State<AddItem> {
                                         String SendformattedDate =
                                             DateFormat('yyyy-MM-dd')
                                                 .format(pickedDate);
-                                        dateController.text = formattedDate;
-                                        // addBatch.epireDate = SendformattedDate;
+                                        flagSaveDate = true;
+                                        _currentDate = formattedDate;
+                                        addBatch.epireDate = SendformattedDate;
                                       }
                                     });
                                   },
-                                  // onSaved: (newValue) {
-                                  //   dateController.text = newValue!;
-                                  // },
                                 ),
                               ),
                             ),
@@ -286,18 +301,24 @@ class _AddItemState extends State<AddItem> {
                           onPressed: () {
                             if (formKey.currentState?.validate() == true) {
                               formKey.currentState?.save();
-                              // api.AddBatchExpire(stockOnhand, addBatch).then((result) {
-                              //   if (result?.status == "success") {
-                              //     setState(() {
-                              //       res = result?.status;
-                              //     });
-                              //     showAddBatch_AlertDialog(context);
-                              //     formKey.currentState?.reset();
-                              //   } else if (result?.status == "fail") {
-                              //     showAlertDialog(context, result?.ErrorM);
-                              //   }
-                              // }
-                              // );
+                              api.AddNewItem(widget.stockID ?? "",
+                                      _currentItemValue!, addBatch)
+                                  .then((result) {
+                                if (result?.status == "success") {
+                                  setState(() {
+                                    res = result?.status;
+                                    _ItemMaster.code = "";
+                                    _ItemMaster.name = "";
+                                    _ItemMaster.uomCode = "";
+                                    flagSave = false;
+                                    flagSaveDate = false;
+                                  });
+                                  showAddNewItem_AlertDialog(context);
+                                  formKey.currentState?.reset();
+                                } else if (result?.status == "fail") {
+                                  showAlertDialog(context, result?.ErrorM);
+                                }
+                              });
                             }
                           },
                         ),
@@ -331,8 +352,9 @@ class _AddItemState extends State<AddItem> {
       if (barcodeScanRes != "-1") {
         _scanBarcode = barcodeScanRes;
         textController.text = barcodeScanRes;
+        _currentItemValue = barcodeScanRes;
         if (textController.text != "") {
-          fItemMaster = api.GetItemMaster(textController.text);
+          fItemMaster = api.GetItemMaster(_currentItemValue!);
           if (fItemMaster != null) {
             ConvertItem();
             Future.delayed(const Duration(

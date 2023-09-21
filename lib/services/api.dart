@@ -311,4 +311,54 @@ class stockCountingAPI {
     }
     return _ItemMaster;
   }
+
+  Future<ResponseBatch?> AddNewItem(
+      String stockcountid, String itemCode, Batch batch) async {
+    ResponseBatch res = new ResponseBatch("", "");
+    ItemMaster _ItemMaster = ItemMaster();
+    String result = "";
+    var uuid = Uuid();
+    String _AddNewItemUrl =
+        'https://inventory-uat.princhealth.com/api/stockcounts/createonhand';
+    Map<String, dynamic> _AddItemdata;
+    if (batch.epireDate != null) {
+      _AddItemdata = {
+        "id": "${uuid.v4()}",
+        "stockCountId": "${stockcountid}",
+        "lineNum": 0,
+        "itemCode": "${itemCode}",
+        "batchID": "${batch.batchNumber}",
+        "expiryDate": "${batch.epireDate}",
+        "qty": 0,
+        "uomCode": "",
+        "binLoc": ""
+      };
+    } else {
+      _AddItemdata = {
+        "id": "${uuid.v4()}",
+        "stockCountId": "${stockcountid}",
+        "lineNum": 0,
+        "itemCode": "${itemCode}",
+        "batchID": "${batch.batchNumber == null ? "" : batch.batchNumber}",
+        "qty": 0,
+        "uomCode": "",
+        "binLoc": ""
+      };
+    }
+
+    try {
+      final response = await _dio.post(_AddNewItemUrl, data: _AddItemdata);
+      if (response.statusCode == 200) {
+        result = "success";
+        res.status = "success";
+      }
+    } on DioError catch (e) {
+      result = "fail";
+      res.status = "fail";
+      Map<String, dynamic> error_res = e.response?.data["errors"];
+      res.ErrorM = error_res['error'][0];
+      //print(e.response?.data);
+    }
+    return res;
+  }
 }

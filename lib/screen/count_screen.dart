@@ -543,6 +543,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                             return AddItem(
                                               batchControl:
                                                   widget.bu_detail.controlLot,
+                                              stockID: widget.bu_detail.id,
                                             );
                                           }));
                                         },
@@ -610,7 +611,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     ),
                                     SizedBox(
                                       child: Text(
-                                        "${itemMaster.uomCode}",
+                                        "${itemMaster.uomCode == null ? "" : itemMaster.uomCode}",
                                         style: GoogleFonts.prompt(
                                             fontSize: 20, color: Colors.black),
                                       ),
