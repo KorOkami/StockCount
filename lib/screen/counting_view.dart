@@ -188,7 +188,8 @@ class _Counting_ViewState extends State<Counting_View> {
                                     borderRadius: BorderRadius.circular(10)),
                                 elevation: 5,
                                 child: ListTile(
-                                  title: data.batchId != ""
+                                  title: data.batchId != "" &&
+                                          data.batchId != null
                                       ? Text("Batch : ${data.batchId ?? ""}",
                                           style: GoogleFonts.prompt(
                                               fontSize: 17,
@@ -201,7 +202,8 @@ class _Counting_ViewState extends State<Counting_View> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      data.batchId != ""
+                                      data.batchId != "" &&
+                                              data.expiryDate != null
                                           ? checkexpDate(data.expiryDate!) ==
                                                   true
                                               ? Text(

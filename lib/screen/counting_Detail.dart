@@ -385,7 +385,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
 
                                                         api.EditCountingDetail(
                                                                 data.id!,
-                                                                strCounted)
+                                                                strCounted,
+                                                                data.comments ??
+                                                                    "")
                                                             .then((result) {
                                                           if (result ==
                                                               "success") {

@@ -220,10 +220,11 @@ class stockCountingAPI {
     return _countingDetail;
   }
 
-  Future<String> EditCountingDetail(String actualID, String countedQty) async {
+  Future<String> EditCountingDetail(
+      String actualID, String countedQty, String _comments) async {
     String result = "";
     String _editCountingUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}';
+        'https://inventory-uat.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}&comments=${_comments}';
     try {
       final response = await _dio.put(_editCountingUrl);
       if (response.statusCode == 200) {
@@ -339,7 +340,6 @@ class stockCountingAPI {
         "stockCountId": "${stockcountid}",
         "lineNum": 0,
         "itemCode": "${itemCode}",
-        "batchID": "${batch.batchNumber == null ? "" : batch.batchNumber}",
         "qty": 0,
         "uomCode": "",
         "binLoc": ""
