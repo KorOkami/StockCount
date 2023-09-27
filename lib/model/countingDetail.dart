@@ -20,6 +20,7 @@ class CountingDetail {
     this.countQty,
     this.userName,
     this.comments,
+    this.updateUserName,
   });
 
   String? id;
@@ -29,6 +30,7 @@ class CountingDetail {
   int? countQty;
   String? userName;
   String? comments;
+  String? updateUserName;
 
   factory CountingDetail.fromJson(Map<String, dynamic> json) => CountingDetail(
         id: json["id"],
@@ -38,6 +40,7 @@ class CountingDetail {
         countQty: json["countQty"],
         userName: json["userName"],
         comments: json["comments"],
+        updateUserName: json["updateUserName"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,5 +51,6 @@ class CountingDetail {
         "countQty": countQty,
         "userName": userName,
         "comments": comments,
+        "updateUserName": updateUserName,
       };
 }

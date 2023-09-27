@@ -182,7 +182,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
           ),
         ),
         body: Column(children: [
-          widget.BatchID != ""
+          widget.BatchID != "" && widget.BatchID != null
               ? Container(
                   height: 50,
                   child: Padding(
@@ -461,7 +461,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("User : ${data.userName}",
+                            Text(
+                                "User : ${data.updateUserName == null ? data.userName : data.updateUserName}",
                                 style: GoogleFonts.prompt(
                                   fontSize: 15,
                                 )),
