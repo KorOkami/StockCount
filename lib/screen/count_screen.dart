@@ -978,7 +978,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   children: [
                                     SizedBox(
                                       child: Text(
-                                        "Remark :",
+                                        "Comments :",
                                         style: GoogleFonts.prompt(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20,
@@ -1136,7 +1136,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   maxLength: 100,
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(),
-                                    labelText: 'Add Remark',
+                                    labelText: 'Add Comments',
                                   ),
                                   style: GoogleFonts.prompt(
                                       fontSize: 18, color: Colors.black),

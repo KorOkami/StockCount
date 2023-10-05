@@ -227,6 +227,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                     startActionPane:
                         ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
+                        //borderRadius: BorderRadius.all(Radius.circular(8)),
+                        padding: EdgeInsets.fromLTRB(1, 2, 1, 2),
                         onPressed: (context) {
                           showDialog(
                               context: context,
@@ -248,7 +250,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   decoration: InputDecoration(
                                                     border:
                                                         OutlineInputBorder(),
-                                                    labelText: 'Edit Remark',
+                                                    labelText: 'Edit Comments',
                                                   ),
                                                   style: GoogleFonts.prompt(
                                                       fontSize: 18,
@@ -260,7 +262,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   },
                                                   // validator: RequiredValidator(
                                                   //     errorText:
-                                                  //         "Please Enter Remark."),
+                                                  //         "Please Enter Comments."),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -320,7 +322,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                         backgroundColor: Color.fromARGB(255, 49, 3, 253),
                         foregroundColor: Colors.white,
                         icon: Icons.edit_note,
-                        label: 'Remark',
+                        label: 'Comments',
+                        spacing: 4,
                       ),
                       SlidableAction(
                         label: 'Counted',
@@ -470,7 +473,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                               height: 10,
                             ),
                             data.comments != null && data.comments != ""
-                                ? Text("Remark : ${data.comments}",
+                                ? Text("Comments : ${data.comments}",
                                     style: GoogleFonts.prompt(
                                         fontSize: 14,
                                         color: Color.fromARGB(255, 1, 57, 83)))
