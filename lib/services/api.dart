@@ -28,7 +28,7 @@ class stockCountingAPI {
   }
 
   final String _loginUrl =
-      'https://inventory-uat.princhealth.com/api/account/login';
+      'https://stockcount.princhealth.com/api/account/login';
 
   Future<void> _saveToken(Map<String, dynamic> data) async {
     final token = data['token'];
@@ -76,8 +76,8 @@ class stockCountingAPI {
       'Cookie': 'refreshToken=l9lbOu2%2BQ08KTAKEUHqYe9fwywz6Rz5TKeXP7yQV2p0%3D'
     };*/
     try {
-      final response = await _dio.post(
-          'https://inventory-uat.princhealth.com/api/account/refreshToken');
+      final response = await _dio
+          .post('https://stockcount.princhealth.com/api/account/refreshToken');
       if (response.statusCode == 200) {
         await _saveToken(response.data);
       }
@@ -90,7 +90,7 @@ class stockCountingAPI {
       String bu_detail_Id, String itemCode) async {
     late List<StockOnhand> _StockOnhand = [];
     String _BatchListUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/${bu_detail_Id}/item?ItemCode=${itemCode}';
+        'https://stockcount.princhealth.com/api/stockcounts/${bu_detail_Id}/item?ItemCode=${itemCode}';
     try {
       final response = await _dio.get(_BatchListUrl);
 
@@ -110,7 +110,7 @@ class stockCountingAPI {
     late List<CountingDoc> _DocumentCounting = [];
 
     String _BuListUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/mobile';
+        'https://stockcount.princhealth.com/api/stockcounts/mobile';
     try {
       final response = await _dio.get(_BuListUrl);
       if (response.statusCode == 200) {
@@ -132,7 +132,7 @@ class stockCountingAPI {
     String result = "";
     var uuid = Uuid();
     String _AddActualUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/createactual';
+        'https://stockcount.princhealth.com/api/stockcounts/createactual';
     Map<String, dynamic> _actualdata = {
       "id": "${uuid.v4()}",
       "onhandId": "${_stockOnhand.id}",
@@ -153,7 +153,7 @@ class stockCountingAPI {
   Future<String> updateComments(String _batchID, String _comments) async {
     String result = "";
     String _AddcommentsUrl =
-        'https://inventory-uat.princhealth.com/api/StockCounts/editOnhandComments/${_batchID}';
+        'https://stockcount.princhealth.com/api/StockCounts/editOnhandComments/${_batchID}';
     Map<String, dynamic> _commentsdata = {"comments": "${_comments}"};
     try {
       final response = await _dio.put(_AddcommentsUrl, data: _commentsdata);
@@ -173,7 +173,7 @@ class stockCountingAPI {
     String result = "";
     var uuid = Uuid();
     String _AddBatchUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/createonhand';
+        'https://stockcount.princhealth.com/api/stockcounts/createonhand';
     Map<String, dynamic> _AddBatchdata = {
       "id": "${uuid.v4()}",
       "stockCountId": "${_stockOnhand.stockcountid}",
@@ -205,7 +205,7 @@ class stockCountingAPI {
     List<CountingDetail> _countingDetail = [];
     String result = "";
     String _countingDetailhUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/onhands/${onHandID}/actuals';
+        'https://stockcount.princhealth.com/api/stockcounts/onhands/${onHandID}/actuals';
     try {
       final response = await _dio.get(_countingDetailhUrl);
       if (response.statusCode == 200) {
@@ -224,7 +224,7 @@ class stockCountingAPI {
       String actualID, String countedQty, String _comments) async {
     String result = "";
     String _editCountingUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}&comments=${_comments}';
+        'https://stockcount.princhealth.com/api/stockcounts/editactual/${actualID}?countQty=${countedQty}&comments=${_comments}';
     try {
       final response = await _dio.put(_editCountingUrl);
       if (response.statusCode == 200) {
@@ -241,7 +241,7 @@ class stockCountingAPI {
       String actualID, String comments) async {
     String result = "";
     String _editCountingUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/editactualcomments/${actualID}?comments=${comments}';
+        'https://stockcount.princhealth.com/api/stockcounts/editactualcomments/${actualID}?comments=${comments}';
     try {
       final response = await _dio.put(_editCountingUrl);
       if (response.statusCode == 200) {
@@ -257,7 +257,7 @@ class stockCountingAPI {
   /*Future<String> DeleteCountingDetail(String actualID) async {
     String result = "";
     String _deleteCountingUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/deleteactual/${actualID}';
+        'https://stockcount.princhealth.com/api/stockcounts/deleteactual/${actualID}';
 
     try {
       final response = await _dio.delete(_deleteCountingUrl);
@@ -274,7 +274,7 @@ class stockCountingAPI {
   Future<List<history>> GetHistory(String bu_detail_Id, String username) async {
     late List<history> _history = [];
     String _historyListUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/${bu_detail_Id}/history?username=${username}';
+        'https://stockcount.princhealth.com/api/stockcounts/${bu_detail_Id}/history?username=${username}';
     try {
       final response = await _dio.get(_historyListUrl);
 
@@ -294,7 +294,7 @@ class stockCountingAPI {
     String result = "";
     ItemMaster _ItemMaster = ItemMaster();
     String _GetItemMasterUrl =
-        'https://inventory-uat.princhealth.com/api/itemmasters/${_itemCode}';
+        'https://stockcount.princhealth.com/api/itemmasters/${_itemCode}';
     try {
       final response = await _dio.get(_GetItemMasterUrl);
       if (response.statusCode == 200) {
@@ -320,7 +320,7 @@ class stockCountingAPI {
     String result = "";
     var uuid = Uuid();
     String _AddNewItemUrl =
-        'https://inventory-uat.princhealth.com/api/stockcounts/createonhand';
+        'https://stockcount.princhealth.com/api/stockcounts/createonhand';
     Map<String, dynamic> _AddItemdata;
     if (batch.epireDate != null) {
       _AddItemdata = {

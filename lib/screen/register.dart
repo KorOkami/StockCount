@@ -31,10 +31,8 @@ class _Register_ScreenState extends State<Register_Screen> {
     var headers = {
       'Content-Type': 'application/json',
     };
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://inventory-uat.princhealth.com/api/account/register'));
+    var request = http.Request('POST',
+        Uri.parse('https://stockcount.princhealth.com/api/account/register'));
 
     request.body = json.jsonEncode({
       "displayName": "${resg_detail.displayname}",

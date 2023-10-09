@@ -183,7 +183,7 @@ class _AddItemState extends State<AddItem> {
                           ),
                           SizedBox(
                             child: Text(
-                              "${_ItemMaster.uomName == null ? "" : _ItemMaster.uomName}",
+                              "${_ItemMaster.uomCode == null ? "" : _ItemMaster.uomCode}",
                               style: GoogleFonts.prompt(
                                   fontSize: 20, color: Colors.black),
                             ),

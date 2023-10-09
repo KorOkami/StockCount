@@ -96,7 +96,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     var request = http.Request(
         'DELETE',
         Uri.parse(
-            'https://inventory-uat.princhealth.com/api/stockcounts/deleteactual/${actualID}'));
+            'https://stockcount.princhealth.com/api/stockcounts/deleteactual/${actualID}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
