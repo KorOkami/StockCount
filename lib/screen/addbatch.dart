@@ -196,8 +196,8 @@ class _AddBatchState extends State<AddBatch> {
                           onTap: () async {
                             //when click we have to show the datepicker
                             DateTime? pickedDate = await showDatePicker(
-                                // initialEntryMode:
-                                //     DatePickerEntryMode.calendarOnly,
+                                initialEntryMode:
+                                    DatePickerEntryMode.calendarOnly,
                                 context: context,
                                 initialDate: DateTime.now(), //get today's date
                                 firstDate: DateTime(

@@ -255,6 +255,8 @@ class _AddItemState extends State<AddItem> {
                                   onTap: () async {
                                     //when click we have to show the datepicker
                                     DateTime? pickedDate = await showDatePicker(
+                                        initialEntryMode:
+                                            DatePickerEntryMode.calendarOnly,
                                         context: context,
                                         initialDate:
                                             DateTime.now(), //get today's date
