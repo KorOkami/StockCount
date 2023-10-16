@@ -97,10 +97,15 @@ class _history_screenState extends State<history_screen> {
                           style: GoogleFonts.prompt(
                             fontSize: 15,
                           )),
-                      Text("User : ${data.userName!}",
-                          style: GoogleFonts.prompt(
-                            fontSize: 15,
-                          )),
+                      data.comments != null
+                          ? Text("Comments : ${data.comments!}",
+                              style: GoogleFonts.prompt(
+                                fontSize: 15,
+                              ))
+                          : Text("Comments : ",
+                              style: GoogleFonts.prompt(
+                                fontSize: 15,
+                              )),
                       SizedBox(
                         height: 5,
                       )

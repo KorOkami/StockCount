@@ -51,7 +51,7 @@ class CountScan extends StatefulWidget {
 class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   final TextEditingController textController = TextEditingController();
 //  TextEditingController _textCountController = TextEditingController();
-  final TextEditingController textCommentsController = TextEditingController();
+  TextEditingController textCommentsController = TextEditingController();
   //MobileScannerController cameraController = MobileScannerController();
   TabController? _tabController;
   final formKey = GlobalKey<FormState>();
@@ -87,6 +87,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
       length: 2,
       vsync: this,
     );
+
+    textCommentsController = TextEditingController(text: ' ');
 
     if (widget.bu_detail.controlLot == "N") {
       DropdownIndex = 0;
@@ -470,10 +472,10 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
 
                                                 if (List_StockOnhand.length !=
                                                     0) {
-                                                  textCommentsController.text =
-                                                      List_StockOnhand[0]
-                                                              .comments ??
-                                                          "";
+                                                  // textCommentsController.text =
+                                                  //     List_StockOnhand[0]
+                                                  //             .comments ??
+                                                  //         "";
                                                   _iscomments = checkValue(
                                                       List_StockOnhand[0]
                                                               .comments ??
@@ -669,8 +671,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                     value.countQty;
                                                 countItem =
                                                     batch_detail.countQty;
-                                                textCommentsController.text =
-                                                    value.comments ?? "";
+                                                // textCommentsController.text =
+                                                //     value.comments ?? "";
                                                 _iscomments = checkValue(
                                                     value.comments ?? "");
                                               });
@@ -1130,7 +1132,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                   controller: flagSave == false
                                       ? TextEditingController(text: "")
                                       : TextEditingController(
-                                          text: _currentComments.toString()),
+                                          text: _currentComments),
                                   minLines: 1,
                                   maxLines: 8,
                                   maxLength: 100,
@@ -1194,6 +1196,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                   textController.text);
                                               setState(() {
                                                 textCommentsController.clear();
+                                                textCommentsController.text =
+                                                    '';
                                                 //_textCountController.clear();
                                                 flagSave = false;
                                                 _currentComments = '';
@@ -1298,8 +1302,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                 DropdownIndex = -1;
               }
               if (List_StockOnhand.length != 0) {
-                textCommentsController.text =
-                    List_StockOnhand[0].comments ?? "";
+                // textCommentsController.text =
+                //     List_StockOnhand[0].comments ?? "";
                 _iscomments = checkValue(List_StockOnhand[0].comments ?? "");
                 batch_detail.id = List_StockOnhand[0].id;
                 itemMaster.code = List_StockOnhand[0].itemCode;

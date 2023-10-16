@@ -23,7 +23,8 @@ class history {
       this.uomCode,
       this.uomName,
       this.userName,
-      this.createDate});
+      this.createDate,
+      this.comments});
 
   String? id;
   String? onhandId;
@@ -36,6 +37,7 @@ class history {
   String? uomName;
   String? userName;
   String? createDate;
+  String? comments;
 
   factory history.fromJson(Map<String, dynamic> json) => history(
       id: json["id"],
@@ -48,7 +50,8 @@ class history {
       uomCode: json["uomCode"],
       uomName: json["uomName"],
       userName: json["userName"],
-      createDate: json["createDate"]);
+      createDate: json["createDate"],
+      comments: json["comments"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -61,6 +64,7 @@ class history {
         "uomCode": uomCode,
         "uomName": uomName,
         "userName": userName,
-        "createDate": createDate
+        "createDate": createDate,
+        "comments": comments
       };
 }
