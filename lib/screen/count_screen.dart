@@ -1196,7 +1196,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                                 textCommentsController.clear();
                                                 //_textCountController.clear();
                                                 flagSave = false;
-                                                //CounttextController.clear();
+                                                _currentComments = '';
                                               });
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
