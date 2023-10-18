@@ -124,8 +124,8 @@ class _AddItemState extends State<AddItem> {
                             if (fItemMaster != null) {
                               ConvertItem();
                               Future.delayed(const Duration(
-                                      milliseconds:
-                                          500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                      seconds:
+                                          1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                                   .then((val) {
                                 setState(() {
                                   if (_ItemMaster.name == "") {
@@ -362,8 +362,7 @@ class _AddItemState extends State<AddItem> {
           if (fItemMaster != null) {
             ConvertItem();
             Future.delayed(const Duration(
-                    milliseconds:
-                        500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                    seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                 .then((val) {
               setState(() {
                 if (_ItemMaster.name == "") {

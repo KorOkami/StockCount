@@ -286,6 +286,18 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         showLogout_AlertDialog(context);
                       }
                     }),
+                // refresh Data
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        refreshDataBatch(textController.text);
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 30,
+                      ))
+                ],
                 // actions: [ // Sorting Menu
                 //   Visibility(
                 //     visible: _showSortmenu,
@@ -458,8 +470,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                           if (Batch_List != null) {
                                             ConvertList(); // แปลงจาก Future List เป็น List
                                             Future.delayed(const Duration(
-                                                    milliseconds:
-                                                        500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                                                    seconds:
+                                                        1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                                                 .then((val) {
                                               setState(() {
                                                 if (widget
@@ -950,14 +962,15 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return "Please Enter Count.";
-                                      } else if (double.parse(value).toInt() <
-                                          0) {
-                                        return "Count should be greater than 0";
                                       }
+                                      // else if (double.parse(value).toInt() <
+                                      //     0) {
+                                      //   return "Count should be greater than 0";
+                                      // }
                                     },
                                     inputFormatters: [
                                       FilteringTextInputFormatter.allow(
-                                        RegExp("[0-9]"),
+                                        RegExp(r'^-?[0-9]*'),
                                       ),
                                     ],
                                     keyboardType: TextInputType.number,
@@ -1293,7 +1306,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
         if (Batch_List != null) {
           ConvertList(); // แปลงจาก Future List เป็น List
           Future.delayed(const Duration(
-                  milliseconds: 800)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                  seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
               .then((val) {
             setState(() {
               if (widget.bu_detail.controlLot == "N") {
@@ -1393,7 +1406,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
     Batch_List = api.GetBatchList(widget.bu_detail.id, itemcode);
     ConvertList(); // แปลงจาก Future List เป็น List
     Future.delayed(const Duration(
-            milliseconds: 600)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
         .then((val) {
       Batch_Provider provider =
           Provider.of<Batch_Provider>(context, listen: false);

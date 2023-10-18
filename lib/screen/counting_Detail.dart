@@ -140,7 +140,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     // TODO: implement initState
     futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
     Future.delayed(const Duration(
-            milliseconds: 500)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
         .then((val) {
       setState(() {
         ConvertList();
@@ -223,6 +223,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                 itemBuilder: (context, index) {
                   CountingDetail data = countingDetailList![index];
                   return Slidable(
+                    enabled: data.userName == widget.userName ? true : false,
                     key: Key('$data'),
                     startActionPane:
                         ActionPane(motion: const ScrollMotion(), children: [
@@ -358,18 +359,19 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   inputFormatters: [
                                                     FilteringTextInputFormatter
                                                         .allow(
-                                                      RegExp("[0-9]"),
+                                                      RegExp(r'^-?[0-9]*'),
                                                     ),
                                                   ],
                                                   validator: (value) {
                                                     if (value!.isEmpty) {
                                                       return "Please Enter Counted.";
-                                                    } else if (double.parse(
-                                                                value)
-                                                            .toInt() <
-                                                        0) {
-                                                      return "Count should be greater than 0";
                                                     }
+                                                    // else if (double.parse(
+                                                    //             value)
+                                                    //         .toInt() <
+                                                    //     0) {
+                                                    //   return "Count should be greater than 0";
+                                                    // }
                                                   },
                                                 ),
                                                 SizedBox(
@@ -464,11 +466,18 @@ class _Counting_DetailState extends State<Counting_Detail> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                                "User : ${data.updateUserName == null ? data.userName : data.updateUserName}",
+                            Text("User : ${data.userName}",
                                 style: GoogleFonts.prompt(
                                   fontSize: 15,
                                 )),
+                            // SizedBox(
+                            //   height: 5,
+                            // ),
+                            // Text(
+                            //     "Update User : ${data.updateUserName == null ? '' : data.updateUserName}",
+                            //     style: GoogleFonts.prompt(
+                            //       fontSize: 15,
+                            //     )),
                             SizedBox(
                               height: 10,
                             ),

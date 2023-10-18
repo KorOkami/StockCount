@@ -160,101 +160,99 @@ class _Counting_ViewState extends State<Counting_View> {
                     ),
                   ),
                   Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: _getData,
-                      child: ListView.builder(
-                          // reverse: false,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: provider.bList.length,
-                          itemBuilder: (context, int index) {
-                            // final List_test = provider.bList
-                            //   ..sort((a, b) {
-                            //     //sorting in ascending order
-                            //     return DateTime.parse(b.expiryDate!)
-                            //         .compareTo(DateTime.parse(a.expiryDate!));
-                            //   });
-                            final List_test =
-                                getSorting(provider.bList, widget.sortfield);
-                            StockOnhand data = List_test[index];
-                            // StockOnhand data = provider.bList[index];
-                            if (data != null)
-                              return Card(
-                                shadowColor: Colors.lightBlue,
-                                color: Color.fromARGB(255, 239, 249, 253),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                elevation: 5,
-                                child: ListTile(
-                                  title: data.batchId != "" &&
-                                          data.batchId != null
-                                      ? Text("Batch : ${data.batchId ?? ""}",
-                                          style: GoogleFonts.prompt(
-                                              fontSize: 17,
-                                              color: Color.fromARGB(
-                                                  255, 1, 57, 83)))
-                                      : Container(
-                                          height: 5,
-                                        ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      data.batchId != "" &&
-                                              data.expiryDate != null
-                                          ? checkexpDate(data.expiryDate!) ==
-                                                  true
-                                              ? Text(
-                                                  "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
-                                                  style: GoogleFonts.prompt(
-                                                    color: Colors.red,
-                                                    fontSize: 12,
-                                                  ))
-                                              : Text(
-                                                  "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
-                                                  style: GoogleFonts.prompt(
-                                                    color: Colors.green,
-                                                    fontSize: 12,
-                                                  ))
-                                          : Container(
-                                              height: 2,
-                                            ),
-                                      Text("OnHand : ${data.qty ?? ""}",
-                                          style: GoogleFonts.prompt(
-                                            fontSize: 15,
-                                          )),
-                                      Text("Counted : ${data.countQty ?? ""}",
-                                          style: GoogleFonts.prompt(
-                                            fontSize: 15,
-                                          )),
-                                      Text("Diff : ${data.diffQty ?? ""}",
-                                          style: GoogleFonts.prompt(
-                                            fontSize: 15,
-                                          )),
-                                      SizedBox(
+                    // child: RefreshIndicator(
+                    //   onRefresh: _getData,
+                    child: ListView.builder(
+                        // reverse: false,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: provider.bList.length,
+                        itemBuilder: (context, int index) {
+                          // final List_test = provider.bList
+                          //   ..sort((a, b) {
+                          //     //sorting in ascending order
+                          //     return DateTime.parse(b.expiryDate!)
+                          //         .compareTo(DateTime.parse(a.expiryDate!));
+                          //   });
+                          final List_test =
+                              getSorting(provider.bList, widget.sortfield);
+                          StockOnhand data = List_test[index];
+                          // StockOnhand data = provider.bList[index];
+                          if (data != null)
+                            return Card(
+                              shadowColor: Colors.lightBlue,
+                              color: Color.fromARGB(255, 239, 249, 253),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              elevation: 5,
+                              child: ListTile(
+                                title: data.batchId != "" &&
+                                        data.batchId != null
+                                    ? Text("Batch : ${data.batchId ?? ""}",
+                                        style: GoogleFonts.prompt(
+                                            fontSize: 17,
+                                            color:
+                                                Color.fromARGB(255, 1, 57, 83)))
+                                    : Container(
                                         height: 5,
-                                      )
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return Counting_Detail(
-                                        token: token_provider.token,
-                                        onHandId: data.id,
-                                        BatchID: data.batchId,
-                                        bu_ID: widget.bu_detail.id,
-                                        itemCode: data.itemCode,
-                                        userName: widget.userName,
-                                      );
-                                    }));
-                                  },
+                                      ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    data.batchId != "" &&
+                                            data.expiryDate != null
+                                        ? checkexpDate(data.expiryDate!) == true
+                                            ? Text(
+                                                "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
+                                                style: GoogleFonts.prompt(
+                                                  color: Colors.red,
+                                                  fontSize: 12,
+                                                ))
+                                            : Text(
+                                                "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
+                                                style: GoogleFonts.prompt(
+                                                  color: Colors.green,
+                                                  fontSize: 12,
+                                                ))
+                                        : Container(
+                                            height: 2,
+                                          ),
+                                    Text("OnHand : ${data.qty ?? ""}",
+                                        style: GoogleFonts.prompt(
+                                          fontSize: 15,
+                                        )),
+                                    Text("Counted : ${data.countQty ?? ""}",
+                                        style: GoogleFonts.prompt(
+                                          fontSize: 15,
+                                        )),
+                                    Text("Diff : ${data.diffQty ?? ""}",
+                                        style: GoogleFonts.prompt(
+                                          fontSize: 15,
+                                        )),
+                                    SizedBox(
+                                      height: 5,
+                                    )
+                                  ],
                                 ),
-                              );
-                          }),
-                    ),
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return Counting_Detail(
+                                      token: token_provider.token,
+                                      onHandId: data.id,
+                                      BatchID: data.batchId,
+                                      bu_ID: widget.bu_detail.id,
+                                      itemCode: data.itemCode,
+                                      userName: widget.userName,
+                                    );
+                                  }));
+                                },
+                              ),
+                            );
+                        }),
+                    //),
                   ),
                 ],
               ),
