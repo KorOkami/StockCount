@@ -1247,14 +1247,16 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   // }
 
   void refreshDataBatch(String itemcode) {
-    api.checktoken().then((value) {
-      if (value == 'success') {
+    api.checktoken().then((result) {
+      if (result == 'success') {
         //Batch_List = api.GetBatchList(widget.bu_detail.id, itemcode);
         api.GetBatchList(widget.bu_detail.id, itemcode).then((value) {
           List_StockOnhand = value;
           Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
           provider.addBatchStockOnhand(List_StockOnhand);
         });
+      } else {
+        showDisconnect_AlertDialog(context, result);
       }
     });
     // ConvertList(); // แปลงจาก Future List เป็น List
