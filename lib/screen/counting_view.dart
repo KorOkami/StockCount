@@ -78,8 +78,7 @@ class _Counting_ViewState extends State<Counting_View> {
   @override
   Widget build(BuildContext context) {
     final userStore = Provider.of<Batch_Provider>(context, listen: true);
-    return Consumer2<Batch_Provider, Token_Provider>(builder: (context,
-        Batch_Provider provider, Token_Provider token_provider, Widget? child) {
+    return Consumer2<Batch_Provider, Token_Provider>(builder: (context, Batch_Provider provider, Token_Provider token_provider, Widget? child) {
       return provider.bList.length != 0
           ? Padding(
               padding: const EdgeInsets.all(10.0),
@@ -98,17 +97,13 @@ class _Counting_ViewState extends State<Counting_View> {
                             SizedBox(
                               child: Text(
                                 "Item Code : ",
-                                style: GoogleFonts.prompt(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
+                                style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                               ),
                             ),
                             SizedBox(
                               child: Text(
                                 "${widget.itemMaster.code}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 18, color: Colors.black),
+                                style: GoogleFonts.prompt(fontSize: 18, color: Colors.black),
                               ),
                             ),
                           ],
@@ -119,18 +114,13 @@ class _Counting_ViewState extends State<Counting_View> {
                             SizedBox(
                               child: Text(
                                 "Item Name : ",
-                                style: GoogleFonts.prompt(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
+                                style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                               ),
                             ),
                             SizedBox(
                               child: Text(
                                 "${widget.itemMaster.name}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
+                                style: GoogleFonts.prompt(fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                               ),
                             ),
                           ],
@@ -140,18 +130,13 @@ class _Counting_ViewState extends State<Counting_View> {
                             SizedBox(
                               child: Text(
                                 "Base Uom : ",
-                                style: GoogleFonts.prompt(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
+                                style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                               ),
                             ),
                             SizedBox(
                               child: Text(
                                 "${widget.itemMaster.uomCode == null ? "" : widget.itemMaster.uomCode}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 1, 57, 83)),
+                                style: GoogleFonts.prompt(fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                               ),
                             ),
                           ],
@@ -176,42 +161,32 @@ class _Counting_ViewState extends State<Counting_View> {
                           //     return DateTime.parse(b.expiryDate!)
                           //         .compareTo(DateTime.parse(a.expiryDate!));
                           //   });
-                          final List_test =
-                              getSorting(provider.bList, widget.sortfield);
+                          final List_test = getSorting(provider.bList, widget.sortfield);
                           StockOnhand data = List_test[index];
                           // StockOnhand data = provider.bList[index];
                           if (data != null)
                             return Card(
                               shadowColor: Colors.lightBlue,
                               color: Color.fromARGB(255, 239, 249, 253),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                               elevation: 5,
                               child: ListTile(
-                                title: data.batchId != "" &&
-                                        data.batchId != null
-                                    ? Text("Batch : ${data.batchId ?? ""}",
-                                        style: GoogleFonts.prompt(
-                                            fontSize: 17,
-                                            color:
-                                                Color.fromARGB(255, 1, 57, 83)))
+                                title: data.batchId != "" && data.batchId != null
+                                    ? Text("Batch : ${data.batchId ?? ""}", style: GoogleFonts.prompt(fontSize: 17, color: Color.fromARGB(255, 1, 57, 83)))
                                     : Container(
                                         height: 5,
                                       ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    data.batchId != "" &&
-                                            data.expiryDate != null
+                                    data.batchId != "" && data.expiryDate != null
                                         ? checkexpDate(data.expiryDate!) == true
-                                            ? Text(
-                                                "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
+                                            ? Text("Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
                                                 style: GoogleFonts.prompt(
                                                   color: Colors.red,
                                                   fontSize: 12,
                                                 ))
-                                            : Text(
-                                                "Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
+                                            : Text("Expire Date : ${DateFormat('dd-MM-yyyy').format(DateTime.parse(data.expiryDate!))}",
                                                 style: GoogleFonts.prompt(
                                                   color: Colors.green,
                                                   fontSize: 12,
@@ -237,8 +212,7 @@ class _Counting_ViewState extends State<Counting_View> {
                                   ],
                                 ),
                                 onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                                     return Counting_Detail(
                                       token: token_provider.token,
                                       onHandId: data.id,
@@ -268,22 +242,22 @@ class _Counting_ViewState extends State<Counting_View> {
 
   final api = stockCountingAPI();
 
-  Future<void> _getData() async {
-    setState(() {
-      Batch_List =
-          api.GetBatchList(widget.bu_detail.id, widget.itemMaster.code ?? "");
-      if (Batch_List != null) {
-        ConvertBatchList();
-        Future.delayed(const Duration(
-                seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-            .then((val) {
-          Batch_Provider provider =
-              Provider.of<Batch_Provider>(context, listen: false);
-          provider.addBatchStockOnhand(List_StockOnhand);
-        });
-      }
-    });
-  }
+  // Future<void> _getData() async {
+  //   setState(() {
+  //     Batch_List =
+  //         api.GetBatchList(widget.bu_detail.id, widget.itemMaster.code ?? "");
+  //     if (Batch_List != null) {
+  //       ConvertBatchList();
+  //       Future.delayed(const Duration(
+  //               seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+  //           .then((val) {
+  //         Batch_Provider provider =
+  //             Provider.of<Batch_Provider>(context, listen: false);
+  //         provider.addBatchStockOnhand(List_StockOnhand);
+  //       });
+  //     }
+  //   });
+  // }
 
   void ConvertBatchList() async {
     List_StockOnhand = await Batch_List;
@@ -305,8 +279,7 @@ class _Counting_ViewState extends State<Counting_View> {
     if (srtfield == "Exp") {
       resSorted = batchlist
         ..sort((a, b) {
-          return DateTime.parse(a.expiryDate!)
-              .compareTo(DateTime.parse(b.expiryDate!));
+          return DateTime.parse(a.expiryDate!).compareTo(DateTime.parse(b.expiryDate!));
         });
     } else if (srtfield == "Onhand") {
       resSorted = batchlist

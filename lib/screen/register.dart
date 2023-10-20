@@ -31,8 +31,7 @@ class _Register_ScreenState extends State<Register_Screen> {
     var headers = {
       'Content-Type': 'application/json',
     };
-    var request = http.Request('POST',
-        Uri.parse('https://stockcount.princhealth.com/api/account/register'));
+    var request = http.Request('POST', Uri.parse('https://stockcount.princhealth.com/api/account/register'));
 
     request.body = json.jsonEncode({
       "displayName": "${resg_detail.displayname}",
@@ -84,28 +83,25 @@ class _Register_ScreenState extends State<Register_Screen> {
           key: formKey,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(
                 height: 10,
               ),
-              Text("Your infomation",
-                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
+              Text("Your infomation", style: GoogleFonts.prompt(fontSize: 20, color: Colors.black)),
               SizedBox(
                 height: 5,
               ),
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.face),
                     border: InputBorder.none,
                     labelText: 'Full Name *',
                   ),
-                  validator:
-                      RequiredValidator(errorText: "Please Enter Full Name"),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: RequiredValidator(errorText: "Please Enter Full Name"),
                   onSaved: (displayname) {
                     register.displayname = displayname ?? "";
                   },
@@ -119,8 +115,7 @@ class _Register_ScreenState extends State<Register_Screen> {
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.badge),
                     border: InputBorder.none,
@@ -141,8 +136,7 @@ class _Register_ScreenState extends State<Register_Screen> {
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.attribution),
                     border: InputBorder.none,
@@ -163,13 +157,13 @@ class _Register_ScreenState extends State<Register_Screen> {
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.email),
                     border: InputBorder.none,
                     labelText: 'E-mail *',
                   ),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: MultiValidator([
                     RequiredValidator(errorText: "Please Enter E-mail"),
                     EmailValidator(errorText: "Invalid E-mail Format")
@@ -188,15 +182,14 @@ class _Register_ScreenState extends State<Register_Screen> {
               TextFormFieldContainerRegister(
                 colors: Color.fromARGB(255, 217, 242, 253),
                 child: TextFormField(
-                  style: TextStyle(
-                      fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
+                  style: TextStyle(fontSize: 18, color: Color.fromARGB(255, 1, 103, 166)),
                   decoration: InputDecoration(
                     icon: Icon(Icons.person),
                     border: InputBorder.none,
                     labelText: 'User Name (ห้ามเว้นวรรค) *',
                   ),
-                  validator:
-                      RequiredValidator(errorText: "Please Enter User Name"),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: RequiredValidator(errorText: "Please Enter User Name"),
                   onSaved: (userName) {
                     register.username = userName ?? "";
                   },
@@ -221,11 +214,9 @@ class _Register_ScreenState extends State<Register_Screen> {
                               _isObscured = !_isObscured;
                             });
                           },
-                          icon: _isObscured
-                              ? const Icon(Icons.visibility)
-                              : const Icon(Icons.visibility_off))),
-                  validator:
-                      RequiredValidator(errorText: "Please Enter Password"),
+                          icon: _isObscured ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off))),
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  validator: RequiredValidator(errorText: "Please Enter Password"),
                   obscureText: _isObscured,
                   onSaved: (password) {
                     register.password = password ?? "";
@@ -240,14 +231,11 @@ class _Register_ScreenState extends State<Register_Screen> {
                 height: 50,
                 child: ElevatedButton.icon(
                   style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15))),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                   ),
                   label: Text(
                     "Save",
-                    style:
-                        GoogleFonts.prompt(fontSize: 20, color: Colors.white),
+                    style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                   ),
                   icon: Icon(
                     Icons.save,

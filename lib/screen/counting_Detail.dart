@@ -23,14 +23,7 @@ import 'package:stock_counting_app/utility/alert.dart';
 import 'package:flutter/services.dart';
 
 class Counting_Detail extends StatefulWidget {
-  const Counting_Detail(
-      {super.key,
-      required this.token,
-      required this.onHandId,
-      required this.BatchID,
-      required this.bu_ID,
-      required this.itemCode,
-      required this.userName});
+  const Counting_Detail({super.key, required this.token, required this.onHandId, required this.BatchID, required this.bu_ID, required this.itemCode, required this.userName});
   final String? token;
   final String? onHandId;
   final String? BatchID;
@@ -50,7 +43,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
   final api = stockCountingAPI();
   late Future<List<StockOnhand>> Batch_List;
   late List<StockOnhand> List_StockOnhand = [];
-  bool _isDelete = false;
+  //bool _isDelete = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -90,13 +83,9 @@ class _Counting_DetailState extends State<Counting_Detail> {
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${token}',
-      'Cookie':
-          'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
+      'Cookie': 'refreshToken=p%2BBKUP28N7C%2BrTHUlBMM%2FUPeHg55hQD7KmLkNLZrduo%3D'
     };
-    var request = http.Request(
-        'DELETE',
-        Uri.parse(
-            'https://stockcount.princhealth.com/api/stockcounts/deleteactual/${actualID}'));
+    var request = http.Request('DELETE', Uri.parse('https://stockcount.princhealth.com/api/stockcounts/deleteactual/${actualID}'));
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
@@ -138,13 +127,23 @@ class _Counting_DetailState extends State<Counting_Detail> {
   @override
   void initState() {
     // TODO: implement initState
-    futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
-    Future.delayed(const Duration(
-            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-        .then((val) {
-      setState(() {
-        ConvertList();
-      });
+    // futurecountingDetailList = api.GetCountingDetail(widget.onHandId ?? "");
+    // Future.delayed(const Duration(seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+    //     .then((val) {
+    //   setState(() {
+    //     ConvertList();
+    //   });
+    // });
+    api.checktoken().then((result) {
+      if (result == "success") {
+        api.GetCountingDetail(widget.onHandId ?? "").then((value) {
+          setState(() {
+            countingDetailList = value;
+          });
+        });
+      } else {
+        showDisconnect_AlertDialog(context, result);
+      }
     });
 
     super.initState();
@@ -195,17 +194,13 @@ class _Counting_DetailState extends State<Counting_Detail> {
                               SizedBox(
                                 child: Text(
                                   "Batch : ",
-                                  style: GoogleFonts.prompt(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Color.fromARGB(255, 1, 57, 83)),
+                                  style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 18, color: Color.fromARGB(255, 1, 57, 83)),
                                 ),
                               ),
                               SizedBox(
                                 child: Text(
                                   "${widget.BatchID}",
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 18, color: Colors.black),
+                                  style: GoogleFonts.prompt(fontSize: 18, color: Colors.black),
                                 ),
                               ),
                             ],
@@ -225,8 +220,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                   return Slidable(
                     enabled: data.userName == widget.userName ? true : false,
                     key: Key('$data'),
-                    startActionPane:
-                        ActionPane(motion: const ScrollMotion(), children: [
+                    startActionPane: ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
                         //borderRadius: BorderRadius.all(Radius.circular(8)),
                         padding: EdgeInsets.fromLTRB(1, 2, 1, 2),
@@ -242,28 +236,20 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                             child: Column(
                                               children: [
                                                 TextFormField(
-                                                  controller:
-                                                      TextEditingController(
-                                                          text: data.comments),
+                                                  controller: TextEditingController(text: data.comments),
                                                   minLines: 1,
                                                   maxLines: 8,
                                                   maxLength: 100,
                                                   decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
+                                                    border: OutlineInputBorder(),
                                                     labelText: 'Edit Comments',
                                                   ),
-                                                  style: GoogleFonts.prompt(
-                                                      fontSize: 18,
-                                                      color: Colors.black),
+                                                  style: GoogleFonts.prompt(fontSize: 18, color: Colors.black),
                                                   onChanged: (value) {
                                                     setState(() {
                                                       comments = value;
                                                     });
                                                   },
-                                                  // validator: RequiredValidator(
-                                                  //     errorText:
-                                                  //         "Please Enter Comments."),
                                                 ),
                                                 SizedBox(
                                                   height: 5,
@@ -273,45 +259,30 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   height: 50,
                                                   child: ElevatedButton(
                                                     onPressed: () {
-                                                      if (formKeyComments
-                                                              .currentState
-                                                              ?.validate() ==
-                                                          true) {
-                                                        formKeyComments
-                                                            .currentState
-                                                            ?.save();
-
-                                                        api.EditCountingDetail_comments(
-                                                                data.id!,
-                                                                comments)
-                                                            .then((result) {
-                                                          if (result ==
-                                                              "success") {
-                                                            refreshDataBatch(
-                                                                data.itemCode!);
-                                                            setState(() {
-                                                              data.comments =
-                                                                  comments;
-                                                              data.userName =
-                                                                  widget
-                                                                      .userName;
+                                                      if (formKeyComments.currentState?.validate() == true) {
+                                                        formKeyComments.currentState?.save();
+                                                        api.checktoken().then((result) {
+                                                          if (result == "success") {
+                                                            api.EditCountingDetail_comments(data.id!, comments).then((result) {
+                                                              if (result == "success") {
+                                                                refreshDataBatch(data.itemCode!);
+                                                                setState(() {
+                                                                  data.comments = comments;
+                                                                  data.userName = widget.userName;
+                                                                });
+                                                              } else {
+                                                                showAlertDialog(context, "Update Failed.");
+                                                              }
                                                             });
                                                           } else {
-                                                            showAlertDialog(
-                                                                context,
-                                                                "Update Failed.");
+                                                            showDisconnect_AlertDialog(context, result);
                                                           }
                                                         });
 
                                                         Navigator.pop(context);
                                                       }
                                                     },
-                                                    child: Text("Update",
-                                                        style:
-                                                            GoogleFonts.prompt(
-                                                                fontSize: 20,
-                                                                color: Colors
-                                                                    .white)),
+                                                    child: Text("Update", style: GoogleFonts.prompt(fontSize: 20, color: Colors.white)),
                                                   ),
                                                 ),
                                               ],
@@ -341,27 +312,22 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                               children: [
                                                 TextFormField(
                                                   decoration: InputDecoration(
-                                                    border:
-                                                        OutlineInputBorder(),
-                                                    labelText:
-                                                        'Edit Counted Item',
+                                                    border: OutlineInputBorder(),
+                                                    labelText: 'Edit Counted Item',
                                                   ),
-                                                  style: GoogleFonts.prompt(
-                                                      fontSize: 18,
-                                                      color: Colors.black),
-                                                  keyboardType:
-                                                      TextInputType.number,
+                                                  style: GoogleFonts.prompt(fontSize: 18, color: Colors.black),
+                                                  keyboardType: TextInputType.number,
                                                   onChanged: (value) {
                                                     setState(() {
                                                       strCounted = value;
                                                     });
                                                   },
                                                   inputFormatters: [
-                                                    FilteringTextInputFormatter
-                                                        .allow(
+                                                    FilteringTextInputFormatter.allow(
                                                       RegExp(r'^-?[0-9]*'),
                                                     ),
                                                   ],
+                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                                   validator: (value) {
                                                     if (value!.isEmpty) {
                                                       return "Please Enter Counted.";
@@ -382,46 +348,29 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                   height: 50,
                                                   child: ElevatedButton(
                                                     onPressed: () {
-                                                      if (formKey.currentState
-                                                              ?.validate() ==
-                                                          true) {
-                                                        formKey.currentState
-                                                            ?.save();
-
-                                                        api.EditCountingDetail(
-                                                                data.id!,
-                                                                strCounted,
-                                                                data.comments ??
-                                                                    "")
-                                                            .then((result) {
-                                                          if (result ==
-                                                              "success") {
-                                                            refreshDataBatch(
-                                                                data.itemCode!);
-                                                            setState(() {
-                                                              data.countQty =
-                                                                  int.parse(
-                                                                      strCounted);
-                                                              data.userName =
-                                                                  widget
-                                                                      .userName;
+                                                      if (formKey.currentState?.validate() == true) {
+                                                        formKey.currentState?.save();
+                                                        api.checktoken().then((result) {
+                                                          if (result == "success") {
+                                                            api.EditCountingDetail(data.id!, strCounted, data.comments ?? "").then((result) {
+                                                              if (result == "success") {
+                                                                refreshDataBatch(data.itemCode!);
+                                                                setState(() {
+                                                                  data.countQty = int.parse(strCounted);
+                                                                  data.userName = widget.userName;
+                                                                });
+                                                              } else {
+                                                                showAlertDialog(context, "Update Failed.");
+                                                              }
                                                             });
                                                           } else {
-                                                            showAlertDialog(
-                                                                context,
-                                                                "Update Failed.");
+                                                            showDisconnect_AlertDialog(context, result);
                                                           }
                                                         });
-
                                                         Navigator.pop(context);
                                                       }
                                                     },
-                                                    child: Text("Update",
-                                                        style:
-                                                            GoogleFonts.prompt(
-                                                                fontSize: 20,
-                                                                color: Colors
-                                                                    .white)),
+                                                    child: Text("Update", style: GoogleFonts.prompt(fontSize: 20, color: Colors.white)),
                                                   ),
                                                 ),
                                               ],
@@ -434,8 +383,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                         icon: Icons.edit,
                       ),
                     ]),
-                    endActionPane:
-                        ActionPane(motion: const ScrollMotion(), children: [
+                    endActionPane: ActionPane(motion: const ScrollMotion(), children: [
                       SlidableAction(
                         label: 'Delete',
                         onPressed: (context) {
@@ -459,10 +407,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                       shadowColor: Colors.lightBlue,
                       elevation: 5,
                       child: ListTile(
-                        title: Text("Counted : ${data.countQty}",
-                            style: GoogleFonts.prompt(
-                                fontSize: 17,
-                                color: Color.fromARGB(255, 1, 57, 83))),
+                        title: Text("Counted : ${data.countQty}", style: GoogleFonts.prompt(fontSize: 17, color: Color.fromARGB(255, 1, 57, 83))),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -482,10 +427,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
                               height: 10,
                             ),
                             data.comments != null && data.comments != ""
-                                ? Text("Comments : ${data.comments}",
-                                    style: GoogleFonts.prompt(
-                                        fontSize: 14,
-                                        color: Color.fromARGB(255, 1, 57, 83)))
+                                ? Text("Comments : ${data.comments}", style: GoogleFonts.prompt(fontSize: 14, color: Color.fromARGB(255, 1, 57, 83)))
                                 : SizedBox(
                                     height: 0,
                                   )
@@ -500,24 +442,33 @@ class _Counting_DetailState extends State<Counting_Detail> {
   }
 
   void refreshDataBatch(String itemcode) {
-    Batch_List = api.GetBatchList(widget.bu_ID ?? "", itemcode);
-    ConvertBatchList(); // แปลงจาก Future List เป็น List
-    Future.delayed(const Duration(
-            seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-        .then((val) {
-      Batch_Provider provider =
-          Provider.of<Batch_Provider>(context, listen: false);
-      provider.addBatchStockOnhand(List_StockOnhand);
+    // Batch_List = api.GetBatchList(widget.bu_ID ?? "", itemcode);
+    // ConvertBatchList(); // แปลงจาก Future List เป็น List
+    // Future.delayed(const Duration(seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+    //     .then((val) {
+    //   Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
+    //   provider.addBatchStockOnhand(List_StockOnhand);
+    // });
+    api.checktoken().then((result) {
+      if (result == "success") {
+        api.GetBatchList(widget.bu_ID ?? "", itemcode).then((value) {
+          List_StockOnhand = value;
+          Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
+          provider.addBatchStockOnhand(List_StockOnhand);
+        });
+      } else {
+        showDisconnect_AlertDialog(context, result);
+      }
     });
   }
 
-  void ConvertList() async {
-    countingDetailList = await futurecountingDetailList;
-  }
+  // void ConvertList() async {
+  //   countingDetailList = await futurecountingDetailList;
+  // }
 
-  void ConvertBatchList() async {
-    List_StockOnhand = await Batch_List;
-  }
+  // void ConvertBatchList() async {
+  //   List_StockOnhand = await Batch_List;
+  // }
 
   showDelete_AlertDialog(BuildContext context, CountingDetail data, int index) {
     // set up the buttons
@@ -528,13 +479,19 @@ class _Counting_DetailState extends State<Counting_Detail> {
       ),
       onPressed: () {
         setState(() {
-          _isDelete = true;
-          DeleteCountingDetail(data.id!).then((result) {
+          //_isDelete = true;
+          api.checktoken().then((result) {
             if (result == "success") {
-              countingDetailList!.removeAt(index);
-              refreshDataBatch(data.itemCode!);
+              DeleteCountingDetail(data.id!).then((result) {
+                if (result == "success") {
+                  countingDetailList!.removeAt(index);
+                  refreshDataBatch(data.itemCode!);
+                } else {
+                  showAlertDialog(context, "Delete Failed.");
+                }
+              });
             } else {
-              showAlertDialog(context, "Delete Failed.");
+              showDisconnect_AlertDialog(context, result);
             }
           });
         });

@@ -173,3 +173,41 @@ showAddNewItem_AlertDialog(BuildContext context) {
     },
   );
 }
+
+showDisconnect_AlertDialog(BuildContext context, String? errorMessage) {
+  // set up the buttons
+  Widget OkButton = TextButton(
+    child: Text(
+      "Ok",
+      style: GoogleFonts.prompt(fontSize: 20),
+    ),
+    onPressed: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return LoginScreen();
+      }));
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text(
+      "Warning",
+      style: GoogleFonts.prompt(fontSize: 20, fontWeight: FontWeight.bold),
+    ),
+    content: Text(
+      "Session expired please login again",
+      style: GoogleFonts.prompt(fontSize: 16),
+    ),
+    actions: [
+      OkButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

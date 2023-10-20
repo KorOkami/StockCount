@@ -86,19 +86,13 @@ class _AddItemState extends State<AddItem> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Item QR/Barcode",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 1, 57, 83))),
+                      Text("Item QR/Barcode", style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20, color: Color.fromARGB(255, 1, 57, 83))),
                       SizedBox(
                         height: 5,
                       ),
                       TextFormField(
                         // controller: textController,
-                        controller: flagSave == false
-                            ? TextEditingController(text: "")
-                            : TextEditingController(text: _currentItemValue),
+                        controller: flagSave == false ? TextEditingController(text: "") : TextEditingController(text: _currentItemValue),
                         style: TextStyle(fontSize: 20),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -112,28 +106,41 @@ class _AddItemState extends State<AddItem> {
                               ),
                               iconSize: 40,
                             )),
-                        validator:
-                            RequiredValidator(errorText: "Please Scan Item."),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: RequiredValidator(errorText: "Please Scan Item."),
                         onChanged: (value) {
                           _currentItemValue = value;
                           flagSave = true;
                         },
                         onEditingComplete: () {
                           if (_currentItemValue != "") {
-                            fItemMaster = api.GetItemMaster(_currentItemValue!);
-                            if (fItemMaster != null) {
-                              ConvertItem();
-                              Future.delayed(const Duration(
-                                      seconds:
-                                          1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                                  .then((val) {
-                                setState(() {
-                                  if (_ItemMaster.name == "") {
-                                    showAlertDialog(context, "No Items found.");
-                                  }
+                            api.checktoken().then((result) {
+                              if (result == "success") {
+                                api.GetItemMaster(_currentItemValue!).then((value) {
+                                  _ItemMaster = value;
+                                  setState(() {
+                                    if (_ItemMaster.name == "") {
+                                      showAlertDialog(context, "No Items found.");
+                                    }
+                                  });
                                 });
-                              });
-                            }
+                              } else {
+                                showDisconnect_AlertDialog(context, result);
+                              }
+                            });
+
+                            // fItemMaster = api.GetItemMaster(_currentItemValue!);
+                            // if (fItemMaster != null) {
+                            //   ConvertItem();
+                            //   Future.delayed(const Duration(seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+                            //       .then((val) {
+                            //     setState(() {
+                            //       if (_ItemMaster.name == "") {
+                            //         showAlertDialog(context, "No Items found.");
+                            //       }
+                            //     });
+                            //   });
+                            // }
                           } else {
                             setState(() {
                               _ItemMaster.code = "";
@@ -151,17 +158,13 @@ class _AddItemState extends State<AddItem> {
                       SizedBox(
                         child: Text(
                           "Item Name : ",
-                          style: GoogleFonts.prompt(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 1, 57, 83)),
+                          style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                         ),
                       ),
                       SizedBox(
                         child: Text(
                           "${_ItemMaster.name}",
-                          style: GoogleFonts.prompt(
-                              fontSize: 20, color: Colors.black),
+                          style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
                         ),
                       ),
                       SizedBox(
@@ -175,17 +178,13 @@ class _AddItemState extends State<AddItem> {
                           SizedBox(
                             child: Text(
                               "Base Uom : ",
-                              style: GoogleFonts.prompt(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 1, 57, 83)),
+                              style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                             ),
                           ),
                           SizedBox(
                             child: Text(
                               "${_ItemMaster.uomCode == null ? "" : _ItemMaster.uomCode}",
-                              style: GoogleFonts.prompt(
-                                  fontSize: 20, color: Colors.black),
+                              style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
                             ),
                           ),
                         ],
@@ -201,9 +200,7 @@ class _AddItemState extends State<AddItem> {
                               child: TextFormFieldContainerRegister(
                                 colors: Color.fromARGB(255, 217, 242, 253),
                                 child: TextFormField(
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Color.fromARGB(255, 1, 103, 166)),
+                                  style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 103, 166)),
                                   decoration: InputDecoration(
                                     suffixIcon: Icon(
                                       Icons.keyboard,
@@ -212,8 +209,8 @@ class _AddItemState extends State<AddItem> {
                                     border: InputBorder.none,
                                     labelText: 'Batch',
                                   ),
-                                  validator: RequiredValidator(
-                                      errorText: "Please Enter Batch"),
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                                  validator: RequiredValidator(errorText: "Please Enter Batch"),
                                   onSaved: (batchNo) {
                                     addBatch.batchNumber = batchNo ?? "";
                                   },
@@ -227,18 +224,11 @@ class _AddItemState extends State<AddItem> {
                               child: TextFormFieldContainerRegister(
                                 colors: Color.fromARGB(255, 217, 242, 253),
                                 child: TextFormField(
-                                  style: GoogleFonts.prompt(
-                                      fontSize: 20,
-                                      color: Color.fromARGB(255, 1, 57, 83)),
+                                  style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                                   //controller: dateController, //editing controller of this TextField
-                                  controller: flagSaveDate == false
-                                      ? TextEditingController(text: "")
-                                      : TextEditingController(
-                                          text: _currentDate),
-                                  validator: MultiValidator([
-                                    RequiredValidator(
-                                        errorText: "Please select Date")
-                                  ]),
+                                  controller: flagSaveDate == false ? TextEditingController(text: "") : TextEditingController(text: _currentDate),
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator: RequiredValidator(errorText: "Please select Date"),
                                   decoration: const InputDecoration(
                                     labelText: "Expire Date",
                                     //contentPadding: EdgeInsets.zero,
@@ -250,27 +240,19 @@ class _AddItemState extends State<AddItem> {
                                     // labelText: "Select Date",
                                     //labelStyle: TextStyle(fontSize: 25)
                                   ),
-                                  readOnly:
-                                      true, // when true user cannot edit text
+                                  readOnly: true, // when true user cannot edit text
                                   onTap: () async {
                                     //when click we have to show the datepicker
                                     DateTime? pickedDate = await showDatePicker(
-                                        initialEntryMode:
-                                            DatePickerEntryMode.calendarOnly,
+                                        initialEntryMode: DatePickerEntryMode.calendarOnly,
                                         context: context,
-                                        initialDate:
-                                            DateTime.now(), //get today's date
-                                        firstDate: DateTime(
-                                            2000), //DateTime.now() - not to allow to choose before today.
+                                        initialDate: DateTime.now(), //get today's date
+                                        firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
                                         lastDate: DateTime(2101));
                                     setState(() {
                                       if (pickedDate != null) {
-                                        String formattedDate =
-                                            DateFormat('dd-MM-yyyy')
-                                                .format(pickedDate);
-                                        String SendformattedDate =
-                                            DateFormat('yyyy-MM-dd')
-                                                .format(pickedDate);
+                                        String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                                        String SendformattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
                                         flagSaveDate = true;
                                         _currentDate = formattedDate;
                                         addBatch.epireDate = SendformattedDate;
@@ -292,8 +274,7 @@ class _AddItemState extends State<AddItem> {
                         child: ElevatedButton.icon(
                           label: Text(
                             "Save",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20, color: Colors.white),
+                            style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                           ),
                           icon: Icon(
                             Icons.save,
@@ -303,24 +284,28 @@ class _AddItemState extends State<AddItem> {
                           onPressed: () {
                             if (formKey.currentState?.validate() == true) {
                               formKey.currentState?.save();
-                              api.AddNewItem(widget.stockID ?? "",
-                                      _currentItemValue!, addBatch)
-                                  .then((result) {
-                                if (result?.status == "success") {
-                                  setState(() {
-                                    res = result?.status;
-                                    _ItemMaster.code = "";
-                                    _ItemMaster.name = "";
-                                    _ItemMaster.uomCode = "";
-                                    flagSave = false;
-                                    flagSaveDate = false;
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
+
+                              api.checktoken().then((result) {
+                                if (result == "success") {
+                                  api.AddNewItem(widget.stockID ?? "", _currentItemValue!, addBatch).then((result) {
+                                    if (result?.status == "success") {
+                                      setState(() {
+                                        res = result?.status;
+                                        _ItemMaster.code = "";
+                                        _ItemMaster.name = "";
+                                        _ItemMaster.uomCode = "";
+                                        flagSave = false;
+                                        flagSaveDate = false;
+                                        FocusManager.instance.primaryFocus?.unfocus();
+                                      });
+                                      showAddNewItem_AlertDialog(context);
+                                      formKey.currentState?.reset();
+                                    } else if (result?.status == "fail") {
+                                      showAlertDialog(context, result?.ErrorM);
+                                    }
                                   });
-                                  showAddNewItem_AlertDialog(context);
-                                  formKey.currentState?.reset();
-                                } else if (result?.status == "fail") {
-                                  showAlertDialog(context, result?.ErrorM);
+                                } else {
+                                  showDisconnect_AlertDialog(context, result);
                                 }
                               });
                             }
@@ -345,8 +330,7 @@ class _AddItemState extends State<AddItem> {
     String barcodeScanRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.QR);
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#ff6666', 'Cancel', true, ScanMode.QR);
       //print(barcodeScanRes);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -358,19 +342,35 @@ class _AddItemState extends State<AddItem> {
         textController.text = barcodeScanRes;
         _currentItemValue = barcodeScanRes;
         if (textController.text != "") {
-          fItemMaster = api.GetItemMaster(_currentItemValue!);
-          if (fItemMaster != null) {
-            ConvertItem();
-            Future.delayed(const Duration(
-                    seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
-                .then((val) {
-              setState(() {
-                if (_ItemMaster.name == "") {
-                  showAlertDialog(context, "No Items found.");
-                }
-              });
+          // fItemMaster = api.GetItemMaster(_currentItemValue!);
+          // if (fItemMaster != null) {
+          //   ConvertItem();
+          //   Future.delayed(const Duration(seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
+          //       .then((val) {
+          //     setState(() {
+          //       if (_ItemMaster.name == "") {
+          //         showAlertDialog(context, "No Items found.");
+          //       }
+          //     });
+          //   });
+          // }
+          api.checktoken().then((result) {
+            api.getAccessToken().then((value) {
+              String test = '';
             });
-          }
+            if (result == "success") {
+              api.GetItemMaster(_currentItemValue!).then((value) {
+                setState(() {
+                  _ItemMaster = value;
+                  if (_ItemMaster.name == "") {
+                    showAlertDialog(context, "No Items found.");
+                  }
+                });
+              });
+            } else {
+              showDisconnect_AlertDialog(context, result);
+            }
+          });
         } else {
           _ItemMaster.code = "";
           _ItemMaster.name = "";

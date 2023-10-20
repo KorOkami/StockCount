@@ -108,15 +108,11 @@ class _LoginScreenState extends State<LoginScreen> {
         return false; //ป้องการกดปุ่มยอนกลับบน mobile
       },
       child: Scaffold(
-          resizeToAvoidBottomInset:
-              false, //ป้องกัน Error : Bottom overflowed by pixels
+          resizeToAvoidBottomInset: false, //ป้องกัน Error : Bottom overflowed by pixels
           appBar: AppBar(
             title: Text(
               "Stock Counting",
-              style: GoogleFonts.prompt(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+              style: GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             automaticallyImplyLeading: false,
             /*leading: IconButton(
@@ -199,12 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
           body: Container(
             height: double.infinity,
             width: double.infinity,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    opacity: 0.2,
-                    alignment: Alignment.bottomCenter,
-                    image: AssetImage("asset/images/AppBG.png"),
-                    fit: BoxFit.none)),
+            decoration: BoxDecoration(image: DecorationImage(opacity: 0.2, alignment: Alignment.bottomCenter, image: AssetImage("asset/images/AppBG.png"), fit: BoxFit.none)),
             child: Column(
               children: [
                 Image.asset("asset/images/PrincLogo.png"),
@@ -216,171 +207,135 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Form(
                         key: formKey,
                         child: SingleChildScrollView(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                /*Text(
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                            SizedBox(
+                              height: 20,
+                            ),
+                            /*Text(
                                   "User Name",
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Color.fromARGB(255, 9, 1, 87)),
                                 ),*/
 
-                                TextFormFieldContainer(
-                                  child: TextFormField(
-                                    //controller: _textUserController,
-                                    style: TextStyle(fontSize: 20),
-                                    decoration: InputDecoration(
-                                      // suffixIcon: IconButton(
-                                      //   onPressed: _textUserController.clear,
-                                      //   icon: Icon(Icons.clear),
-                                      // ),
-                                      border: InputBorder.none,
-                                      icon: Icon(
-                                        Icons.person,
-                                      ),
-                                      labelText: "UserName or E-mail",
+                            TextFormFieldContainer(
+                              child: TextFormField(
+                                //controller: _textUserController,
+                                style: TextStyle(fontSize: 20),
+                                decoration: InputDecoration(
+                                  // suffixIcon: IconButton(
+                                  //   onPressed: _textUserController.clear,
+                                  //   icon: Icon(Icons.clear),
+                                  // ),
+                                  border: InputBorder.none,
+                                  icon: Icon(
+                                    Icons.person,
+                                  ),
+                                  labelText: "UserName or E-mail",
+                                ),
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                validator: MultiValidator([
+                                  RequiredValidator(errorText: "Please enter User Name or E-mail"),
+                                ]),
+                                onSaved: (email) {
+                                  profile.email = email ?? "";
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            TextFormFieldContainer(
+                              child: TextFormField(
+                                style: TextStyle(fontSize: 20),
+                                decoration: InputDecoration(
+                                    hintText: "Password",
+                                    border: InputBorder.none,
+                                    icon: Icon(
+                                      Icons.lock,
                                     ),
-                                    validator: MultiValidator([
-                                      RequiredValidator(
-                                          errorText:
-                                              "Please enter User Name or E-mail"),
-                                    ]),
-                                    onSaved: (email) {
-                                      profile.email = email ?? "";
-                                    },
-                                  ),
+                                    suffixIcon: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _isObscured = !_isObscured;
+                                          });
+                                        },
+                                        icon: _isObscured ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off))),
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                validator: RequiredValidator(errorText: "Please enter password."),
+                                obscureText: _isObscured,
+                                onSaved: (password) {
+                                  profile.password = password ?? "";
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton.icon(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
                                 ),
-                                SizedBox(
-                                  height: 10,
+                                label: Text(
+                                  "Login",
+                                  style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                                 ),
-                                TextFormFieldContainer(
-                                  child: TextFormField(
-                                    style: TextStyle(fontSize: 20),
-                                    decoration: InputDecoration(
-                                        hintText: "Password",
-                                        border: InputBorder.none,
-                                        icon: Icon(
-                                          Icons.lock,
-                                        ),
-                                        suffixIcon: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                _isObscured = !_isObscured;
-                                              });
-                                            },
-                                            icon: _isObscured
-                                                ? const Icon(Icons.visibility)
-                                                : const Icon(
-                                                    Icons.visibility_off))),
-                                    validator: RequiredValidator(
-                                        errorText: "Please enter password."),
-                                    obscureText: _isObscured,
-                                    onSaved: (password) {
-                                      profile.password = password ?? "";
-                                    },
-                                  ),
+                                icon: Icon(
+                                  Icons.login,
+                                  color: Colors.white,
+                                  size: 30,
                                 ),
-                                SizedBox(
-                                  height: 25,
-                                ),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: ElevatedButton.icon(
+                                onPressed: () {
+                                  if (formKey.currentState?.validate() == true) {
+                                    formKey.currentState?.save();
+                                    api.dioLogin(profile.email, profile.password).then((result) {
+                                      // AppLogin(profile.email, profile.password)
+                                      //.then((result) {
+                                      if (result?.status == "success") {
+                                        Token_Provider provider = Provider.of<Token_Provider>(context, listen: false);
+                                        provider.addToken(result!.token);
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                                          return BU_Screen(token: result.token, userName: result.username);
+                                        }));
+                                      } else {
+                                        showAlertDialog(context, result?.ErrorM);
+                                      }
+                                    });
+                                    //formKey.currentState?.reset();
+                                  }
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                                width: double.infinity,
+                                height: 50,
+                                color: Colors.white,
+                                child: ElevatedButton.icon(
                                     style: ButtonStyle(
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15))),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
+                                      backgroundColor: MaterialStateProperty.all(Color.fromARGB(255, 1, 103, 166)),
                                     ),
                                     label: Text(
-                                      "Login",
-                                      style: GoogleFonts.prompt(
-                                          fontSize: 20, color: Colors.white),
+                                      "Register",
+                                      style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                                     ),
                                     icon: Icon(
-                                      Icons.login,
+                                      Icons.person_add_alt_1,
                                       color: Colors.white,
                                       size: 30,
                                     ),
                                     onPressed: () {
-                                      if (formKey.currentState?.validate() ==
-                                          true) {
-                                        formKey.currentState?.save();
-                                        api
-                                            .dioLogin(
-                                                profile.email, profile.password)
-                                            .then((result) {
-                                          // AppLogin(profile.email, profile.password)
-                                          //.then((result) {
-                                          if (result?.status == "success") {
-                                            Token_Provider provider =
-                                                Provider.of<Token_Provider>(
-                                                    context,
-                                                    listen: false);
-                                            provider.addToken(result!.token);
-                                            Navigator.pushReplacement(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return BU_Screen(
-                                                  token: result.token,
-                                                  userName: result.username);
-                                            }));
-                                          } else {
-                                            showAlertDialog(
-                                                context, result?.ErrorM);
-                                          }
-                                        });
-                                        //formKey.currentState?.reset();
-                                      }
-                                    },
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                    width: double.infinity,
-                                    height: 50,
-                                    color: Colors.white,
-                                    child: ElevatedButton.icon(
-                                        style: ButtonStyle(
-                                          shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          15))),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Color.fromARGB(
-                                                      255, 1, 103, 166)),
-                                        ),
-                                        label: Text(
-                                          "Register",
-                                          style: GoogleFonts.prompt(
-                                              fontSize: 20,
-                                              color: Colors.white),
-                                        ),
-                                        icon: Icon(
-                                          Icons.person_add_alt_1,
-                                          color: Colors.white,
-                                          size: 30,
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return Register_Screen(
-                                                token: _successData?.token);
-                                          }));
-                                        }))
-                              ]),
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                        return Register_Screen(token: _successData?.token);
+                                      }));
+                                    }))
+                          ]),
                         ),
                       ),
                     ),

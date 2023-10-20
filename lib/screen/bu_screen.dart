@@ -40,7 +40,14 @@ class _BU_ScreenState extends State<BU_Screen> {
   @override
   void initState() {
     // TODO: implement initState
-    Document_List = api.GetBU();
+    api.checktoken().then((result) {
+      if (result == "success") {
+        Document_List = api.GetBU();
+      } else {
+        showDisconnect_AlertDialog(context, result);
+      }
+    });
+
     _itemMaster.code = "";
     _itemMaster.name = "";
     _itemMaster.uomCode = "";
