@@ -316,7 +316,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                     labelText: 'Edit Counted Item',
                                                   ),
                                                   style: GoogleFonts.prompt(fontSize: 18, color: Colors.black),
-                                                  keyboardType: TextInputType.number,
+                                                  keyboardType: TextInputType.numberWithOptions(signed: true),
+                                                  //keyboardType: TextInputType.number,
                                                   onChanged: (value) {
                                                     setState(() {
                                                       strCounted = value;
