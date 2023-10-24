@@ -803,7 +803,8 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                                     RegExp(r'^-?[0-9]*'),
                                   ),
                                 ],
-                                keyboardType: TextInputType.number,
+                                keyboardType: TextInputType.numberWithOptions(signed: true),
+                                //keyboardType: TextInputType.number,
                                 onSaved: (countItem1) {
                                   setState(() {
                                     countItem = countItem! + int.parse(countItem1!);
