@@ -214,7 +214,7 @@ class _Counting_ViewState extends State<Counting_View> {
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                                     return Counting_Detail(
-                                      token: token_provider.token,
+                                      //token: token_provider.token,
                                       onHandId: data.id,
                                       BatchID: data.batchId,
                                       bu_ID: widget.bu_detail.id,

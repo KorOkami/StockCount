@@ -23,8 +23,16 @@ import 'package:stock_counting_app/utility/alert.dart';
 import 'package:flutter/services.dart';
 
 class Counting_Detail extends StatefulWidget {
-  const Counting_Detail({super.key, required this.token, required this.onHandId, required this.BatchID, required this.bu_ID, required this.itemCode, required this.userName});
-  final String? token;
+  const Counting_Detail(
+      {super.key
+      //, required this.token
+      ,
+      required this.onHandId,
+      required this.BatchID,
+      required this.bu_ID,
+      required this.itemCode,
+      required this.userName});
+  //final String? token;
   final String? onHandId;
   final String? BatchID;
   final String? bu_ID;
@@ -177,7 +185,8 @@ class _Counting_DetailState extends State<Counting_Detail> {
           //automaticallyImplyLeading: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+            // onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pop(context),
           ),
         ),
         body: Column(children: [
@@ -405,17 +414,15 @@ class _Counting_DetailState extends State<Counting_Detail> {
                       )
                     ]),
                     child: Card(
-                      shadowColor: Colors.lightBlue,
+                      color: data.userName == widget.userName ? Color.fromARGB(255, 255, 188, 183) : Colors.white,
+                      shadowColor: data.userName == widget.userName ? Color.fromARGB(255, 38, 179, 245) : Colors.lightBlue,
                       elevation: 5,
                       child: ListTile(
-                        title: Text("Counted : ${data.countQty}", style: GoogleFonts.prompt(fontSize: 17, color: Color.fromARGB(255, 1, 57, 83))),
+                        title: Text("Counted : ${data.countQty}", style: GoogleFonts.prompt(fontSize: 17, color: Color.fromARGB(255, 4, 10, 14))),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("User : ${data.userName}",
-                                style: GoogleFonts.prompt(
-                                  fontSize: 15,
-                                )),
+                            Text("User : ${data.userName}", style: GoogleFonts.prompt(fontSize: 15, color: Colors.black)),
                             // SizedBox(
                             //   height: 5,
                             // ),
@@ -452,7 +459,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     // });
     api.checktoken().then((result) {
       if (result == "success") {
-        api.GetBatchList(widget.bu_ID ?? "", itemcode).then((value) {
+        api.GetBatchList(widget.bu_ID ?? "", widget.itemCode!).then((value) {
           List_StockOnhand = value;
           Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
           provider.addBatchStockOnhand(List_StockOnhand);

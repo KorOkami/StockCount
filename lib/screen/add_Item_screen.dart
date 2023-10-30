@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:scroll_date_picker/scroll_date_picker.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,7 @@ class _AddItemState extends State<AddItem> {
   bool flagSaveDate = true;
   String? _currentItemValue = "";
   String? _currentDate = "";
+  DateTime _selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -229,35 +231,74 @@ class _AddItemState extends State<AddItem> {
                                   controller: flagSaveDate == false ? TextEditingController(text: "") : TextEditingController(text: _currentDate),
                                   autovalidateMode: AutovalidateMode.always,
                                   validator: RequiredValidator(errorText: "Please select Date"),
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     labelText: "Expire Date",
                                     //contentPadding: EdgeInsets.zero,
                                     border: InputBorder.none,
-                                    suffixIcon: Icon(
-                                      Icons.calendar_today,
-                                      color: Colors.black,
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        showModalBottomSheet<void>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return SizedBox(
+                                              height: 200,
+                                              child: Center(
+                                                child: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    SizedBox(
+                                                      height: 200,
+                                                      child: ScrollDatePicker(
+                                                        minimumDate: DateTime(2000),
+                                                        maximumDate: DateTime(2101),
+                                                        selectedDate: _selectedDate,
+                                                        locale: Locale('th'),
+                                                        onDateTimeChanged: (DateTime value) {
+                                                          setState(() {
+                                                            _selectedDate = value;
+                                                            String formattedDate = DateFormat('dd-MM-yyyy').format(value);
+                                                            String SendformattedDate = DateFormat('yyyy-MM-dd').format(value);
+                                                            flagSaveDate = true;
+                                                            _currentDate = formattedDate;
+                                                            addBatch.epireDate = SendformattedDate;
+                                                          });
+                                                        },
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.calendar_today,
+                                        color: Colors.black,
+                                      ),
                                     ), //icon of text field
                                     // labelText: "Select Date",
                                     //labelStyle: TextStyle(fontSize: 25)
                                   ),
                                   readOnly: true, // when true user cannot edit text
-                                  onTap: () async {
+                                  onTap: () {
                                     //when click we have to show the datepicker
-                                    DateTime? pickedDate = await showDatePicker(
-                                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                                        context: context,
-                                        initialDate: DateTime.now(), //get today's date
-                                        firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                                        lastDate: DateTime(2101));
-                                    setState(() {
-                                      if (pickedDate != null) {
-                                        String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                                        String SendformattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                                        flagSaveDate = true;
-                                        _currentDate = formattedDate;
-                                        addBatch.epireDate = SendformattedDate;
-                                      }
-                                    });
+                                    // DateTime? pickedDate = await showDatePicker(
+                                    //     initialEntryMode: DatePickerEntryMode.calendarOnly,
+                                    //     context: context,
+                                    //     initialDate: DateTime.now(), //get today's date
+                                    //     firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
+                                    //     lastDate: DateTime(2101));
+                                    // setState(() {
+                                    //   if (pickedDate != null) {
+                                    //     String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                                    //     String SendformattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                                    //     flagSaveDate = true;
+                                    //     _currentDate = formattedDate;
+                                    //     addBatch.epireDate = SendformattedDate;
+                                    //   }
+                                    // });
                                   },
                                 ),
                               ),

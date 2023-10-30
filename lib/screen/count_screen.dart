@@ -257,19 +257,12 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                         // ConverthistoryList();
                         // Future.delayed(const Duration(seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
                         //     .then((val) {});
-                        api.checktoken().then((result) {
-                          if (result == "success") {
-                            api.GetHistory(widget.bu_detail.id, widget.userName ?? "").then((value) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return history_screen(
-                                  history_list: value,
-                                );
-                              }));
-                            });
-                          } else {
-                            showDisconnect_AlertDialog(context, result);
-                          }
-                        });
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return history_screen(
+                            stockcountID: widget.bu_detail.id,
+                            userName: widget.userName,
+                          );
+                        }));
                       } else if (value == 3) {
                         showLogout_AlertDialog(context);
                       }

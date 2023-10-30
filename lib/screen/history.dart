@@ -4,13 +4,20 @@ import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:stock_counting_app/model/history_model.dart';
+import 'package:stock_counting_app/screen/counting_Detail.dart';
 import 'package:stock_counting_app/services/api.dart';
+import 'package:stock_counting_app/utility/alert.dart';
 
 class history_screen extends StatefulWidget {
-  const history_screen({super.key, required this.history_list});
-  // final String? stockcountID;
-  // final String? userName;
-  final List<history> history_list;
+  const history_screen(
+      {super.key
+      //, required this.history_list
+      ,
+      required this.stockcountID,
+      required this.userName});
+  final String? stockcountID;
+  final String? userName;
+  //final List<history> history_list;
 
   @override
   State<history_screen> createState() => _history_screenState();
@@ -18,7 +25,7 @@ class history_screen extends StatefulWidget {
 
 class _history_screenState extends State<history_screen> {
   // late Future<List<history>> history_List;
-  // late List<history> _List_history = [];
+  late List<history> _List_history = [];
 
   @override
   void initState() {
@@ -30,6 +37,18 @@ class _history_screenState extends State<history_screen> {
     //         seconds: 1)) //Delay ให้ข้อมูล Future เป็น List ธรรมดา
     //     .then((val) {
     //   ConverthistoryList();
+    // });
+    getLog();
+    // api.checktoken().then((result) {
+    //   if (result == "success") {
+    //     api.GetHistory(widget.stockcountID!, widget.userName ?? "").then((value) {
+    //       setState(() {
+    //         _List_history = value;
+    //       });
+    //     });
+    //   } else {
+    //     showDisconnect_AlertDialog(context, result);
+    //   }
     // });
     super.initState();
   }
@@ -48,6 +67,17 @@ class _history_screenState extends State<history_screen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                getLog();
+              },
+              icon: const Icon(
+                Icons.refresh,
+                color: Colors.white,
+                size: 30,
+              ))
+        ],
       ),
       body: ListView.builder(
           // reverse: false,
@@ -55,20 +85,27 @@ class _history_screenState extends State<history_screen> {
           primary: false,
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
-          itemCount: widget.history_list.length,
+          itemCount: _List_history.length,
+          //itemCount: getLog().length,
           itemBuilder: (context, int index) {
-            history data = widget.history_list[index];
+            history data = _List_history[index];
+            //history data = getLog()[index];
             if (data != null)
               return Card(
                 child: ListTile(
-                  title: Text(
-                      DateFormat('dd/MM/yyyy : HH:mm:ss').format(
-                          DateTime.parse(data.createDate!)
-                              .add(Duration(hours: 7))),
-                      style: GoogleFonts.prompt(
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold)),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                      return Counting_Detail(
+                        //token: token_provider.token,
+                        onHandId: data.onhandId,
+                        BatchID: data.batchId,
+                        bu_ID: widget.stockcountID,
+                        itemCode: data.itemCode,
+                        userName: data.userName,
+                      );
+                    })).then((value) => getLog());
+                  },
+                  title: Text(DateFormat('dd/MM/yyyy : HH:mm:ss').format(DateTime.parse(data.createDate!).add(Duration(hours: 7))), style: GoogleFonts.prompt(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -117,7 +154,17 @@ class _history_screenState extends State<history_screen> {
     );
   }
 
-  // void ConverthistoryList() async {
-  //   _List_history = await history_List;
-  // }
+  void getLog() {
+    api.checktoken().then((result) {
+      if (result == "success") {
+        api.GetHistory(widget.stockcountID!, widget.userName ?? "").then((value) {
+          setState(() {
+            _List_history = value;
+          });
+        });
+      } else {
+        showDisconnect_AlertDialog(context, result);
+      }
+    });
+  }
 }
