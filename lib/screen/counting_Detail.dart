@@ -31,13 +31,15 @@ class Counting_Detail extends StatefulWidget {
       required this.BatchID,
       required this.bu_ID,
       required this.itemCode,
-      required this.userName});
+      required this.userName,
+      required this.screeType});
   //final String? token;
   final String? onHandId;
   final String? BatchID;
   final String? bu_ID;
   final String? itemCode;
   final String? userName;
+  final String? screeType;
   @override
   State<Counting_Detail> createState() => _Counting_DetailState();
 }
@@ -274,7 +276,10 @@ class _Counting_DetailState extends State<Counting_Detail> {
                                                           if (result == "success") {
                                                             api.EditCountingDetail_comments(data.id!, comments).then((result) {
                                                               if (result == "success") {
-                                                                refreshDataBatch(data.itemCode!);
+                                                                if (widget.screeType == 'view') {
+                                                                  refreshDataBatch(data.itemCode!);
+                                                                }
+
                                                                 setState(() {
                                                                   data.comments = comments;
                                                                   data.userName = widget.userName;
@@ -459,7 +464,7 @@ class _Counting_DetailState extends State<Counting_Detail> {
     // });
     api.checktoken().then((result) {
       if (result == "success") {
-        api.GetBatchList(widget.bu_ID ?? "", widget.itemCode!).then((value) {
+        api.GetBatchList(widget.bu_ID ?? "", itemcode).then((value) {
           List_StockOnhand = value;
           Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
           provider.addBatchStockOnhand(List_StockOnhand);

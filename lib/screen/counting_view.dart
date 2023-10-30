@@ -79,7 +79,7 @@ class _Counting_ViewState extends State<Counting_View> {
   Widget build(BuildContext context) {
     final userStore = Provider.of<Batch_Provider>(context, listen: true);
     return Consumer2<Batch_Provider, Token_Provider>(builder: (context, Batch_Provider provider, Token_Provider token_provider, Widget? child) {
-      return provider.bList.length != 0
+      return provider.bList.length != 0 && widget.itemMaster.code != ''
           ? Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -220,6 +220,7 @@ class _Counting_ViewState extends State<Counting_View> {
                                       bu_ID: widget.bu_detail.id,
                                       itemCode: data.itemCode,
                                       userName: widget.userName,
+                                      screeType: 'view',
                                     );
                                   }));
                                 },

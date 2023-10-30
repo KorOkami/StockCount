@@ -102,6 +102,7 @@ class _history_screenState extends State<history_screen> {
                         bu_ID: widget.stockcountID,
                         itemCode: data.itemCode,
                         userName: data.userName,
+                        screeType: 'histort',
                       );
                     })).then((value) => getLog());
                   },
