@@ -66,6 +66,7 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
   String? _currentComments = "";
   bool flagSave = false;
   bool _showSortmenu = false;
+  bool _showOnhand = true;
   //bool _iscomments = false;
   String _sortfield = "";
   String DisconnectError = "";
@@ -667,26 +668,29 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
                             SizedBox(
                               height: 10,
                             ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  child: Text(
-                                    "Onhand : ",
-                                    style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                            Visibility(
+                              visible: _showOnhand,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    child: Text(
+                                      "Onhand : ",
+                                      style: GoogleFonts.prompt(fontWeight: FontWeight.bold, fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  child: provider.bList.length != 0 && DropdownIndex != -1 && provider.bList[0].itemCode != ""
-                                      ? Text(
-                                          widget.bu_detail.controlLot == "N" ? "${provider.bList[0].qty}" : "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
-                                          style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-                                        )
-                                      : Text(
-                                          "",
-                                          style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
-                                        ),
-                                ),
-                              ],
+                                  SizedBox(
+                                    child: provider.bList.length != 0 && DropdownIndex != -1 && provider.bList[0].itemCode != ""
+                                        ? Text(
+                                            widget.bu_detail.controlLot == "N" ? "${provider.bList[0].qty}" : "${provider.bList[DropdownIndex].qty}", //"${batch_detail.qty}",
+                                            style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                                          )
+                                        : Text(
+                                            "",
+                                            style: GoogleFonts.prompt(fontSize: 20, color: Colors.black),
+                                          ),
+                                  ),
+                                ],
+                              ),
                             ),
                             SizedBox(
                               height: 8,
@@ -1248,6 +1252,11 @@ class _CountScanState extends State<CountScan> with TickerProviderStateMixin {
           List_StockOnhand = value;
           Batch_Provider provider = Provider.of<Batch_Provider>(context, listen: false);
           provider.addBatchStockOnhand(List_StockOnhand);
+        });
+        api.checkShowOnhand(widget.bu_detail.id).then((value) {
+          setState(() {
+            _showOnhand = value;
+          });
         });
       } else {
         showDisconnect_AlertDialog(context, result);

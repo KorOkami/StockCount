@@ -403,4 +403,20 @@ class stockCountingAPI {
     // }
     return res;
   }
+
+  Future<bool> checkShowOnhand(String onhandID) async {
+    // final CountingDoc _DocumentCounting = ("");
+    late bool res = true;
+    String _BuListUrl = 'https://stockcount.princhealth.com/api/stockcounts/${onhandID}';
+    try {
+      final response = await _dio.get(_BuListUrl);
+      if (response.statusCode == 200) {
+        res = response.data['showOnhand'];
+      }
+    } on DioError catch (e) {
+      print(e.response?.data);
+    }
+
+    return res;
+  }
 }

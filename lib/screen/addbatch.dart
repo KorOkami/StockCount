@@ -186,10 +186,16 @@ class _AddBatchState extends State<AddBatch> {
                                         SizedBox(
                                           height: 200,
                                           child: ScrollDatePicker(
+                                            viewType: const [
+                                              DatePickerViewType.day,
+                                              DatePickerViewType.month,
+                                              DatePickerViewType.year,
+                                            ],
                                             minimumDate: DateTime(2000),
                                             maximumDate: DateTime(2101),
                                             selectedDate: _selectedDate,
-                                            locale: Locale('th'),
+                                            options: DatePickerOptions(itemExtent: 30, diameterRatio: 2),
+                                            scrollViewOptions: const DatePickerScrollViewOptions(day: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 18), selectedTextStyle: TextStyle(fontSize: 18)), month: ScrollViewDetailOptions(alignment: Alignment.centerLeft, selectedTextStyle: TextStyle(fontSize: 18), textStyle: TextStyle(fontSize: 18)), year: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 18), selectedTextStyle: TextStyle(fontSize: 18))),
                                             onDateTimeChanged: (DateTime value) {
                                               setState(() {
                                                 _selectedDate = value;

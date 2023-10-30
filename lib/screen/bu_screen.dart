@@ -33,7 +33,7 @@ class BU_Screen extends StatefulWidget {
 class _BU_ScreenState extends State<BU_Screen> {
   final formKey = GlobalKey<FormState>();
   late Future<List<CountingDoc>> Document_List;
-  BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "", "");
+  BU_Detail BU = BU_Detail("", "", "", "", "", "", "", "", "", "", true);
   late String? internalToken;
   late ItemMaster _itemMaster = ItemMaster();
 
@@ -117,9 +117,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text("${widget.userName}",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
+                            Text("${widget.userName}", style: GoogleFonts.prompt(fontSize: 20, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -135,9 +133,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text("Logout",
-                                style: GoogleFonts.prompt(
-                                    fontSize: 20, color: Colors.white)),
+                            Text("Logout", style: GoogleFonts.prompt(fontSize: 20, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -166,24 +162,16 @@ class _BU_ScreenState extends State<BU_Screen> {
                       SizedBox(
                         child: Text(
                           "Please select.",
-                          style: GoogleFonts.prompt(
-                              fontSize: 20,
-                              color: Color.fromARGB(255, 1, 57, 83)),
+                          style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                         ),
                       ),
                       DropdownSearch<CountingDoc>(
                         autoValidateMode: AutovalidateMode.onUserInteraction,
-                        popupProps: PopupProps.dialog(
-                            showSearchBox: true,
-                            searchFieldProps: TextFieldProps(
-                                decoration: InputDecoration(
-                                    labelText: "Search..."))), // Popup search
+                        popupProps: PopupProps.dialog(showSearchBox: true, searchFieldProps: TextFieldProps(decoration: InputDecoration(labelText: "Search..."))), // Popup search
 
                         asyncItems: (filter) => Document_List, //GetBU(filter),
 
-                        itemAsString: (CountingDoc? u) =>
-                            u?.userAsString() ??
-                            "", //กำหนดฟิลล์ที่ต้องการให้เลือก
+                        itemAsString: (CountingDoc? u) => u?.userAsString() ?? "", //กำหนดฟิลล์ที่ต้องการให้เลือก
 
                         onChanged: (value) {
                           setState(() {
@@ -197,13 +185,10 @@ class _BU_ScreenState extends State<BU_Screen> {
                             BU.remark = value.remarks ?? "";
                             BU.status = value.status ?? "";
                             BU.subject = value.subject ?? "";
+                            BU.showOnhand = value.showOnhand;
                           });
                         },
-                        dropdownDecoratorProps: DropDownDecoratorProps(
-                            dropdownSearchDecoration: InputDecoration(
-                                labelText:
-                                    "Warehouse - Business Unit - Subject"),
-                            baseStyle: GoogleFonts.prompt(fontSize: 18)),
+                        dropdownDecoratorProps: DropDownDecoratorProps(dropdownSearchDecoration: InputDecoration(labelText: "Warehouse - Business Unit - Subject"), baseStyle: GoogleFonts.prompt(fontSize: 18)),
                         validator: (value) {
                           if (value == null) {
                             return 'Please select Business Unit.';
@@ -225,9 +210,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                           ),
                           Text(
                             " Business Unit",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
+                            style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                           ),
                         ],
                       ),
@@ -245,9 +228,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                           child: SizedBox(
                             child: Text(
                               "${BU.buName}",
-                              style: GoogleFonts.prompt(
-                                  fontSize: 20,
-                                  color: Color.fromARGB(255, 1, 57, 83)),
+                              style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                             ),
                           ),
                         ),
@@ -267,9 +248,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                           ),
                           Text(
                             " Warehouse",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
+                            style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                           ),
                         ],
                       ),
@@ -290,9 +269,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                                 SizedBox(
                                   child: Text(
                                     "${BU.whsName}",
-                                    style: GoogleFonts.prompt(
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                    style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                                   ),
                                 ),
                               ],
@@ -315,9 +292,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                           ),
                           Text(
                             " Subject",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20,
-                                color: Color.fromARGB(255, 1, 57, 83)),
+                            style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                           ),
                         ],
                       ),
@@ -338,9 +313,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                                 SizedBox(
                                   child: Text(
                                     "${BU.subject}",
-                                    style: GoogleFonts.prompt(
-                                        fontSize: 20,
-                                        color: Color.fromARGB(255, 1, 57, 83)),
+                                    style: GoogleFonts.prompt(fontSize: 20, color: Color.fromARGB(255, 1, 57, 83)),
                                   ),
                                 ),
                               ],
@@ -357,8 +330,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                         child: ElevatedButton.icon(
                           label: Text(
                             "Start Counting",
-                            style: GoogleFonts.prompt(
-                                fontSize: 20, color: Colors.white),
+                            style: GoogleFonts.prompt(fontSize: 20, color: Colors.white),
                           ),
                           icon: Icon(
                             Icons.play_circle,
@@ -369,8 +341,7 @@ class _BU_ScreenState extends State<BU_Screen> {
                               formKey.currentState?.save();
 
                               if (widget.token != "") {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) {
                                   return CountScan(
                                     token: widget.token,
                                     userName: widget.userName,

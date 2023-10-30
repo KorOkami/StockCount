@@ -243,17 +243,25 @@ class _AddItemState extends State<AddItem> {
                                             return SizedBox(
                                               height: 200,
                                               child: Center(
+                                                widthFactor: 400,
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  //mainAxisSize: MainAxisSize.min,
                                                   children: <Widget>[
                                                     SizedBox(
                                                       height: 200,
                                                       child: ScrollDatePicker(
+                                                        viewType: const [
+                                                          DatePickerViewType.day,
+                                                          DatePickerViewType.month,
+                                                          DatePickerViewType.year,
+                                                        ],
                                                         minimumDate: DateTime(2000),
                                                         maximumDate: DateTime(2101),
                                                         selectedDate: _selectedDate,
-                                                        locale: Locale('th'),
+                                                        options: DatePickerOptions(itemExtent: 30, diameterRatio: 2),
+                                                        scrollViewOptions: const DatePickerScrollViewOptions(day: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 18), selectedTextStyle: TextStyle(fontSize: 18)), month: ScrollViewDetailOptions(alignment: Alignment.centerLeft, selectedTextStyle: TextStyle(fontSize: 18), textStyle: TextStyle(fontSize: 18)), year: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 18), selectedTextStyle: TextStyle(fontSize: 18))),
+                                                        // locale: const Locale('th', 'TH'),
                                                         onDateTimeChanged: (DateTime value) {
                                                           setState(() {
                                                             _selectedDate = value;

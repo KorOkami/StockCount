@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class BU_Detail {
@@ -11,7 +13,7 @@ class BU_Detail {
   String remark;
   String status;
   String subject;
+  bool? showOnhand;
 
-  BU_Detail(this.id, this.buCode, this.buName, this.whsCode, this.whsName,
-      this.docNum, this.controlLot, this.remark, this.status, this.subject);
+  BU_Detail(this.id, this.buCode, this.buName, this.whsCode, this.whsName, this.docNum, this.controlLot, this.remark, this.status, this.subject, this.showOnhand);
 }

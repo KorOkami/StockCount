@@ -3,12 +3,11 @@
 //     final countingDoc = countingDocFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:ffi';
 
-List<CountingDoc> countingDocFromJson(String str) => List<CountingDoc>.from(
-    json.decode(str).map((x) => CountingDoc.fromJson(x)));
+List<CountingDoc> countingDocFromJson(String str) => List<CountingDoc>.from(json.decode(str).map((x) => CountingDoc.fromJson(x)));
 
-String countingDocToJson(List<CountingDoc> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String countingDocToJson(List<CountingDoc> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CountingDoc {
   CountingDoc({
@@ -23,6 +22,7 @@ class CountingDoc {
     this.remarks,
     this.status,
     this.subject,
+    this.showOnhand,
   });
 
   String? id;
@@ -36,12 +36,12 @@ class CountingDoc {
   String? remarks;
   String? status;
   String? subject;
+  bool? showOnhand;
 
   factory CountingDoc.fromJson(Map<String, dynamic> json) => CountingDoc(
         id: json["id"],
         docNum: json["docNum"],
-        docDate:
-            json["docDate"] == null ? null : DateTime.parse(json["docDate"]),
+        docDate: json["docDate"] == null ? null : DateTime.parse(json["docDate"]),
         buCode: json["buCode"],
         buName: json["buName"],
         whsCode: json["whsCode"],
@@ -50,6 +50,7 @@ class CountingDoc {
         remarks: json["remarks"],
         status: json["status"],
         subject: json["subject"],
+        showOnhand: json["showOnhand"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +65,7 @@ class CountingDoc {
         "remarks": remarks,
         "status": status,
         "subject": subject,
+        "showOnhand": showOnhand,
       };
 
   String userAsString() {
