@@ -194,8 +194,8 @@ class _AddBatchState extends State<AddBatch> {
                                             minimumDate: DateTime(2000),
                                             maximumDate: DateTime(2101),
                                             selectedDate: _selectedDate,
-                                            options: DatePickerOptions(itemExtent: 30, diameterRatio: 5),
-                                            scrollViewOptions: const DatePickerScrollViewOptions(day: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 22), selectedTextStyle: TextStyle(fontSize: 22), alignment: Alignment.center), month: ScrollViewDetailOptions(alignment: Alignment.center, selectedTextStyle: TextStyle(fontSize: 22), textStyle: TextStyle(fontSize: 22)), year: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 22), selectedTextStyle: TextStyle(fontSize: 22))),
+                                            options: DatePickerOptions(itemExtent: 35, diameterRatio: 5),
+                                            scrollViewOptions: const DatePickerScrollViewOptions(day: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 22), selectedTextStyle: TextStyle(fontSize: 22), alignment: Alignment.center, margin: EdgeInsets.only(right: 12)), month: ScrollViewDetailOptions(alignment: Alignment.center, selectedTextStyle: TextStyle(fontSize: 22), textStyle: TextStyle(fontSize: 22)), year: ScrollViewDetailOptions(textStyle: TextStyle(fontSize: 22), selectedTextStyle: TextStyle(fontSize: 22), margin: EdgeInsets.only(left: 18))),
                                             onDateTimeChanged: (DateTime value) {
                                               setState(() {
                                                 _selectedDate = value;

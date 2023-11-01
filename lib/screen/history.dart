@@ -67,17 +67,17 @@ class _history_screenState extends State<history_screen> {
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                getLog();
-              },
-              icon: const Icon(
-                Icons.refresh,
-                color: Colors.white,
-                size: 30,
-              ))
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         getLog();
+        //       },
+        //       icon: const Icon(
+        //         Icons.refresh,
+        //         color: Colors.white,
+        //         size: 30,
+        //       ))
+        // ],
       ),
       body: ListView.builder(
           // reverse: false,
