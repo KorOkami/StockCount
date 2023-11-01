@@ -20,6 +20,7 @@ import 'package:stock_counting_app/services/api.dart';
 import 'package:stock_counting_app/utility/alert.dart';
 import 'package:stock_counting_app/model/stockOnhand.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter/cupertino.dart';
 
 class AddBatch extends StatefulWidget {
   const AddBatch({super.key, required this.token, required this.itemCode, required this.stockID, required this.bu_detail, this.userName, required this.itemMaster});
@@ -173,7 +174,26 @@ class _AddBatchState extends State<AddBatch> {
                         border: InputBorder.none,
                         suffixIcon: IconButton(
                           onPressed: () {
-                            showModalBottomSheet<void>(
+                            _showDialog(
+                              CupertinoDatePicker(
+                                initialDateTime: DateTime.now(),
+                                mode: CupertinoDatePickerMode.date,
+                                minimumYear: 1990,
+                                maximumYear: 2100,
+                                dateOrder: DatePickerDateOrder.dmy,
+                                onDateTimeChanged: (DateTime newDate) {
+                                  //setState(() => date = newDate);
+                                  setState(() {
+                                    String formattedDate = DateFormat('dd-MM-yyyy').format(newDate);
+                                    String SendformattedDate = DateFormat('yyyy-MM-dd').format(newDate);
+                                    flagSaveDate = true;
+                                    _currentDate = formattedDate;
+                                    addBatch.epireDate = SendformattedDate;
+                                  });
+                                },
+                              ),
+                            );
+                            /*showModalBottomSheet<void>(
                               context: context,
                               builder: (BuildContext context) {
                                 return SizedBox(
@@ -213,7 +233,7 @@ class _AddBatchState extends State<AddBatch> {
                                   ),
                                 );
                               },
-                            );
+                            );*/
                           },
                           icon: Icon(
                             Icons.calendar_today,
@@ -293,6 +313,28 @@ class _AddBatchState extends State<AddBatch> {
               ]),
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        // The Bottom margin is provided to align the popup above the system
+        // navigation bar.
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        // Provide a background color for the popup.
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        // Use a SafeArea widget to avoid system overlaps.
+        child: SafeArea(
+          top: false,
+          child: child,
         ),
       ),
     );

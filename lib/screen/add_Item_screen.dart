@@ -15,6 +15,8 @@ import 'package:stock_counting_app/utility/alert.dart';
 import '../components/text_field_container.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter/cupertino.dart';
+
 class AddItem extends StatefulWidget {
   const AddItem({
     super.key,
@@ -237,7 +239,26 @@ class _AddItemState extends State<AddItem> {
                                     border: InputBorder.none,
                                     suffixIcon: IconButton(
                                       onPressed: () {
-                                        showModalBottomSheet<void>(
+                                        _showDialog(
+                                          CupertinoDatePicker(
+                                            initialDateTime: DateTime.now(),
+                                            mode: CupertinoDatePickerMode.date,
+                                            minimumYear: 1990,
+                                            maximumYear: 2100,
+                                            dateOrder: DatePickerDateOrder.dmy,
+                                            onDateTimeChanged: (DateTime newDate) {
+                                              //setState(() => date = newDate);
+                                              setState(() {
+                                                String formattedDate = DateFormat('dd-MM-yyyy').format(newDate);
+                                                String SendformattedDate = DateFormat('yyyy-MM-dd').format(newDate);
+                                                flagSaveDate = true;
+                                                _currentDate = formattedDate;
+                                                addBatch.epireDate = SendformattedDate;
+                                              });
+                                            },
+                                          ),
+                                        );
+                                        /*showModalBottomSheet<void>(
                                           context: context,
                                           builder: (BuildContext context) {
                                             return SizedBox(
@@ -248,7 +269,8 @@ class _AddItemState extends State<AddItem> {
                                                   mainAxisAlignment: MainAxisAlignment.center,
                                                   //mainAxisSize: MainAxisSize.min,
                                                   children: <Widget>[
-                                                    SizedBox(
+                                                    
+                                                    /*SizedBox(
                                                       height: 200,
                                                       child: ScrollDatePicker(
                                                         viewType: const [
@@ -273,13 +295,13 @@ class _AddItemState extends State<AddItem> {
                                                           });
                                                         },
                                                       ),
-                                                    )
+                                                    )*/
                                                   ],
                                                 ),
                                               ),
                                             );
                                           },
-                                        );
+                                        );*/
                                       },
                                       icon: Icon(
                                         Icons.calendar_today,
@@ -429,5 +451,27 @@ class _AddItemState extends State<AddItem> {
         }
       }
     });
+  }
+
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        // The Bottom margin is provided to align the popup above the system
+        // navigation bar.
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        // Provide a background color for the popup.
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        // Use a SafeArea widget to avoid system overlaps.
+        child: SafeArea(
+          top: false,
+          child: child,
+        ),
+      ),
+    );
   }
 }
