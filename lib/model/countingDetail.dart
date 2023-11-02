@@ -4,12 +4,9 @@
 
 import 'dart:convert';
 
-List<CountingDetail> countingDetailFromJson(String str) =>
-    List<CountingDetail>.from(
-        json.decode(str).map((x) => CountingDetail.fromJson(x)));
+List<CountingDetail> countingDetailFromJson(String str) => List<CountingDetail>.from(json.decode(str).map((x) => CountingDetail.fromJson(x)));
 
-String countingDetailToJson(List<CountingDetail> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String countingDetailToJson(List<CountingDetail> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class CountingDetail {
   CountingDetail({

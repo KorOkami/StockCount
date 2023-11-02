@@ -115,6 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
               style: GoogleFonts.prompt(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             automaticallyImplyLeading: false,
+            actions: [
+              Center(child: Text("1.0.0 (25) ", style: GoogleFonts.prompt(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)))
+            ],
             /*leading: IconButton(
                 //elevation: 0,
                 color: Color.fromARGB(255, 1, 68, 122),
