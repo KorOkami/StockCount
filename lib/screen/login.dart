@@ -15,7 +15,6 @@ import 'package:stock_counting_app/providers/token_provider.dart';
 import 'package:stock_counting_app/screen/bu_screen.dart';
 import 'package:stock_counting_app/screen/register.dart';
 import 'package:stock_counting_app/services/api.dart';
-//import 'package:stock_counting_app/screen/poScreen.dart';
 import 'package:stock_counting_app/utility/Alert.dart';
 import 'package:google_fonts/google_fonts.dart';
 
